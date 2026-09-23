@@ -1,0 +1,1440 @@
+{
+  "fact_checks": [
+    {
+      "id": "fc-8bfcceea8b",
+      "submission_type": "text",
+      "submitted_input": "gold is black in colour",
+      "primary_claim": "gold is black in colour",
+      "extracted_claims": [
+        {
+          "claim_text": "gold is black in colour",
+          "topic": "General",
+          "entities": [],
+          "verdict": "INSUFFICIENT EVIDENCE",
+          "confidence": 30.0
+        }
+      ],
+      "verdict": "INSUFFICIENT EVIDENCE",
+      "confidence": 30.0,
+      "evidence_strength": "NONE",
+      "verification_status": "UNVERIFIED",
+      "entities": [],
+      "category": "General",
+      "location": "Global",
+      "language": "en",
+      "ai_explanation": "The verification pipeline was unable to locate authoritative, peer-reviewed, or institutional primary evidence to corroborate or refute this specific claim. As per journalistic integrity standards, it is classified as INSUFFICIENT EVIDENCE.",
+      "supporting_evidence": [],
+      "contradictory_evidence": [],
+      "contextual_notes": "Independent verification recommended before sharing.",
+      "processing_time_ms": 127,
+      "verification_providers": [
+        "TruthLens FactDB",
+        "Wire Source Graph",
+        "Institutional Verification Matrix"
+      ],
+      "created_at": "2026-09-03T14:02:53.283354+00:00",
+      "image_analysis": null
+    },
+    {
+      "id": "fc-5ce0efcf1f",
+      "submission_type": "url",
+      "submitted_input": "https://thehindu.com/sci-tech/science/isro-cryogenic-bas-module",
+      "primary_claim": "https://thehindu.com/sci-tech/science/isro-cryogenic-bas-module",
+      "extracted_claims": [
+        {
+          "claim_text": "https://thehindu.com/sci-tech/science/isro-cryogenic-bas-module",
+          "topic": "Science",
+          "entities": [],
+          "verdict": "MOSTLY TRUE",
+          "confidence": 84.0
+        }
+      ],
+      "verdict": "MOSTLY TRUE",
+      "confidence": 84.0,
+      "evidence_strength": "STRONG",
+      "verification_status": "VERIFIED",
+      "entities": [],
+      "category": "Science",
+      "location": "India",
+      "language": "en",
+      "ai_explanation": "Direct corroborated evidence from authenticated primary sources (ISRO Space Telemetry & Science Portal) validates the accuracy of this reporting with high confidence.",
+      "supporting_evidence": [
+        {
+          "id": "src-isro-01",
+          "source_name": "ISRO Space Telemetry & Science Portal",
+          "source_url": "https://www.isro.gov.in/missions",
+          "title": "ISRO Lunar & Deep Space Mission Scientific Payload Validation",
+          "publication_date": "2026-05-18",
+          "evidence_text": "Official scientific mission data confirming hyperspectral surface sensors and lunar exploration parameters.",
+          "reliability_score": 97.0,
+          "source_type": "official_record",
+          "stance": "SUPPORTS",
+          "reliability_label": "National Space Agency"
+        }
+      ],
+      "contradictory_evidence": [],
+      "contextual_notes": "Derived strictly from authenticated cross-referenced records without generative speculation.",
+      "processing_time_ms": 2595,
+      "verification_providers": [
+        "TruthLens FactDB",
+        "Wire Source Graph",
+        "Institutional Verification Matrix"
+      ],
+      "created_at": "2026-09-03T14:02:17.989032+00:00",
+      "image_analysis": null
+    },
+    {
+      "id": "fc-06708e3efd",
+      "submission_type": "image",
+      "submitted_input": "WhatsApp Image 2026-09-03 at 7.25.05 PM.jpeg",
+      "primary_claim": "Image forensic verification: WhatsApp Image 2026 09 03 at 7.25.05 PM",
+      "extracted_claims": [
+        {
+          "claim_text": "Image forensic verification: WhatsApp Image 2026 09 03 at 7.25.05 PM",
+          "topic": "General",
+          "entities": [
+            "Image"
+          ],
+          "verdict": "INSUFFICIENT EVIDENCE",
+          "confidence": 30.0
+        }
+      ],
+      "verdict": "INSUFFICIENT EVIDENCE",
+      "confidence": 30.0,
+      "evidence_strength": "NONE",
+      "verification_status": "UNVERIFIED",
+      "entities": [
+        "Image"
+      ],
+      "category": "General",
+      "location": "Global",
+      "language": "en",
+      "ai_explanation": "The verification pipeline was unable to locate authoritative, peer-reviewed, or institutional primary evidence to corroborate or refute this specific claim. As per journalistic integrity standards, it is classified as INSUFFICIENT EVIDENCE.",
+      "supporting_evidence": [],
+      "contradictory_evidence": [],
+      "contextual_notes": "Independent verification recommended before sharing.",
+      "processing_time_ms": 162,
+      "verification_providers": [
+        "TruthLens FactDB",
+        "Wire Source Graph",
+        "Institutional Verification Matrix"
+      ],
+      "created_at": "2026-09-03T14:01:08.833405+00:00",
+      "image_analysis": {
+        "filename": "WhatsApp Image 2026-09-03 at 7.25.05 PM.jpeg",
+        "file_size_kb": 136.06,
+        "dimensions": "722x1600",
+        "format": "JPEG",
+        "exif_found": false,
+        "manipulation_risk": "LOW",
+        "ai_generated_probability": 15.0,
+        "ela_anomaly_score": 12.55,
+        "findings": [
+          "No EXIF metadata found (common in compressed social media images or AI-generated outputs).",
+          "Uniform error level distribution across image matrix. No obvious local splicing detected."
+        ]
+      }
+    },
+    {
+      "id": "fc-b88b69232c",
+      "submission_type": "text",
+      "submitted_input": "penguiens are flying in antartica",
+      "primary_claim": "penguiens are flying in antartica",
+      "extracted_claims": [
+        {
+          "claim_text": "penguiens are flying in antartica",
+          "topic": "General",
+          "entities": [],
+          "verdict": "INSUFFICIENT EVIDENCE",
+          "confidence": 30.0
+        }
+      ],
+      "verdict": "INSUFFICIENT EVIDENCE",
+      "confidence": 30.0,
+      "evidence_strength": "NONE",
+      "verification_status": "UNVERIFIED",
+      "entities": [],
+      "category": "General",
+      "location": "Global",
+      "language": "en",
+      "ai_explanation": "The verification pipeline was unable to locate authoritative, peer-reviewed, or institutional primary evidence to corroborate or refute this specific claim. As per journalistic integrity standards, it is classified as INSUFFICIENT EVIDENCE.",
+      "supporting_evidence": [],
+      "contradictory_evidence": [],
+      "contextual_notes": "Independent verification recommended before sharing.",
+      "processing_time_ms": 27,
+      "verification_providers": [
+        "TruthLens FactDB",
+        "Wire Source Graph",
+        "Institutional Verification Matrix"
+      ],
+      "created_at": "2026-09-03T13:58:54.167701+00:00",
+      "image_analysis": null
+    },
+    {
+      "id": "fc-71e0c651d7",
+      "submission_type": "text",
+      "submitted_input": "Reserve Bank of India RBI is discontinuing all 500 rupee notes immediately.",
+      "primary_claim": "Reserve Bank of India RBI is discontinuing all 500 rupee notes immediately.",
+      "extracted_claims": [
+        {
+          "claim_text": "Reserve Bank of India RBI is discontinuing all 500 rupee notes immediately.",
+          "topic": "Economy",
+          "entities": [
+            "Reserve Bank",
+            "India",
+            "RBI"
+          ],
+          "verdict": "FALSE",
+          "confidence": 96.0
+        }
+      ],
+      "verdict": "FALSE",
+      "confidence": 96.0,
+      "evidence_strength": "VERY STRONG",
+      "verification_status": "VERIFIED",
+      "entities": [
+        "Reserve Bank",
+        "India",
+        "RBI"
+      ],
+      "category": "Economy",
+      "location": "India",
+      "language": "en",
+      "ai_explanation": "This assertion is categorically contradicted by authenticated primary sources, including RBI Press Releases & PIB Fact Check. Official records and verified gazette releases confirm no such policy, event, or mandate exists.",
+      "supporting_evidence": [],
+      "contradictory_evidence": [
+        {
+          "id": "db-raw-102",
+          "source_name": "RBI Press Releases & PIB Fact Check",
+          "source_url": "https://pib.gov.in/factcheck",
+          "title": "Claim: Reserve Bank of India (RBI) Discontinuing All 500 Rupee Notes",
+          "publication_date": "2026-04-06",
+          "evidence_text": "The Press Information Bureau (PIB) and Reserve Bank of India issued a categorical clarification that ₹500 notes remain legal tender with zero plans for discontinuation.",
+          "reliability_score": 99.0,
+          "source_type": "fact_checker",
+          "stance": "CONTRADICTS",
+          "reliability_label": "Verified Archive (FALSE)"
+        },
+        {
+          "id": "src-rbi-01",
+          "source_name": "Reserve Bank of India Press Release",
+          "source_url": "https://www.rbi.org.in/press-releases",
+          "title": "RBI Gazette: Currency Management Status & Banknote Circulation Integrity",
+          "publication_date": "2026-04-02",
+          "evidence_text": "RBI official releases affirm stable currency circulation metrics with zero plans for denomination alteration.",
+          "reliability_score": 99.5,
+          "source_type": "official_record",
+          "stance": "CONTRADICTS",
+          "reliability_label": "Central Bank Gazette"
+        }
+      ],
+      "contextual_notes": "Derived strictly from authenticated cross-referenced records without generative speculation.",
+      "processing_time_ms": 22,
+      "verification_providers": [
+        "TruthLens FactDB",
+        "Wire Source Graph",
+        "Institutional Verification Matrix"
+      ],
+      "created_at": "2026-09-03T13:58:10.287680+00:00",
+      "image_analysis": null
+    },
+    {
+      "id": "fc-c2693789ce",
+      "submission_type": "url",
+      "submitted_input": "https://web.whatsapp.com/",
+      "primary_claim": "https://web.whatsapp.com/",
+      "extracted_claims": [
+        {
+          "claim_text": "https://web.whatsapp.com/",
+          "topic": "General",
+          "entities": [],
+          "verdict": "INSUFFICIENT EVIDENCE",
+          "confidence": 30.0
+        }
+      ],
+      "verdict": "INSUFFICIENT EVIDENCE",
+      "confidence": 30.0,
+      "evidence_strength": "NONE",
+      "verification_status": "UNVERIFIED",
+      "entities": [],
+      "category": "General",
+      "location": "Global",
+      "language": "en",
+      "ai_explanation": "The verification pipeline was unable to locate authoritative, peer-reviewed, or institutional primary evidence to corroborate or refute this specific claim. As per journalistic integrity standards, it is classified as INSUFFICIENT EVIDENCE.",
+      "supporting_evidence": [],
+      "contradictory_evidence": [],
+      "contextual_notes": "Independent verification recommended before sharing.",
+      "processing_time_ms": 1515,
+      "verification_providers": [
+        "TruthLens FactDB",
+        "Wire Source Graph",
+        "Institutional Verification Matrix"
+      ],
+      "created_at": "2026-09-03T13:56:47.600697+00:00",
+      "image_analysis": null
+    },
+    {
+      "id": "fc-f85fc1d786",
+      "submission_type": "text",
+      "submitted_input": "WHO announced mandatory global digital health passports for all travel in 2026.",
+      "primary_claim": "WHO announced mandatory global digital health passports for all travel in 2026.",
+      "extracted_claims": [
+        {
+          "claim_text": "WHO announced mandatory global digital health passports for all travel in 2026.",
+          "topic": "Health",
+          "entities": [
+            "WHO"
+          ],
+          "verdict": "FALSE",
+          "confidence": 96.0
+        }
+      ],
+      "verdict": "FALSE",
+      "confidence": 96.0,
+      "evidence_strength": "VERY STRONG",
+      "verification_status": "VERIFIED",
+      "entities": [
+        "WHO"
+      ],
+      "category": "Health",
+      "location": "Global",
+      "language": "en",
+      "ai_explanation": "This assertion is categorically contradicted by authenticated primary sources, including WHO Official Fact Portal & Reuters Fact Check. Official records and verified gazette releases confirm no such policy, event, or mandate exists.",
+      "supporting_evidence": [],
+      "contradictory_evidence": [
+        {
+          "id": "db-raw-101",
+          "source_name": "WHO Official Fact Portal & Reuters Fact Check",
+          "source_url": "https://www.who.int/news-room/fact-sheets",
+          "title": "Claim: WHO Announced Mandatory Global Digital Health Passports for 2026",
+          "publication_date": "2026-03-14",
+          "evidence_text": "WHO guidelines and the Global Digital Health Certification Network (GDHCN) are entirely voluntary technical standards for member states. No mandatory international health passport exists.",
+          "reliability_score": 98.0,
+          "source_type": "fact_checker",
+          "stance": "CONTRADICTS",
+          "reliability_label": "Verified Archive (FALSE)"
+        },
+        {
+          "id": "src-reuters-fact-01",
+          "source_name": "Reuters Fact Check",
+          "source_url": "https://www.reuters.com/fact-check",
+          "title": "Fact Check: Claims of compulsory worldwide digital health IDs lack factual basis",
+          "publication_date": "2026-03-01",
+          "evidence_text": "Independent review of international treaties confirms no binding resolution imposing mandatory digital documentation for foreign travelers exists.",
+          "reliability_score": 96.0,
+          "source_type": "fact_checker",
+          "stance": "CONTRADICTS",
+          "reliability_label": "IFCN Signatory Fact Checker"
+        }
+      ],
+      "contextual_notes": "Derived strictly from authenticated cross-referenced records without generative speculation.",
+      "processing_time_ms": 19,
+      "verification_providers": [
+        "TruthLens FactDB",
+        "Wire Source Graph",
+        "Institutional Verification Matrix"
+      ],
+      "created_at": "2026-08-15T07:33:48.949409+00:00",
+      "image_analysis": null
+    },
+    {
+      "id": "fc-76cfcebbc5",
+      "submission_type": "text",
+      "submitted_input": "WHO announced mandatory global digital health passports for all travel in 2026.",
+      "primary_claim": "WHO announced mandatory global digital health passports for all travel in 2026.",
+      "extracted_claims": [
+        {
+          "claim_text": "WHO announced mandatory global digital health passports for all travel in 2026.",
+          "topic": "Health",
+          "entities": [
+            "WHO"
+          ],
+          "verdict": "FALSE",
+          "confidence": 96.0
+        }
+      ],
+      "verdict": "FALSE",
+      "confidence": 96.0,
+      "evidence_strength": "VERY STRONG",
+      "verification_status": "VERIFIED",
+      "entities": [
+        "WHO"
+      ],
+      "category": "Health",
+      "location": "Global",
+      "language": "en",
+      "ai_explanation": "This assertion is categorically contradicted by authenticated primary sources, including WHO Official Fact Portal & Reuters Fact Check. Official records and verified gazette releases confirm no such policy, event, or mandate exists.",
+      "supporting_evidence": [],
+      "contradictory_evidence": [
+        {
+          "id": "db-raw-101",
+          "source_name": "WHO Official Fact Portal & Reuters Fact Check",
+          "source_url": "https://www.who.int/news-room/fact-sheets",
+          "title": "Claim: WHO Announced Mandatory Global Digital Health Passports for 2026",
+          "publication_date": "2026-03-14",
+          "evidence_text": "WHO guidelines and the Global Digital Health Certification Network (GDHCN) are entirely voluntary technical standards for member states. No mandatory international health passport exists.",
+          "reliability_score": 98.0,
+          "source_type": "fact_checker",
+          "stance": "CONTRADICTS",
+          "reliability_label": "Verified Archive (FALSE)"
+        },
+        {
+          "id": "src-reuters-fact-01",
+          "source_name": "Reuters Fact Check",
+          "source_url": "https://www.reuters.com/fact-check",
+          "title": "Fact Check: Claims of compulsory worldwide digital health IDs lack factual basis",
+          "publication_date": "2026-03-01",
+          "evidence_text": "Independent review of international treaties confirms no binding resolution imposing mandatory digital documentation for foreign travelers exists.",
+          "reliability_score": 96.0,
+          "source_type": "fact_checker",
+          "stance": "CONTRADICTS",
+          "reliability_label": "IFCN Signatory Fact Checker"
+        }
+      ],
+      "contextual_notes": "Derived strictly from authenticated cross-referenced records without generative speculation.",
+      "processing_time_ms": 24,
+      "verification_providers": [
+        "TruthLens FactDB",
+        "Wire Source Graph",
+        "Institutional Verification Matrix"
+      ],
+      "created_at": "2026-08-15T07:32:57.428916+00:00",
+      "image_analysis": null
+    },
+    {
+      "id": "fc-dd61fa5a66",
+      "submission_type": "text",
+      "submitted_input": "ISRO launches lunar water prospecting rover with real-time spectrometry.",
+      "primary_claim": "ISRO launches lunar water prospecting rover with real-time spectrometry.",
+      "extracted_claims": [
+        {
+          "claim_text": "ISRO launches lunar water prospecting rover with real-time spectrometry.",
+          "topic": "Science",
+          "entities": [
+            "ISRO"
+          ],
+          "verdict": "TRUE",
+          "confidence": 95.5
+        }
+      ],
+      "verdict": "TRUE",
+      "confidence": 95.5,
+      "evidence_strength": "VERY STRONG",
+      "verification_status": "VERIFIED",
+      "entities": [
+        "ISRO"
+      ],
+      "category": "Science",
+      "location": "India",
+      "language": "en",
+      "ai_explanation": "Direct corroborated evidence from authenticated primary sources (ISRO Official Missions & The Hindu Science Desk) validates the accuracy of this reporting with high confidence.",
+      "supporting_evidence": [
+        {
+          "id": "db-raw-103",
+          "source_name": "ISRO Official Missions & The Hindu Science Desk",
+          "source_url": "https://www.isro.gov.in",
+          "title": "Claim: ISRO Launches Lunar Water Prospecting Rover with Real-Time Spectrometry",
+          "publication_date": "2026-05-19",
+          "evidence_text": "ISRO mission telemetry and peer-reviewed mission profiles confirm deployment and data transmission from the onboard infrared reflection spectrometer.",
+          "reliability_score": 95.0,
+          "source_type": "fact_checker",
+          "stance": "SUPPORTS",
+          "reliability_label": "Verified Archive (TRUE)"
+        },
+        {
+          "id": "src-isro-01",
+          "source_name": "ISRO Space Telemetry & Science Portal",
+          "source_url": "https://www.isro.gov.in/missions",
+          "title": "ISRO Lunar & Deep Space Mission Scientific Payload Validation",
+          "publication_date": "2026-05-18",
+          "evidence_text": "Official scientific mission data confirming hyperspectral surface sensors and lunar exploration parameters.",
+          "reliability_score": 97.0,
+          "source_type": "official_record",
+          "stance": "SUPPORTS",
+          "reliability_label": "National Space Agency"
+        }
+      ],
+      "contradictory_evidence": [],
+      "contextual_notes": "Derived strictly from authenticated cross-referenced records without generative speculation.",
+      "processing_time_ms": 15,
+      "verification_providers": [
+        "TruthLens FactDB",
+        "Wire Source Graph",
+        "Institutional Verification Matrix"
+      ],
+      "created_at": "2026-08-15T07:12:56.019853+00:00",
+      "image_analysis": null
+    },
+    {
+      "id": "fc-94a8c1389c",
+      "submission_type": "text",
+      "submitted_input": "Reserve Bank of India RBI is discontinuing all 500 rupee notes immediately.",
+      "primary_claim": "Reserve Bank of India RBI is discontinuing all 500 rupee notes immediately.",
+      "extracted_claims": [
+        {
+          "claim_text": "Reserve Bank of India RBI is discontinuing all 500 rupee notes immediately.",
+          "topic": "Economy",
+          "entities": [
+            "RBI",
+            "Reserve Bank",
+            "India"
+          ],
+          "verdict": "FALSE",
+          "confidence": 96.0
+        }
+      ],
+      "verdict": "FALSE",
+      "confidence": 96.0,
+      "evidence_strength": "VERY STRONG",
+      "verification_status": "VERIFIED",
+      "entities": [
+        "RBI",
+        "Reserve Bank",
+        "India"
+      ],
+      "category": "Economy",
+      "location": "India",
+      "language": "en",
+      "ai_explanation": "This assertion is categorically contradicted by authenticated primary sources, including RBI Press Releases & PIB Fact Check. Official records and verified gazette releases confirm no such policy, event, or mandate exists.",
+      "supporting_evidence": [],
+      "contradictory_evidence": [
+        {
+          "id": "db-raw-102",
+          "source_name": "RBI Press Releases & PIB Fact Check",
+          "source_url": "https://pib.gov.in/factcheck",
+          "title": "Claim: Reserve Bank of India (RBI) Discontinuing All 500 Rupee Notes",
+          "publication_date": "2026-04-06",
+          "evidence_text": "The Press Information Bureau (PIB) and Reserve Bank of India issued a categorical clarification that ₹500 notes remain legal tender with zero plans for discontinuation.",
+          "reliability_score": 99.0,
+          "source_type": "fact_checker",
+          "stance": "CONTRADICTS",
+          "reliability_label": "Verified Archive (FALSE)"
+        },
+        {
+          "id": "src-rbi-01",
+          "source_name": "Reserve Bank of India Press Release",
+          "source_url": "https://www.rbi.org.in/press-releases",
+          "title": "RBI Gazette: Currency Management Status & Banknote Circulation Integrity",
+          "publication_date": "2026-04-02",
+          "evidence_text": "RBI official releases affirm stable currency circulation metrics with zero plans for denomination alteration.",
+          "reliability_score": 99.5,
+          "source_type": "official_record",
+          "stance": "CONTRADICTS",
+          "reliability_label": "Central Bank Gazette"
+        }
+      ],
+      "contextual_notes": "Derived strictly from authenticated cross-referenced records without generative speculation.",
+      "processing_time_ms": 30,
+      "verification_providers": [
+        "TruthLens FactDB",
+        "Wire Source Graph",
+        "Institutional Verification Matrix"
+      ],
+      "created_at": "2026-08-15T07:12:45.580852+00:00",
+      "image_analysis": null
+    },
+    {
+      "id": "fc-0919f81b34",
+      "submission_type": "text",
+      "submitted_input": "Reserve Bank of India RBI is discontinuing all 500 rupee notes immediately.",
+      "primary_claim": "Reserve Bank of India RBI is discontinuing all 500 rupee notes immediately.",
+      "extracted_claims": [
+        {
+          "claim_text": "Reserve Bank of India RBI is discontinuing all 500 rupee notes immediately.",
+          "topic": "Economy",
+          "entities": [
+            "RBI",
+            "Reserve Bank",
+            "India"
+          ],
+          "verdict": "FALSE",
+          "confidence": 96.0
+        }
+      ],
+      "verdict": "FALSE",
+      "confidence": 96.0,
+      "evidence_strength": "VERY STRONG",
+      "verification_status": "VERIFIED",
+      "entities": [
+        "RBI",
+        "Reserve Bank",
+        "India"
+      ],
+      "category": "Economy",
+      "location": "India",
+      "language": "en",
+      "ai_explanation": "This assertion is categorically contradicted by authenticated primary sources, including RBI Press Releases & PIB Fact Check. Official records and verified gazette releases confirm no such policy, event, or mandate exists.",
+      "supporting_evidence": [],
+      "contradictory_evidence": [
+        {
+          "id": "db-raw-102",
+          "source_name": "RBI Press Releases & PIB Fact Check",
+          "source_url": "https://pib.gov.in/factcheck",
+          "title": "Claim: Reserve Bank of India (RBI) Discontinuing All 500 Rupee Notes",
+          "publication_date": "2026-04-06",
+          "evidence_text": "The Press Information Bureau (PIB) and Reserve Bank of India issued a categorical clarification that ₹500 notes remain legal tender with zero plans for discontinuation.",
+          "reliability_score": 99.0,
+          "source_type": "fact_checker",
+          "stance": "CONTRADICTS",
+          "reliability_label": "Verified Archive (FALSE)"
+        },
+        {
+          "id": "src-rbi-01",
+          "source_name": "Reserve Bank of India Press Release",
+          "source_url": "https://www.rbi.org.in/press-releases",
+          "title": "RBI Gazette: Currency Management Status & Banknote Circulation Integrity",
+          "publication_date": "2026-04-02",
+          "evidence_text": "RBI official releases affirm stable currency circulation metrics with zero plans for denomination alteration.",
+          "reliability_score": 99.5,
+          "source_type": "official_record",
+          "stance": "CONTRADICTS",
+          "reliability_label": "Central Bank Gazette"
+        }
+      ],
+      "contextual_notes": "Derived strictly from authenticated cross-referenced records without generative speculation.",
+      "processing_time_ms": 27,
+      "verification_providers": [
+        "TruthLens FactDB",
+        "Wire Source Graph",
+        "Institutional Verification Matrix"
+      ],
+      "created_at": "2026-08-15T07:09:35.281161+00:00",
+      "image_analysis": null
+    },
+    {
+      "id": "fc-0c8ac03506",
+      "submission_type": "text",
+      "submitted_input": "Reserve Bank of India RBI is discontinuing all 500 rupee notes immediately.",
+      "primary_claim": "Reserve Bank of India RBI is discontinuing all 500 rupee notes immediately.",
+      "extracted_claims": [
+        {
+          "claim_text": "Reserve Bank of India RBI is discontinuing all 500 rupee notes immediately.",
+          "topic": "Economy",
+          "entities": [
+            "RBI",
+            "Reserve Bank",
+            "India"
+          ],
+          "verdict": "FALSE",
+          "confidence": 96.0
+        }
+      ],
+      "verdict": "FALSE",
+      "confidence": 96.0,
+      "evidence_strength": "VERY STRONG",
+      "verification_status": "VERIFIED",
+      "entities": [
+        "RBI",
+        "Reserve Bank",
+        "India"
+      ],
+      "category": "Economy",
+      "location": "India",
+      "language": "en",
+      "ai_explanation": "This assertion is categorically contradicted by authenticated primary sources, including RBI Press Releases & PIB Fact Check. Official records and verified gazette releases confirm no such policy, event, or mandate exists.",
+      "supporting_evidence": [],
+      "contradictory_evidence": [
+        {
+          "id": "db-raw-102",
+          "source_name": "RBI Press Releases & PIB Fact Check",
+          "source_url": "https://pib.gov.in/factcheck",
+          "title": "Claim: Reserve Bank of India (RBI) Discontinuing All 500 Rupee Notes",
+          "publication_date": "2026-04-06",
+          "evidence_text": "The Press Information Bureau (PIB) and Reserve Bank of India issued a categorical clarification that ₹500 notes remain legal tender with zero plans for discontinuation.",
+          "reliability_score": 99.0,
+          "source_type": "fact_checker",
+          "stance": "CONTRADICTS",
+          "reliability_label": "Verified Archive (FALSE)"
+        },
+        {
+          "id": "src-rbi-01",
+          "source_name": "Reserve Bank of India Press Release",
+          "source_url": "https://www.rbi.org.in/press-releases",
+          "title": "RBI Gazette: Currency Management Status & Banknote Circulation Integrity",
+          "publication_date": "2026-04-02",
+          "evidence_text": "RBI official releases affirm stable currency circulation metrics with zero plans for denomination alteration.",
+          "reliability_score": 99.5,
+          "source_type": "official_record",
+          "stance": "CONTRADICTS",
+          "reliability_label": "Central Bank Gazette"
+        }
+      ],
+      "contextual_notes": "Derived strictly from authenticated cross-referenced records without generative speculation.",
+      "processing_time_ms": 2,
+      "verification_providers": [
+        "TruthLens FactDB",
+        "Wire Source Graph",
+        "Institutional Verification Matrix"
+      ],
+      "created_at": "2026-08-15T07:09:33.627602+00:00",
+      "image_analysis": null
+    },
+    {
+      "id": "fc-a7751f9baa",
+      "submission_type": "url",
+      "submitted_input": "https://www.ndtv.com/india-news/independence-day-2026-shoutout-to-gen-z-warning-for-rivals-in-vijays-first-independence-day-speech-11913414?pfrom=home-ndtv_topscroll",
+      "primary_claim": "https://www.ndtv.com/india-news/independence-day-2026-shoutout-to-gen-z-warning-for-rivals-in-vijays-first-independence-day-speech-11913414?pfrom=home-ndtv_topscroll",
+      "extracted_claims": [
+        {
+          "claim_text": "https://www.ndtv.com/india-news/independence-day-2026-shoutout-to-gen-z-warning-for-rivals-in-vijays-first-independence-day-speech-11913414?pfrom=home-ndtv_topscroll",
+          "topic": "General",
+          "entities": [],
+          "verdict": "INSUFFICIENT EVIDENCE",
+          "confidence": 30.0
+        }
+      ],
+      "verdict": "INSUFFICIENT EVIDENCE",
+      "confidence": 30.0,
+      "evidence_strength": "NONE",
+      "verification_status": "UNVERIFIED",
+      "entities": [],
+      "category": "General",
+      "location": "India",
+      "language": "en",
+      "ai_explanation": "The verification pipeline was unable to locate authoritative, peer-reviewed, or institutional primary evidence to corroborate or refute this specific claim. As per journalistic integrity standards, it is classified as INSUFFICIENT EVIDENCE.",
+      "supporting_evidence": [],
+      "contradictory_evidence": [],
+      "contextual_notes": "Independent verification recommended before sharing.",
+      "processing_time_ms": 5115,
+      "verification_providers": [
+        "TruthLens FactDB",
+        "Wire Source Graph",
+        "Institutional Verification Matrix"
+      ],
+      "created_at": "2026-08-15T06:49:00.581422+00:00",
+      "image_analysis": null
+    },
+    {
+      "id": "fc-3fdb5b7455",
+      "submission_type": "url",
+      "submitted_input": "https://www.ndtv.com/india-news/independence-day-2026-shoutout-to-gen-z-warning-for-rivals-in-vijays-first-independence-day-speech-11913414?pfrom=home-ndtv_topscroll",
+      "primary_claim": "https://www.ndtv.com/india-news/independence-day-2026-shoutout-to-gen-z-warning-for-rivals-in-vijays-first-independence-day-speech-11913414?pfrom=home-ndtv_topscroll",
+      "extracted_claims": [
+        {
+          "claim_text": "https://www.ndtv.com/india-news/independence-day-2026-shoutout-to-gen-z-warning-for-rivals-in-vijays-first-independence-day-speech-11913414?pfrom=home-ndtv_topscroll",
+          "topic": "General",
+          "entities": [],
+          "verdict": "INSUFFICIENT EVIDENCE",
+          "confidence": 30.0
+        }
+      ],
+      "verdict": "INSUFFICIENT EVIDENCE",
+      "confidence": 30.0,
+      "evidence_strength": "NONE",
+      "verification_status": "UNVERIFIED",
+      "entities": [],
+      "category": "General",
+      "location": "India",
+      "language": "en",
+      "ai_explanation": "The verification pipeline was unable to locate authoritative, peer-reviewed, or institutional primary evidence to corroborate or refute this specific claim. As per journalistic integrity standards, it is classified as INSUFFICIENT EVIDENCE.",
+      "supporting_evidence": [],
+      "contradictory_evidence": [],
+      "contextual_notes": "Independent verification recommended before sharing.",
+      "processing_time_ms": 5054,
+      "verification_providers": [
+        "TruthLens FactDB",
+        "Wire Source Graph",
+        "Institutional Verification Matrix"
+      ],
+      "created_at": "2026-08-15T06:48:59.754406+00:00",
+      "image_analysis": null
+    },
+    {
+      "id": "fc-2dbbd94d7e",
+      "submission_type": "url",
+      "submitted_input": "https://www.ndtv.com/india-news/independence-day-2026-shoutout-to-gen-z-warning-for-rivals-in-vijays-first-independence-day-speech-11913414?pfrom=home-ndtv_topscroll",
+      "primary_claim": "https://www.ndtv.com/india-news/independence-day-2026-shoutout-to-gen-z-warning-for-rivals-in-vijays-first-independence-day-speech-11913414?pfrom=home-ndtv_topscroll",
+      "extracted_claims": [
+        {
+          "claim_text": "https://www.ndtv.com/india-news/independence-day-2026-shoutout-to-gen-z-warning-for-rivals-in-vijays-first-independence-day-speech-11913414?pfrom=home-ndtv_topscroll",
+          "topic": "General",
+          "entities": [],
+          "verdict": "INSUFFICIENT EVIDENCE",
+          "confidence": 30.0
+        }
+      ],
+      "verdict": "INSUFFICIENT EVIDENCE",
+      "confidence": 30.0,
+      "evidence_strength": "NONE",
+      "verification_status": "UNVERIFIED",
+      "entities": [],
+      "category": "General",
+      "location": "India",
+      "language": "en",
+      "ai_explanation": "The verification pipeline was unable to locate authoritative, peer-reviewed, or institutional primary evidence to corroborate or refute this specific claim. As per journalistic integrity standards, it is classified as INSUFFICIENT EVIDENCE.",
+      "supporting_evidence": [],
+      "contradictory_evidence": [],
+      "contextual_notes": "Independent verification recommended before sharing.",
+      "processing_time_ms": 5324,
+      "verification_providers": [
+        "TruthLens FactDB",
+        "Wire Source Graph",
+        "Institutional Verification Matrix"
+      ],
+      "created_at": "2026-08-15T06:48:59.308905+00:00",
+      "image_analysis": null
+    },
+    {
+      "id": "fc-987b973a11",
+      "submission_type": "url",
+      "submitted_input": "https://www.ndtv.com/india-news/independence-day-2026-shoutout-to-gen-z-warning-for-rivals-in-vijays-first-independence-day-speech-11913414?pfrom=home-ndtv_topscroll",
+      "primary_claim": "https://www.ndtv.com/india-news/independence-day-2026-shoutout-to-gen-z-warning-for-rivals-in-vijays-first-independence-day-speech-11913414?pfrom=home-ndtv_topscroll",
+      "extracted_claims": [
+        {
+          "claim_text": "https://www.ndtv.com/india-news/independence-day-2026-shoutout-to-gen-z-warning-for-rivals-in-vijays-first-independence-day-speech-11913414?pfrom=home-ndtv_topscroll",
+          "topic": "General",
+          "entities": [],
+          "verdict": "INSUFFICIENT EVIDENCE",
+          "confidence": 30.0
+        }
+      ],
+      "verdict": "INSUFFICIENT EVIDENCE",
+      "confidence": 30.0,
+      "evidence_strength": "NONE",
+      "verification_status": "UNVERIFIED",
+      "entities": [],
+      "category": "General",
+      "location": "India",
+      "language": "en",
+      "ai_explanation": "The verification pipeline was unable to locate authoritative, peer-reviewed, or institutional primary evidence to corroborate or refute this specific claim. As per journalistic integrity standards, it is classified as INSUFFICIENT EVIDENCE.",
+      "supporting_evidence": [],
+      "contradictory_evidence": [],
+      "contextual_notes": "Independent verification recommended before sharing.",
+      "processing_time_ms": 2999,
+      "verification_providers": [
+        "TruthLens FactDB",
+        "Wire Source Graph",
+        "Institutional Verification Matrix"
+      ],
+      "created_at": "2026-08-15T06:48:55.453866+00:00",
+      "image_analysis": null
+    },
+    {
+      "id": "fc-9f0f0e2b2a",
+      "submission_type": "url",
+      "submitted_input": "https://www.ndtv.com/india-news/independence-day-2026-shoutout-to-gen-z-warning-for-rivals-in-vijays-first-independence-day-speech-11913414?pfrom=home-ndtv_topscroll",
+      "primary_claim": "https://www.ndtv.com/india-news/independence-day-2026-shoutout-to-gen-z-warning-for-rivals-in-vijays-first-independence-day-speech-11913414?pfrom=home-ndtv_topscroll",
+      "extracted_claims": [
+        {
+          "claim_text": "https://www.ndtv.com/india-news/independence-day-2026-shoutout-to-gen-z-warning-for-rivals-in-vijays-first-independence-day-speech-11913414?pfrom=home-ndtv_topscroll",
+          "topic": "General",
+          "entities": [],
+          "verdict": "INSUFFICIENT EVIDENCE",
+          "confidence": 30.0
+        }
+      ],
+      "verdict": "INSUFFICIENT EVIDENCE",
+      "confidence": 30.0,
+      "evidence_strength": "NONE",
+      "verification_status": "UNVERIFIED",
+      "entities": [],
+      "category": "General",
+      "location": "India",
+      "language": "en",
+      "ai_explanation": "The verification pipeline was unable to locate authoritative, peer-reviewed, or institutional primary evidence to corroborate or refute this specific claim. As per journalistic integrity standards, it is classified as INSUFFICIENT EVIDENCE.",
+      "supporting_evidence": [],
+      "contradictory_evidence": [],
+      "contextual_notes": "Independent verification recommended before sharing.",
+      "processing_time_ms": 2586,
+      "verification_providers": [
+        "TruthLens FactDB",
+        "Wire Source Graph",
+        "Institutional Verification Matrix"
+      ],
+      "created_at": "2026-08-15T06:48:53.806544+00:00",
+      "image_analysis": null
+    },
+    {
+      "id": "fc-211bfdfe33",
+      "submission_type": "text",
+      "submitted_input": "A completely unrecorded alien artifact was found in a random backyard yesterday xyz9876",
+      "primary_claim": "A completely unrecorded alien artifact was found in a random backyard yesterday xyz9876",
+      "extracted_claims": [
+        {
+          "claim_text": "A completely unrecorded alien artifact was found in a random backyard yesterday xyz9876",
+          "topic": "General",
+          "entities": [],
+          "verdict": "INSUFFICIENT EVIDENCE",
+          "confidence": 30.0
+        }
+      ],
+      "verdict": "INSUFFICIENT EVIDENCE",
+      "confidence": 30.0,
+      "evidence_strength": "NONE",
+      "verification_status": "UNVERIFIED",
+      "entities": [],
+      "category": "General",
+      "location": "Global",
+      "language": "en",
+      "ai_explanation": "The verification pipeline was unable to locate authoritative, peer-reviewed, or institutional primary evidence to corroborate or refute this specific claim. As per journalistic integrity standards, it is classified as INSUFFICIENT EVIDENCE.",
+      "supporting_evidence": [],
+      "contradictory_evidence": [],
+      "contextual_notes": "Independent verification recommended before sharing.",
+      "processing_time_ms": 18,
+      "verification_providers": [
+        "TruthLens FactDB",
+        "Wire Source Graph",
+        "Institutional Verification Matrix"
+      ],
+      "created_at": "2026-08-14T17:55:17.655833+00:00",
+      "image_analysis": null
+    },
+    {
+      "id": "fc-dc9bba07e0",
+      "submission_type": "text",
+      "submitted_input": "Reserve Bank of India RBI is discontinuing 500 rupee notes immediately",
+      "primary_claim": "Reserve Bank of India RBI is discontinuing 500 rupee notes immediately",
+      "extracted_claims": [
+        {
+          "claim_text": "Reserve Bank of India RBI is discontinuing 500 rupee notes immediately",
+          "topic": "Economy",
+          "entities": [
+            "India",
+            "Reserve Bank",
+            "RBI"
+          ],
+          "verdict": "FALSE",
+          "confidence": 96.0
+        }
+      ],
+      "verdict": "FALSE",
+      "confidence": 96.0,
+      "evidence_strength": "VERY STRONG",
+      "verification_status": "VERIFIED",
+      "entities": [
+        "India",
+        "Reserve Bank",
+        "RBI"
+      ],
+      "category": "Economy",
+      "location": "India",
+      "language": "en",
+      "ai_explanation": "This assertion is categorically contradicted by authenticated primary sources, including RBI Press Releases & PIB Fact Check. Official records and verified gazette releases confirm no such policy, event, or mandate exists.",
+      "supporting_evidence": [],
+      "contradictory_evidence": [
+        {
+          "id": "db-raw-102",
+          "source_name": "RBI Press Releases & PIB Fact Check",
+          "source_url": "https://pib.gov.in/factcheck",
+          "title": "Claim: Reserve Bank of India (RBI) Discontinuing All 500 Rupee Notes",
+          "publication_date": "2026-04-06",
+          "evidence_text": "The Press Information Bureau (PIB) and Reserve Bank of India issued a categorical clarification that ₹500 notes remain legal tender with zero plans for discontinuation.",
+          "reliability_score": 99.0,
+          "source_type": "fact_checker",
+          "stance": "CONTRADICTS",
+          "reliability_label": "Verified Archive (FALSE)"
+        },
+        {
+          "id": "src-rbi-01",
+          "source_name": "Reserve Bank of India Press Release",
+          "source_url": "https://www.rbi.org.in/press-releases",
+          "title": "RBI Gazette: Currency Management Status & Banknote Circulation Integrity",
+          "publication_date": "2026-04-02",
+          "evidence_text": "RBI official releases affirm stable currency circulation metrics with zero plans for denomination alteration.",
+          "reliability_score": 99.5,
+          "source_type": "official_record",
+          "stance": "CONTRADICTS",
+          "reliability_label": "Central Bank Gazette"
+        }
+      ],
+      "contextual_notes": "Derived strictly from authenticated cross-referenced records without generative speculation.",
+      "processing_time_ms": 0,
+      "verification_providers": [
+        "TruthLens FactDB",
+        "Wire Source Graph",
+        "Institutional Verification Matrix"
+      ],
+      "created_at": "2026-08-14T17:55:17.629305+00:00",
+      "image_analysis": null
+    },
+    {
+      "id": "fc-6d4ae203db",
+      "submission_type": "text",
+      "submitted_input": "A completely unrecorded alien artifact was found in a random backyard yesterday xyz9876",
+      "primary_claim": "A completely unrecorded alien artifact was found in a random backyard yesterday xyz9876",
+      "extracted_claims": [
+        {
+          "claim_text": "A completely unrecorded alien artifact was found in a random backyard yesterday xyz9876",
+          "topic": "General",
+          "entities": [],
+          "verdict": "FALSE",
+          "confidence": 88.5
+        }
+      ],
+      "verdict": "FALSE",
+      "confidence": 88.5,
+      "evidence_strength": "STRONG",
+      "verification_status": "VERIFIED",
+      "entities": [],
+      "category": "General",
+      "location": "Global",
+      "language": "en",
+      "ai_explanation": "This assertion is categorically contradicted by authenticated primary sources, including BBC Verify & Digital Forensics Lab. Official records and verified gazette releases confirm no such policy, event, or mandate exists.",
+      "supporting_evidence": [
+        {
+          "id": "src-gen-01",
+          "source_name": "Associated Press News Verification Archive",
+          "source_url": "https://apnews.com/hub/ap-fact-check",
+          "title": "Investigative record matching query parameters: 'A completely unrecorded alien artifact was found in a random'",
+          "publication_date": "2026-08-10",
+          "evidence_text": "Journalistic examination of claims involving 'A completely unrecorded alien artifact was found in a random backyard yesterday '. Reviewing primary agency announcements and public records.",
+          "reliability_score": 88.0,
+          "source_type": "news",
+          "stance": "NEUTRAL",
+          "reliability_label": "International News Agency"
+        },
+        {
+          "id": "src-gen-02",
+          "source_name": "AFP Fact Check",
+          "source_url": "https://factcheck.afp.com",
+          "title": "Cross-Source Evidence Analysis Bulletin",
+          "publication_date": "2026-08-12",
+          "evidence_text": "Global verification network audit assessing verifiable public documentation and corroborating statements.",
+          "reliability_score": 91.0,
+          "source_type": "fact_checker",
+          "stance": "NEUTRAL",
+          "reliability_label": "IFCN Verified Fact Checker"
+        }
+      ],
+      "contradictory_evidence": [
+        {
+          "id": "db-raw-104",
+          "source_name": "BBC Verify & Digital Forensics Lab",
+          "source_url": "https://www.bbc.com/news/reality_check",
+          "title": "Claim: Deepfake Video of Global Tech CEO Endorsing Crypto Trading Platform",
+          "publication_date": "2026-06-02",
+          "evidence_text": "Audio frequency analysis reveals voice cloning artifacts, audio-visual phoneme desynchronization, and zero official company disclosures. Confirmed financial scam.",
+          "reliability_score": 97.0,
+          "source_type": "fact_checker",
+          "stance": "CONTRADICTS",
+          "reliability_label": "Verified Archive (FALSE)"
+        }
+      ],
+      "contextual_notes": "Derived strictly from authenticated cross-referenced records without generative speculation.",
+      "processing_time_ms": 15,
+      "verification_providers": [
+        "TruthLens FactDB",
+        "Wire Source Graph",
+        "Institutional Verification Matrix"
+      ],
+      "created_at": "2026-08-14T17:54:36.400568+00:00",
+      "image_analysis": null
+    },
+    {
+      "id": "fc-10890227b8",
+      "submission_type": "text",
+      "submitted_input": "Reserve Bank of India RBI is discontinuing 500 rupee notes immediately",
+      "primary_claim": "Reserve Bank of India RBI is discontinuing 500 rupee notes immediately",
+      "extracted_claims": [
+        {
+          "claim_text": "Reserve Bank of India RBI is discontinuing 500 rupee notes immediately",
+          "topic": "Economy",
+          "entities": [
+            "India",
+            "RBI",
+            "Reserve Bank"
+          ],
+          "verdict": "FALSE",
+          "confidence": 96.0
+        }
+      ],
+      "verdict": "FALSE",
+      "confidence": 96.0,
+      "evidence_strength": "VERY STRONG",
+      "verification_status": "VERIFIED",
+      "entities": [
+        "India",
+        "RBI",
+        "Reserve Bank"
+      ],
+      "category": "Economy",
+      "location": "India",
+      "language": "en",
+      "ai_explanation": "This assertion is categorically contradicted by authenticated primary sources, including RBI Press Releases & PIB Fact Check. Official records and verified gazette releases confirm no such policy, event, or mandate exists.",
+      "supporting_evidence": [],
+      "contradictory_evidence": [
+        {
+          "id": "db-raw-102",
+          "source_name": "RBI Press Releases & PIB Fact Check",
+          "source_url": "https://pib.gov.in/factcheck",
+          "title": "Claim: Reserve Bank of India (RBI) Discontinuing All 500 Rupee Notes",
+          "publication_date": "2026-04-06",
+          "evidence_text": "The Press Information Bureau (PIB) and Reserve Bank of India issued a categorical clarification that ₹500 notes remain legal tender with zero plans for discontinuation.",
+          "reliability_score": 99.0,
+          "source_type": "fact_checker",
+          "stance": "CONTRADICTS",
+          "reliability_label": "Verified Archive (FALSE)"
+        },
+        {
+          "id": "src-rbi-01",
+          "source_name": "Reserve Bank of India Press Release",
+          "source_url": "https://www.rbi.org.in/press-releases",
+          "title": "RBI Gazette: Currency Management Status & Banknote Circulation Integrity",
+          "publication_date": "2026-04-02",
+          "evidence_text": "RBI official releases affirm stable currency circulation metrics with zero plans for denomination alteration.",
+          "reliability_score": 99.5,
+          "source_type": "official_record",
+          "stance": "CONTRADICTS",
+          "reliability_label": "Central Bank Gazette"
+        }
+      ],
+      "contextual_notes": "Derived strictly from authenticated cross-referenced records without generative speculation.",
+      "processing_time_ms": 37,
+      "verification_providers": [
+        "TruthLens FactDB",
+        "Wire Source Graph",
+        "Institutional Verification Matrix"
+      ],
+      "created_at": "2026-08-14T17:54:36.372148+00:00",
+      "image_analysis": null
+    }
+  ],
+  "raw_data": [
+    {
+      "id": "raw-101",
+      "title": "Claim: WHO Announced Mandatory Global Digital Health Passports for 2026",
+      "claim": "The World Health Organization has mandated compulsory digital IDs and health passports for all global travel starting late 2026.",
+      "raw_text": "Viral messages across Telegram and WhatsApp claim WHO passed a resolution forcing all member states to implement mandatory digital biometric health passports.",
+      "source": "WHO Official Fact Portal & Reuters Fact Check",
+      "source_url": "https://www.who.int/news-room/fact-sheets",
+      "category": "Health",
+      "language": "en",
+      "region": "Global",
+      "verdict": "FALSE",
+      "evidence": "WHO guidelines and the Global Digital Health Certification Network (GDHCN) are entirely voluntary technical standards for member states. No mandatory international health passport exists.",
+      "tags": [
+        "WHO",
+        "Health",
+        "Digital ID",
+        "Travel"
+      ],
+      "entities": [
+        "World Health Organization",
+        "GDHCN",
+        "United Nations"
+      ],
+      "publication_date": "2026-03-12",
+      "verification_date": "2026-03-14",
+      "reliability_score": 98.0,
+      "notes": "Verified by official WHO spokesperson and international health treaty records.",
+      "image_url": "https://images.unsplash.com/photo-1584483766114-2cea6facdf57?auto=format&fit=crop&w=800&q=80",
+      "created_by": "admin@truthlens.ai",
+      "created_at": "2026-08-14T23:24:35.997409",
+      "updated_at": "2026-08-14T23:24:35.997417",
+      "status": "PUBLISHED"
+    },
+    {
+      "id": "raw-102",
+      "title": "Claim: Reserve Bank of India (RBI) Discontinuing All 500 Rupee Notes",
+      "claim": "RBI will withdraw all ₹500 currency notes from circulation by end of year.",
+      "raw_text": "A viral social media clip claims RBI governor announced the phase out of 500 rupee banknotes.",
+      "source": "RBI Press Releases & PIB Fact Check",
+      "source_url": "https://pib.gov.in/factcheck",
+      "category": "Economy",
+      "language": "en",
+      "region": "India",
+      "verdict": "FALSE",
+      "evidence": "The Press Information Bureau (PIB) and Reserve Bank of India issued a categorical clarification that ₹500 notes remain legal tender with zero plans for discontinuation.",
+      "tags": [
+        "RBI",
+        "Currency",
+        "Economy",
+        "India"
+      ],
+      "entities": [
+        "Reserve Bank of India",
+        "PIB Fact Check",
+        "Ministry of Finance"
+      ],
+      "publication_date": "2026-04-05",
+      "verification_date": "2026-04-06",
+      "reliability_score": 99.0,
+      "notes": "Recurring hoax circulating on WhatsApp since currency demonetization years.",
+      "image_url": "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=800&q=80",
+      "created_by": "admin@truthlens.ai",
+      "created_at": "2026-08-14T23:24:35.997422",
+      "updated_at": "2026-08-14T23:24:35.997423",
+      "status": "PUBLISHED"
+    },
+    {
+      "id": "raw-103",
+      "title": "Claim: ISRO Launches Lunar Water Prospecting Rover with Real-Time Spectrometry",
+      "claim": "ISRO has successfully placed a dedicated micro-rover capable of direct subsurface water-ice extraction mapping on the Moon's South Pole.",
+      "raw_text": "News reports detailing ISRO's joint lunar exploration initiative with international deep-space spectroscopic sensors.",
+      "source": "ISRO Official Missions & The Hindu Science Desk",
+      "source_url": "https://www.isro.gov.in",
+      "category": "Science",
+      "language": "en",
+      "region": "India",
+      "verdict": "TRUE",
+      "evidence": "ISRO mission telemetry and peer-reviewed mission profiles confirm deployment and data transmission from the onboard infrared reflection spectrometer.",
+      "tags": [
+        "ISRO",
+        "Space",
+        "Moon",
+        "Science"
+      ],
+      "entities": [
+        "ISRO",
+        "Chandrayaan Program",
+        "Department of Space"
+      ],
+      "publication_date": "2026-05-18",
+      "verification_date": "2026-05-19",
+      "reliability_score": 95.0,
+      "notes": "Confirmed via official Indian Space Research Organisation telemetry press conference.",
+      "image_url": "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&w=800&q=80",
+      "created_by": "admin@truthlens.ai",
+      "created_at": "2026-08-14T23:24:35.997427",
+      "updated_at": "2026-08-14T23:24:35.997428",
+      "status": "PUBLISHED"
+    },
+    {
+      "id": "raw-104",
+      "title": "Claim: Deepfake Video of Global Tech CEO Endorsing Crypto Trading Platform",
+      "claim": "Viral video shows OpenAI and Microsoft leadership promoting a guaranteed 300% daily return AI crypto token.",
+      "raw_text": "Synthetic lip-synced video circulated on YouTube Ads and TikTok urging viewers to deposit cryptocurrency.",
+      "source": "BBC Verify & Digital Forensics Lab",
+      "source_url": "https://www.bbc.com/news/reality_check",
+      "category": "Technology",
+      "language": "en",
+      "region": "Global",
+      "verdict": "FALSE",
+      "evidence": "Audio frequency analysis reveals voice cloning artifacts, audio-visual phoneme desynchronization, and zero official company disclosures. Confirmed financial scam.",
+      "tags": [
+        "Deepfake",
+        "AI Scam",
+        "Crypto",
+        "Tech"
+      ],
+      "entities": [
+        "OpenAI",
+        "Microsoft",
+        "YouTube Ads"
+      ],
+      "publication_date": "2026-06-01",
+      "verification_date": "2026-06-02",
+      "reliability_score": 97.0,
+      "notes": "Reported to FTC and social media trust & safety teams.",
+      "image_url": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+      "created_by": "admin@truthlens.ai",
+      "created_at": "2026-08-14T23:24:35.997431",
+      "updated_at": "2026-08-14T23:24:35.997432",
+      "status": "PUBLISHED"
+    },
+    {
+      "id": "raw-105",
+      "title": "Claim: Solar Storm of 2026 Will Permanently Destroy the Global Internet Grid",
+      "claim": "An unprecedented G5 class geomagnetic coronal mass ejection will irreversibly shut down all undersea fiber optic cables for months.",
+      "raw_text": "Sensationalized articles claiming impending total technological blackout caused by Carrington-level solar flares.",
+      "source": "NOAA Space Weather Prediction Center & NASA Heliophysics",
+      "source_url": "https://www.swpc.noaa.gov",
+      "category": "Science",
+      "language": "en",
+      "region": "Global",
+      "verdict": "MISLEADING",
+      "evidence": "While solar cycle 25 peaks can induce high-latitude grid fluctuations and satellite GPS radio blackouts, undersea fiber cables use optical signals immune to magnetic induction. Claims of permanent global internet destruction are grossly exaggerated.",
+      "tags": [
+        "Solar Storm",
+        "Internet",
+        "NASA",
+        "Space Weather"
+      ],
+      "entities": [
+        "NOAA",
+        "NASA",
+        "Space Weather Prediction Center"
+      ],
+      "publication_date": "2026-07-10",
+      "verification_date": "2026-07-11",
+      "reliability_score": 93.0,
+      "notes": "Misrepresentation of scientific vulnerability papers on optical repeater power lines.",
+      "image_url": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
+      "created_by": "admin@truthlens.ai",
+      "created_at": "2026-08-14T23:24:35.997435",
+      "updated_at": "2026-08-14T23:24:35.997436",
+      "status": "PUBLISHED"
+    }
+  ],
+  "fact_articles": [
+    {
+      "id": "art-001",
+      "title": "Anatomy of a Viral Deepfake: How Synthetic Media Manipulates Elections",
+      "slug": "anatomy-of-a-viral-deepfake-elections",
+      "summary": "An in-depth investigation into modern generative video pipelines, voice cloning tactics, and how journalists detect forensic artifacts.",
+      "content": "### The Evolution of Synthetic Deception\n\nIn recent months, synthetic media has evolved from easily detectable distortions to photorealistic generative video capable of misleading even seasoned observers...\n\n### Key Detection Signals\n\n1. **Phoneme Discrepancies**: Subtle mismatches between mouth articulation and audio transients.\n2. **Lighting Inconsistencies**: Specular reflections in pupils that do not match background lighting vectors.\n3. **Spectral Voice Anomalies**: Harmonic frequency dropouts characteristic of diffusion-based neural vocoders.\n\n### Best Practices for Digital Consumers\n\nAlways verify breaking audio/video clips through primary publisher channels and independent institutional fact-checking repositories.",
+      "category": "Technology",
+      "thumbnail_url": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "Deepfake",
+        "AI",
+        "Election Security",
+        "Media Literacy"
+      ],
+      "author": "TruthLens Investigation Team",
+      "published_at": "2026-07-28T10:00:00Z",
+      "verdict_context": "MISLEADING",
+      "read_time_minutes": 5,
+      "is_featured": true,
+      "status": "PUBLISHED"
+    },
+    {
+      "id": "art-002",
+      "title": "Medical Misinformation in the Age of Social Algorithms",
+      "slug": "medical-misinformation-social-algorithms",
+      "summary": "Why health hoaxes spread 6x faster than peer-reviewed medical guidance and the psychological levers exploited by pseudo-scientific influencers.",
+      "content": "### The Amplification Loop\n\nHealth-related anxiety triggers rapid sharing behavior. When sensational health cures or fear-mongering health narratives are fed into algorithmic recommendation feeds, engagement metrics reward outrage over accuracy...\n\n### Clinical Verification Standards\n\nScientific consensus requires replicated randomized controlled trials, peer review, and regulatory meta-analyses. Single-case anecdotal videos do not constitute scientific fact.",
+      "category": "Health",
+      "thumbnail_url": "https://images.unsplash.com/photo-1584483766114-2cea6facdf57?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "Health",
+        "Medicine",
+        "Fact Check",
+        "Social Media"
+      ],
+      "author": "Dr. Sarah Chen, TruthLens Health Desk",
+      "published_at": "2026-08-02T14:30:00Z",
+      "verdict_context": "FALSE",
+      "read_time_minutes": 6,
+      "is_featured": true,
+      "status": "PUBLISHED"
+    },
+    {
+      "id": "art-003",
+      "title": "Financial Fraud & AI Voice Impersonation: Protecting Your Assets",
+      "slug": "financial-fraud-ai-voice-impersonation",
+      "summary": "Emergency response guide on how cybercriminals use 3-second voice samples to impersonate executives and family members.",
+      "content": "### The Three-Second Vulnerability\n\nModern zero-shot neural voice cloning models can approximate a human voice timbre with under four seconds of clean reference audio extracted from public podcasts or phone calls...\n\n### Safety Protocols\n\nEstablish verbal security passphrases within organizations and family circles before executing emergency wire transfers or sharing sensitive financial credentials.",
+      "category": "Economy",
+      "thumbnail_url": "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "Cybersecurity",
+        "Finance",
+        "AI Scams",
+        "Safety"
+      ],
+      "author": "Marcus Vance, Cyber Threat Analyst",
+      "published_at": "2026-08-10T09:15:00Z",
+      "verdict_context": "FALSE",
+      "read_time_minutes": 4,
+      "is_featured": false,
+      "status": "PUBLISHED"
+    }
+  ],
+  "admin_logs": [
+    {
+      "id": "log-1786776590806",
+      "admin_id": "admin@truthlens.ai",
+      "action": "LOGIN",
+      "target_collection": "auth",
+      "target_id": "session",
+      "timestamp": "2026-08-15T12:19:50.806366",
+      "details": "Admin successfully authenticated via portal",
+      "ip_address": "127.0.0.1"
+    },
+    {
+      "id": "log-1786730117772",
+      "admin_id": "admin@truthlens.ai",
+      "action": "DELETE",
+      "target_collection": "raw_data",
+      "target_id": "raw-1786730117728573",
+      "timestamp": "2026-08-14T23:25:17.772643",
+      "details": "Deleted raw record: raw-1786730117728573",
+      "ip_address": "127.0.0.1"
+    },
+    {
+      "id": "log-1786730117742",
+      "admin_id": "admin@truthlens.ai",
+      "action": "CREATE",
+      "target_collection": "raw_data",
+      "target_id": "raw-1786730117728573",
+      "timestamp": "2026-08-14T23:25:17.742927",
+      "details": "Created raw record: Test Claim Automation",
+      "ip_address": "127.0.0.1"
+    },
+    {
+      "id": "log-1786730117702",
+      "admin_id": "admin@truthlens.ai",
+      "action": "LOGIN",
+      "target_collection": "auth",
+      "target_id": "session",
+      "timestamp": "2026-08-14T23:25:17.702376",
+      "details": "Admin successfully authenticated via portal",
+      "ip_address": "127.0.0.1"
+    },
+    {
+      "id": "log-1786730076635",
+      "admin_id": "admin@truthlens.ai",
+      "action": "DELETE",
+      "target_collection": "raw_data",
+      "target_id": "raw-1786730076588108",
+      "timestamp": "2026-08-14T23:24:36.635159",
+      "details": "Deleted raw record: raw-1786730076588108",
+      "ip_address": "127.0.0.1"
+    },
+    {
+      "id": "log-1786730076602",
+      "admin_id": "admin@truthlens.ai",
+      "action": "CREATE",
+      "target_collection": "raw_data",
+      "target_id": "raw-1786730076588108",
+      "timestamp": "2026-08-14T23:24:36.602693",
+      "details": "Created raw record: Test Claim Automation",
+      "ip_address": "127.0.0.1"
+    },
+    {
+      "id": "log-1786730076566",
+      "admin_id": "admin@truthlens.ai",
+      "action": "LOGIN",
+      "target_collection": "auth",
+      "target_id": "session",
+      "timestamp": "2026-08-14T23:24:36.566189",
+      "details": "Admin successfully authenticated via portal",
+      "ip_address": "127.0.0.1"
+    },
+    {
+      "id": "log-001",
+      "admin_id": "system@truthlens.ai",
+      "action": "SYSTEM_INIT",
+      "target_collection": "system",
+      "target_id": "root",
+      "timestamp": "2026-08-14T23:24:35.997443",
+      "details": "TruthLens Database & Seed verification index initialized successfully."
+    }
+  ],
+  "system_settings": {
+    "news_categories": [
+      "All",
+      "Politics",
+      "Technology",
+      "Health",
+      "Economy",
+      "Climate",
+      "Science",
+      "Entertainment"
+    ],
+    "supported_languages": [
+      {
+        "code": "en",
+        "name": "English"
+      },
+      {
+        "code": "hi",
+        "name": "Hindi (हिंदी)"
+      }
+    ],
+    "confidence_threshold_true": 80.0,
+    "confidence_threshold_partial": 55.0,
+    "enabled_providers": {
+      "fact_database": true,
+      "news_api": true,
+      "gemini_ai": true,
+      "search_graph": true,
+      "image_forensics": true
+    },
+    "cache_duration_hours": 4,
+    "rate_limit_per_minute": 60,
+    "maintenance_mode": false,
+    "allow_public_submissions": true
+  }
+}

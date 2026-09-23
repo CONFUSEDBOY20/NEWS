@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=truthlens_super_secure_jwt_secret_key_2026
+      - ADMIN_EMAIL=admin@truthlens.ai
+      - ADMIN_PASSWORD=TruthLens@2026Admin
+      - RATE_LIMIT_PER_MINUTE=60
+    volumes:
+      - ./backend/data:/app/data
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend

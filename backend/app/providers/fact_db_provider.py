@@ -291,15 +291,18 @@ class FactDatabaseProvider(BaseFactDatabaseProvider):
 
     async def save_fact_check(self, record: Dict[str, Any]) -> str:
         data = self._read_db()
-        data["fact_checks"].insert(0, record)
+        data.setdefault("fact_checks", []).insert(0, record)
+        data.setdefault("verifications", []).insert(0, record)
         if len(data["fact_checks"]) > 500:
             data["fact_checks"] = data["fact_checks"][:500]
+        if len(data["verifications"]) > 500:
+            data["verifications"] = data["verifications"][:500]
         self._write_db(data)
         return record.get("id", "")
 
     async def get_fact_check(self, check_id: str) -> Optional[Dict[str, Any]]:
         data = self._read_db()
-        for fc in data.get("fact_checks", []):
+        for fc in data.get("verifications", []) + data.get("fact_checks", []):
             if fc.get("id") == check_id:
                 return fc
         return None

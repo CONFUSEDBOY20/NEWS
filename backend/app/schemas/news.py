@@ -15,6 +15,8 @@ class NewsArticle(BaseModel):
     category: str = "General"
     region: str = "World"  # World, India, etc.
     credibility_rating: str = "Verified Source"  # Verified Source, Trusted News, Independent
+    summary: Optional[str] = None
+    is_live: bool = True
 
 class NewsFeedResponse(BaseModel):
     total_results: int
@@ -22,6 +24,8 @@ class NewsFeedResponse(BaseModel):
     category: str
     region: str
     synced_at: str
+    is_live: bool = True
+    feed_mode: str = "realtime"
 
 class ArticleReadRequest(BaseModel):
     url: Optional[str] = None

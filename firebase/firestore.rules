@@ -2,60 +2,145 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Helper function to check admin role
-    function isAdmin() {
-      return request.auth != null && 
-        (request.auth.token.role == 'admin' || 
-         request.auth.token.email.matches('.*@truthlens[.]ai'));
+    // =========================================================================
+    // Authentication & Role Helper Functions
+    // =========================================================================
+    function isAuthenticated() {
+      return request.auth != null;
     }
 
-    // Public readable fact checks and evidence
-    match /fact_checks/{document} {
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.role == 'admin' ||
+        request.auth.token.role == 'super_admin' ||
+        (request.auth.token.email != null && request.auth.token.email.matches('.*@truthlens[.]ai'))
+      );
+    }
+
+    // Validation Helpers
+    function isValidTimestamp(val) {
+      return val is timestamp || val is string;
+    }
+
+    function isValidConfidence(val) {
+      return val is number && val >= 0.0 && val <= 100.0;
+    }
+
+    // =========================================================================
+    // 1. Users Collection
+    // =========================================================================
+    match /users/{userId} {
+      allow read, update: if isOwner(userId) || isAdmin();
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow delete: if isAdmin();
+    }
+
+    // =========================================================================
+    // 2. Admins Collection (Strictly Admin Access Only)
+    // =========================================================================
+    match /admins/{adminId} {
+      allow read, write: if isAdmin();
+    }
+
+    // =========================================================================
+    // 3. Verifications Collection
+    // =========================================================================
+    match /verifications/{verificationId} {
       allow read: if true;
-      allow create: if true; // Anonymous verification submissions allowed
+      allow create: if true; // Public / anonymous claim verification submissions allowed
       allow update, delete: if isAdmin();
     }
 
-    match /claims/{document} {
+    // Legacy alias support for backward compatibility
+    match /fact_checks/{factCheckId} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if isAdmin();
+    }
+
+    // =========================================================================
+    // 4. Claims Collection
+    // =========================================================================
+    match /claims/{claimId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
-    match /evidence/{document} {
+    // =========================================================================
+    // 5. Sources Collection
+    // =========================================================================
+    match /sources/{sourceId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
-    // Raw Fact Data (Controlled by Admins)
+    // =========================================================================
+    // 6. Evidence Collection
+    // =========================================================================
+    match /evidence/{evidenceId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // =========================================================================
+    // 7. News & Editorial Articles
+    // =========================================================================
+    match /news_articles/{articleId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /fact_articles/{articleId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     match /raw_data/{document} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
-    // Fact Articles (News/Investigative Editorial Desk)
-    match /fact_articles/{document} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // News Cache (Aggregated Feeds)
     match /news_cache/{document} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
-    // Admin Logs and System Settings
-    match /admin_logs/{document} {
+    // =========================================================================
+    // 8. Verification History (User telemetry & analytics)
+    // =========================================================================
+    match /verification_history/{historyId} {
+      allow read: if isAdmin();
+      allow create: if true; // Server-side or telemetry log
+      allow update, delete: if isAdmin();
+    }
+
+    // =========================================================================
+    // 9. Image Analysis Collection
+    // =========================================================================
+    match /image_analysis/{analysisId} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if isAdmin();
+    }
+
+    // =========================================================================
+    // 10. System Logs & Settings (Strictly Admin Access Only)
+    // =========================================================================
+    match /system_logs/{logId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /admin_logs/{logId} {
       allow read, write: if isAdmin();
     }
 
     match /system_settings/{document} {
       allow read: if true;
       allow write: if isAdmin();
-    }
-
-    match /admins/{document} {
-      allow read, write: if isAdmin();
     }
   }
 }

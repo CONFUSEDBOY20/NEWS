@@ -9,9 +9,10 @@ import { HistorySidebar } from "./components/HistorySidebar";
 import { WorldNewsView } from "./components/WorldNewsView";
 import { IndiaNewsView } from "./components/IndiaNewsView";
 import { FactArticlesView } from "./components/FactArticlesView";
+import { LiveDetectionView } from "./components/LiveDetectionView";
 import { AdminModal } from "./components/AdminModal";
 import { AdminDashboard } from "./components/AdminDashboard";
-import { ShieldCheck, CheckCircle, Info } from "lucide-react";
+import { ShieldCheck, CheckCircle } from "lucide-react";
 
 function MainContent() {
   const {
@@ -63,6 +64,8 @@ function MainContent() {
           {activeView === "world-news" && <WorldNewsView />}
 
           {activeView === "india-news" && <IndiaNewsView />}
+
+          {activeView === "live-detect" && <LiveDetectionView />}
 
           {activeView === "articles" && <FactArticlesView />}
 

@@ -128,12 +128,12 @@ npm run dev
 
 ---
 
-## 🔐 Admin Portal Credentials
+## 🔐 Admin Portal Access
 
 Click the subtle lock icon (`🔒`) in the top right navigation bar to log into the Admin Suite.
 
-- **Admin Email**: `admin@truthlens.ai`
-- **Security Password**: `TruthLens@2026Admin`
+- **Admin Credentials**: Configured securely via your `.env` file (`ADMIN_EMAIL` and `ADMIN_PASSWORD`).
+- **Default Setup**: Copy `.env.example` to `.env` and set your preferred administrative email and secure password before launching.
 
 ---
 

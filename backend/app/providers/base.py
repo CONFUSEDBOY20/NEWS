@@ -5,11 +5,15 @@ from app.schemas.news import NewsArticle
 
 class BaseNewsProvider(ABC):
     @abstractmethod
-    async def get_world_news(self, category: Optional[str] = None, page: int = 1, page_size: int = 20) -> List[NewsArticle]:
+    async def get_world_news(
+        self, category: Optional[str] = None, page: int = 1, page_size: int = 20, fresh: bool = False
+    ) -> List[NewsArticle]:
         pass
 
     @abstractmethod
-    async def get_india_news(self, category: Optional[str] = None, page: int = 1, page_size: int = 20) -> List[NewsArticle]:
+    async def get_india_news(
+        self, category: Optional[str] = None, page: int = 1, page_size: int = 20, fresh: bool = False
+    ) -> List[NewsArticle]:
         pass
 
     @abstractmethod

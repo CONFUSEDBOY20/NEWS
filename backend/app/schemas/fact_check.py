@@ -41,6 +41,39 @@ class FactCheckTextRequest(BaseModel):
     language: str = "en"
     title: Optional[str] = None
 
+class LiveDetectionItem(BaseModel):
+    article_id: str
+    title: str
+    source_name: str
+    source_url: str
+    published_at: str
+    region: str
+    category: str
+    risk_level: str
+    risk_score: float
+    source_credibility: str = "Unknown Source"
+    source_credibility_score: float = 50.0
+    risk_signals: List[str] = []
+    evidence_summary: str = ""
+    matched_claim_group: str = "general"
+    verdict: VerdictEnum
+    confidence: float
+    detection_reason: str
+    fact_check_id: str
+    checked_at: str
+
+class LiveDetectionResponse(BaseModel):
+    total_scanned: int
+    high_risk_count: int
+    medium_risk_count: int = 0
+    low_risk_count: int = 0
+    detections: List[LiveDetectionItem] = []
+    claim_clusters: List[Dict[str, Any]] = []
+    region: str
+    category: str
+    synced_at: str
+    feed_mode: str = "realtime_detection"
+
 class ImageAnalysisMetadata(BaseModel):
     filename: str
     file_size_kb: float

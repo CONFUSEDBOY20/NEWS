@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
 function getHeaders(isMultipart = false) {
   const headers = {};
@@ -56,21 +56,46 @@ export const api = {
     return res.json();
   },
 
+  detectLiveNews: async ({ region = "global", category = "All", limit = 8, language = "en" } = {}) => {
+    const params = new URLSearchParams();
+    params.set("region", region);
+    params.set("limit", String(limit));
+    params.set("language", language);
+    if (category && category !== "All") params.set("category", category);
+    const res = await fetch(`${API_BASE}/fact-check/live-news?${params.toString()}`);
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: "Live detection failed" }));
+      throw new Error(err.detail || "Live detection failed");
+    }
+    return res.json();
+  },
+
   // News Feeds
-  getWorldNews: async (category = "All") => {
-    const query = category && category !== "All" ? `?category=${encodeURIComponent(category)}` : "";
+  getWorldNews: async (category = "All", fresh = false) => {
+    const params = new URLSearchParams();
+    if (category && category !== "All") params.set("category", category);
+    if (fresh) params.set("fresh", "true");
+    const query = params.toString() ? `?${params.toString()}` : "";
     const res = await fetch(`${API_BASE}/news/world${query}`);
     return res.json();
   },
 
-  getIndiaNews: async (category = "All") => {
-    const query = category && category !== "All" ? `?category=${encodeURIComponent(category)}` : "";
+  getIndiaNews: async (category = "All", fresh = false) => {
+    const params = new URLSearchParams();
+    if (category && category !== "All") params.set("category", category);
+    if (fresh) params.set("fresh", "true");
+    const query = params.toString() ? `?${params.toString()}` : "";
     const res = await fetch(`${API_BASE}/news/india${query}`);
     return res.json();
   },
 
   searchNews: async (query) => {
     const res = await fetch(`${API_BASE}/news/search?q=${encodeURIComponent(query)}`);
+    return res.json();
+  },
+
+  getLiveTicker: async () => {
+    const res = await fetch(`${API_BASE}/news/ticker`);
     return res.json();
   },
 

@@ -8,7 +8,7 @@ from app.schemas.admin import (
     FactArticle,
     SystemSettings
 )
-from app.core.security import create_access_token, get_current_admin, verify_password
+from app.core.security import create_access_token, get_current_admin, verify_admin_credentials
 from app.core.config import settings
 from app.services.admin_service import AdminService
 
@@ -17,8 +17,8 @@ admin_service = AdminService()
 
 @router.post("/login", response_model=TokenResponse)
 async def admin_login(payload: LoginRequest):
-    # Authenticate admin user
-    if payload.email.strip().lower() == settings.ADMIN_EMAIL.lower() and verify_password(payload.password, settings.ADMIN_PASSWORD):
+    # Authenticate admin user securely
+    if verify_admin_credentials(payload.email, payload.password):
         token = create_access_token(payload.email)
         admin_service.fact_db.add_admin_log(payload.email, "LOGIN", "auth", "session", "Admin successfully authenticated via portal")
         return TokenResponse(

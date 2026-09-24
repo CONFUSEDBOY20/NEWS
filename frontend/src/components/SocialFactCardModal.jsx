@@ -23,8 +23,6 @@ export function SocialFactCardModal({ isOpen, onClose, result, showToast }) {
   const [downloading, setDownloading] = useState(false);
   const canvasRef = useRef(null);
 
-  if (!isOpen || !result) return null;
-
   const getVerdictDetails = (verdict) => {
     switch (verdict) {
       case "TRUE":
@@ -60,7 +58,7 @@ export function SocialFactCardModal({ isOpen, onClose, result, showToast }) {
     }
   };
 
-  const verdictInfo = getVerdictDetails(result.verdict);
+  const verdictInfo = getVerdictDetails(result?.verdict);
 
   const drawRoundRectSafe = (ctx, x, y, width, height, radius) => {
     ctx.beginPath();
@@ -267,11 +265,14 @@ export function SocialFactCardModal({ isOpen, onClose, result, showToast }) {
   };
 
   useEffect(() => {
+    if (!isOpen || !result) return undefined;
     const timer = setTimeout(() => {
       renderCanvas();
     }, 50);
     return () => clearTimeout(timer);
   }, [format, themeStyle, result, isOpen]);
+
+  if (!isOpen || !result) return null;
 
   const handleDownload = () => {
     setDownloading(true);

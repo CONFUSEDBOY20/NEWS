@@ -4,6 +4,7 @@ import {
   ShieldCheck,
   Globe,
   Compass,
+  Radar,
   FileText,
   History,
   Lock,
@@ -12,8 +13,6 @@ import {
   Languages,
   Menu,
   X,
-  Sparkles,
-  Command
 } from "lucide-react";
 
 export function Header() {
@@ -45,6 +44,7 @@ export function Header() {
     { id: "fact-check", label: t.navHome, icon: ShieldCheck },
     { id: "world-news", label: t.navWorldNews, icon: Globe },
     { id: "india-news", label: t.navIndiaNews, icon: Compass },
+    { id: "live-detect", label: t.navLiveDetect, icon: Radar },
     { id: "articles", label: t.navArticles, icon: FileText },
   ];
 

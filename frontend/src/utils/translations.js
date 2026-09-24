@@ -9,6 +9,7 @@ export const translations = {
     navHome: "Fact Check",
     navWorldNews: "World News",
     navIndiaNews: "India News",
+    navLiveDetect: "Live Detect",
     navArticles: "Fact Investigations",
     navHistory: "History",
     navAdmin: "Admin Portal",
@@ -65,8 +66,10 @@ export const translations = {
     newsHeaderWorld: "Live Global News Wire",
     newsHeaderIndia: "India National & Regional Feed",
     newsFilterAll: "All Categories",
-    newsSearchPlaceholder: "Search headlines or topics...",
-    btnVerifyThisNews: "1-Click Verify",
+    newsSearchPlaceholder: "Search live headlines or claims...",
+    btnVerifyThisNews: "Check this news",
+    btnReadSource: "Read source",
+    btnVerifyNow: "Check now",
     
     // Admin
     adminPortalTitle: "TruthLens Admin Intelligence Suite",
@@ -118,6 +121,7 @@ export const translations = {
     navHome: "तथ्य जांच",
     navWorldNews: "विश्व समाचार",
     navIndiaNews: "भारत समाचार",
+    navLiveDetect: "लाइव पहचान",
     navArticles: "तथ्य लेख",
     navHistory: "इतिहास",
     navAdmin: "प्रशासक पोर्टल",
@@ -174,8 +178,10 @@ export const translations = {
     newsHeaderWorld: "लाइव वैश्विक समाचार",
     newsHeaderIndia: "भारत राष्ट्रीय एवं क्षेत्रीय समाचार",
     newsFilterAll: "सभी श्रेणियां",
-    newsSearchPlaceholder: "समाचार या विषय खोजें...",
-    btnVerifyThisNews: "त्वरित जांच",
+    newsSearchPlaceholder: "लाइव समाचार या दावे खोजें...",
+    btnVerifyThisNews: "इस समाचार की जांच करें",
+    btnReadSource: "स्रोत पढ़ें",
+    btnVerifyNow: "अभी जांचें",
     
     // Admin
     adminPortalTitle: "ट्रुथलेंस एडमिन डैशबोर्ड",

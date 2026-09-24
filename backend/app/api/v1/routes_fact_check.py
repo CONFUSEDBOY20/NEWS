@@ -29,36 +29,14 @@ async def check_image(
     language: str = Form("en")
 ):
     if not file.content_type.startswith("image/"):
-        raise HTTPException(status_code=400, detail="Uploaded file must be a valid image (JPEG, PNG, WEBP)")
-    
-    # Read file content (limit 15MB)
-    contents = await file.read()
-    if len(contents) > 15 * 1024 * 1024:
-        raise HTTPException(status_code=400, detail="Image size exceeds 15MB limit")
+        raise HTTPException(status_code=400, detail="File must be a valid image (JPEG, PNG, WEBP)")
+    content = await file.read()
+    if len(content) > 10 * 1024 * 1024:
+        raise HTTPException(status_code=400, detail="Image size exceeds 10MB limit")
+    return await service.verify_image(content, filename=file.filename, language=language)
 
-    return await service.verify_image(contents, file.filename, language=language)
-
-@router.get("/live-news", response_model=LiveDetectionResponse)
-async def detect_live_news(
-    region: str = "global",
-    category: Optional[str] = None,
-    limit: int = 8,
-    language: str = "en"
-):
-    if region.lower() not in {"global", "world", "india"}:
-        raise HTTPException(status_code=400, detail="Region must be global, world, or india")
-    if limit < 1 or limit > 12:
-        raise HTTPException(status_code=400, detail="Limit must be between 1 and 12")
-    return await service.detect_live_news(
-        region=region,
-        category=category,
-        limit=limit,
-        language=language,
-    )
-
-@router.get("/{check_id}")
-async def get_check_result(check_id: str):
-    record = await service.get_check_by_id(check_id)
-    if not record:
-        raise HTTPException(status_code=404, detail="Fact-check record not found")
-    return record
+@router.post("/live", response_model=LiveDetectionResponse)
+async def live_detection(payload: FactCheckTextRequest):
+    if not payload.text or len(payload.text.strip()) < 5:
+        raise HTTPException(status_code=400, detail="Please provide at least 5 characters of speech or stream text")
+    return await service.detect_live_stream(payload.text.strip(), language=payload.language)

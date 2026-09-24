@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useApp } from "../context/AppContext";
 import { api } from "../services/api";
-import { Lock, X, ArrowRight, AlertCircle, ShieldCheck, KeyRound } from "lucide-react";
+import { Lock, X, AlertCircle, ShieldCheck, KeyRound } from "lucide-react";
 
 export function AdminModal() {
   const {
@@ -14,8 +14,8 @@ export function AdminModal() {
     t
   } = useApp();
 
-  const [email, setEmail] = useState("admin@truthlens.ai");
-  const [password, setPassword] = useState("TruthLens@2026Admin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -32,7 +32,7 @@ export function AdminModal() {
       setIsAdminLoggedIn(true);
       setShowAdminModal(false);
       setActiveView("admin");
-      showToast("Authenticated as Super Administrator.");
+      showToast("Authenticated as Administrator.");
     } catch (err) {
       setError(err.message || "Invalid administrative credentials.");
     } finally {
@@ -73,8 +73,9 @@ export function AdminModal() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={t.adminEmailPlaceholder}
+              placeholder={t.adminEmailPlaceholder || "admin@example.com"}
               required
+              autoFocus
               className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-mono"
             />
           </div>
@@ -85,7 +86,7 @@ export function AdminModal() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder={t.adminPasswordPlaceholder}
+              placeholder={t.adminPasswordPlaceholder || "••••••••••••"}
               required
               className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-mono"
             />
@@ -101,17 +102,17 @@ export function AdminModal() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition-all"
+            className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition-all cursor-pointer"
           >
             <KeyRound className="w-4 h-4" />
-            <span>{loading ? "Authenticating..." : t.btnLogin}</span>
+            <span>{loading ? "Authenticating..." : (t.btnLogin || "Authenticate & Enter")}</span>
           </button>
         </form>
 
-        {/* Demo Credentials Hint */}
-        <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-[11px] font-mono text-slate-400 text-center">
-          <p className="text-emerald-400 font-bold mb-0.5">Demo Admin Key:</p>
-          <p>admin@truthlens.ai • TruthLens@2026Admin</p>
+        {/* Informational Security Notice */}
+        <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 text-[11px] font-mono text-slate-400 text-center">
+          <p className="text-slate-300 font-semibold mb-0.5">Authorized Access Only</p>
+          <p className="text-[10px] text-slate-500">Configure administrator credentials in server environment (.env).</p>
         </div>
 
       </div>

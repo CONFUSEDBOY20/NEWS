@@ -1,3 +1,4 @@
+import secrets
 from datetime import datetime, timedelta, timezone
 from typing import Optional, Union, Any
 from jose import jwt, JWTError
@@ -10,14 +11,44 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 security_bearer = HTTPBearer(auto_error=False)
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verifies a password against a bcrypt hash."""
+    if not plain_password or not hashed_password:
+        return False
     try:
         return pwd_context.verify(plain_password, hashed_password)
     except Exception:
-        # Fallback for plain comparison in demo mode
-        return plain_password == hashed_password
+        return False
 
 def get_password_hash(password: str) -> str:
+    """Generates a bcrypt hash for a given password."""
     return pwd_context.hash(password)
+
+def verify_admin_credentials(email: str, password: str) -> bool:
+    """
+    Validates administrator login credentials securely:
+    1. Checks email in constant time / normalized comparison.
+    2. If ADMIN_PASSWORD_HASH is set, verifies with bcrypt.
+    3. If ADMIN_PASSWORD is set, verifies with secrets.compare_digest.
+    4. Fails closed if no password is configured.
+    """
+    if not email or not password:
+        return False
+
+    configured_email = settings.ADMIN_EMAIL.strip().lower()
+    input_email = email.strip().lower()
+
+    if not secrets.compare_digest(input_email, configured_email):
+        return False
+
+    # Check bcrypt hash first if available
+    if settings.ADMIN_PASSWORD_HASH:
+        return verify_password(password, settings.ADMIN_PASSWORD_HASH)
+
+    # Check plain env password using constant-time comparison
+    if settings.ADMIN_PASSWORD:
+        return secrets.compare_digest(password, settings.ADMIN_PASSWORD)
+
+    return False
 
 def create_access_token(subject: Union[str, Any], expires_delta: Optional[timedelta] = None) -> str:
     if expires_delta:
@@ -39,7 +70,7 @@ def get_current_admin(credentials: Optional[HTTPAuthorizationCredentials] = Depe
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         email: str = payload.get("sub")
         role: str = payload.get("role")
-        if email is None or role != "admin":
+        if not email or role != "admin":
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Invalid token or insufficient administrative permissions"

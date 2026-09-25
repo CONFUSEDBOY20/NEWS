@@ -19,6 +19,7 @@ export function AppProvider({ children }) {
   const [verificationResult, setVerificationResult] = useState(null);
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationStage, setVerificationStage] = useState(0);
+  const [activeClaimText, setActiveClaimText] = useState("");
   const [inputPreload, setInputPreload] = useState(null);
 
   // Admin State
@@ -91,6 +92,8 @@ export function AppProvider({ children }) {
         setIsVerifying,
         verificationStage,
         setVerificationStage,
+        activeClaimText,
+        setActiveClaimText,
         inputPreload,
         setInputPreload,
         isAdminLoggedIn,

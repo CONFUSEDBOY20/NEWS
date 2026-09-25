@@ -7,6 +7,7 @@ from app.schemas.fact_check import (
     LiveDetectionResponse
 )
 from app.services.fact_check_service import FactCheckService
+from app.utils.url_safety import UnsafeURLError
 
 router = APIRouter(prefix="/fact-check", tags=["Fact Check"])
 service = FactCheckService()
@@ -15,7 +16,10 @@ service = FactCheckService()
 async def check_url(payload: FactCheckUrlRequest):
     if not payload.url or not payload.url.strip().startswith(("http://", "https://")):
         raise HTTPException(status_code=400, detail="Please provide a valid HTTP or HTTPS news URL")
-    return await service.verify_url(payload.url.strip(), language=payload.language)
+    try:
+        return await service.verify_url(payload.url.strip(), language=payload.language)
+    except UnsafeURLError:
+        raise HTTPException(status_code=400, detail="This URL cannot be checked.")
 
 @router.post("/text", response_model=FactCheckResponse)
 async def check_text(payload: FactCheckTextRequest):

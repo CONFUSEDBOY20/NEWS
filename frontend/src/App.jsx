@@ -12,11 +12,12 @@ import { FactArticlesView } from "./components/FactArticlesView";
 import { LiveDetectionView } from "./components/LiveDetectionView";
 import { AdminModal } from "./components/AdminModal";
 import { AdminDashboard } from "./components/AdminDashboard";
-import { ShieldCheck, CheckCircle } from "lucide-react";
+import { ShieldCheck, CheckCircle2, ArrowUpRight } from "lucide-react";
 
 function MainContent() {
   const {
     activeView,
+    setActiveView,
     isVerifying,
     verificationResult,
     isAdminLoggedIn,
@@ -27,31 +28,18 @@ function MainContent() {
   const isDark = theme === "dark";
 
   return (
-    <div className={`min-h-screen flex flex-col justify-between transition-colors duration-300 relative selection:bg-indigo-500/30 selection:text-indigo-200 ${
-      isDark ? "bg-[#08090E] text-slate-100" : "bg-[#F8FAFC] text-slate-900"
+    <div className={`min-h-screen flex flex-col justify-between transition-colors duration-200 relative selection:bg-emerald-500/20 selection:text-emerald-400 font-sans ${
+      isDark ? "bg-[#090D16] text-slate-100" : "bg-[#F8FAFC] text-slate-900"
     }`}>
-      
-      {/* Apple / Linear Radial Ambient Aura */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className={`absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[350px] rounded-full blur-[140px] transition-all duration-500 ${
-          isDark ? "bg-indigo-500/10" : "bg-indigo-500/8"
-        }`} />
-        <div className={`absolute top-1/3 -left-32 w-[500px] h-[300px] rounded-full blur-[160px] transition-all duration-500 ${
-          isDark ? "bg-emerald-500/5" : "bg-emerald-500/8"
-        }`} />
-        <div className={`absolute top-2/3 -right-32 w-[500px] h-[300px] rounded-full blur-[160px] transition-all duration-500 ${
-          isDark ? "bg-cyan-500/5" : "bg-cyan-500/8"
-        }`} />
-      </div>
 
       <div className="relative z-10 flex-1 flex flex-col">
-        {/* Navigation Header */}
+        {/* Full-width Website Header */}
         <Header />
         
-        {/* Breaking News Ticker */}
+        {/* Full-width Wire Ticker */}
         <NewsTicker />
 
-        {/* View Switcher */}
+        {/* Main Website Page Content */}
         <main className="flex-1 pb-16">
           {activeView === "fact-check" && (
             <>
@@ -77,33 +65,121 @@ function MainContent() {
 
       {/* Global Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 animate-bounce">
-          <div className="flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-[#0D101A] border border-indigo-500/30 text-indigo-300 text-xs font-mono shadow-2xl backdrop-blur-xl">
-            <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+        <div className="fixed bottom-6 right-6 z-50 animate-fadeIn">
+          <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-medium shadow-xl border border-slate-700 dark:border-slate-200">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 dark:text-emerald-600 shrink-0" />
             <span>{toastMessage}</span>
           </div>
         </div>
       )}
 
-      {/* Slide-out History Drawer */}
+      {/* History Modal Dialog */}
       <HistorySidebar />
 
       {/* Admin Login Modal */}
       <AdminModal />
 
-      {/* Footer */}
-      <footer className="w-full border-t border-white/[0.06] bg-black/40 backdrop-blur-md py-8 relative z-10 text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
-              <ShieldCheck className="w-3.5 h-3.5" />
+      {/* Full Website Footer */}
+      <footer className="w-full border-t border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-[#070A11] py-12 relative z-10 text-xs text-slate-500 font-sans">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            
+            {/* Col 1: Brand & Mission */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-md bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+                <span className="font-bold text-slate-900 dark:text-white text-sm">TruthLens</span>
+              </div>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                An open investigative web platform for automated multi-source news verification, media forensics, and claim analysis.
+              </p>
+              <div className="text-[11px] text-slate-400">
+                Source-first verification · Real-time wire consensus
+              </div>
             </div>
-            <span className="font-semibold text-slate-300">TruthLens Intelligence Engine</span>
-            <span>• 500+ Audited Wire Repositories</span>
+
+            {/* Col 2: Verification Tools */}
+            <div className="space-y-2.5">
+              <h4 className="font-semibold text-slate-900 dark:text-white text-xs uppercase tracking-wider">
+                Verification Tools
+              </h4>
+              <ul className="space-y-2">
+                <li>
+                  <button onClick={() => setActiveView("fact-check")} className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                    Article URL Fact-Check
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setActiveView("fact-check")} className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                    Text Claim Cross-Examination
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setActiveView("fact-check")} className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                    Image ELA & Forensic Audit
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setActiveView("live-detect")} className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                    Live Misinformation Monitor
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            {/* Col 3: Live News Coverage */}
+            <div className="space-y-2.5">
+              <h4 className="font-semibold text-slate-900 dark:text-white text-xs uppercase tracking-wider">
+                News Coverage
+              </h4>
+              <ul className="space-y-2">
+                <li>
+                  <button onClick={() => setActiveView("world-news")} className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                    World Wire Headlines
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setActiveView("india-news")} className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                    India National Wire
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setActiveView("articles")} className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                    Fact Investigation Dossiers
+                  </button>
+                </li>
+                <li>
+                  <a href="http://127.0.0.1:8000/api/docs" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                    <span>REST API Documentation</span>
+                    <ArrowUpRight className="w-3 h-3" />
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Col 4: Standards & Transparency */}
+            <div className="space-y-2.5">
+              <h4 className="font-semibold text-slate-900 dark:text-white text-xs uppercase tracking-wider">
+                Editorial Transparency
+              </h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                TruthLens synthesizes evidence from indexed news registries and official wire records. AI-assisted verdicts are probabilistic and should be reviewed alongside cited primary evidence.
+              </p>
+              <div className="text-[11px] text-slate-400">
+                Data stored locally · No user tracking
+              </div>
+            </div>
+
           </div>
-          <p className="text-center sm:text-right text-slate-500">
-            Source-First Verification Architecture • Real-Time Forensic Consensus
-          </p>
+
+          <div className="pt-6 border-t border-slate-200 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+            <p>© {new Date().getFullYear()} TruthLens Media Intelligence. All rights reserved.</p>
+            <p className="text-slate-400 text-center sm:text-right">
+              Built with React 19, FastAPI, and open evidence datasets.
+            </p>
+          </div>
         </div>
       </footer>
 

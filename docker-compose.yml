@@ -21,8 +21,9 @@ services:
       - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID:-}
       - FIREBASE_CLIENT_EMAIL=${FIREBASE_CLIENT_EMAIL:-}
       - FIREBASE_PRIVATE_KEY=${FIREBASE_PRIVATE_KEY:-}
+      - TRUTHLENS_DATA_FILE=/app/data/runtime_database.json
     volumes:
-      - ./backend/data:/app/data
+      - truthlens_data:/app/data
 
   frontend:
     build:
@@ -32,3 +33,6 @@ services:
       - "3000:80"
     depends_on:
       - backend
+
+volumes:
+  truthlens_data:

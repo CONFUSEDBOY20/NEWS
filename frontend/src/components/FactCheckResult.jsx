@@ -3,6 +3,7 @@ import { useApp } from "../context/AppContext";
 import { SocialFactCardModal } from "./SocialFactCardModal";
 import { DisinformationSpreadGraph } from "./DisinformationSpreadGraph";
 import {
+  ShieldCheck,
   CheckCircle2,
   AlertTriangle,
   XCircle,
@@ -21,18 +22,22 @@ import {
 const serif = { fontFamily: "'Source Serif 4', Georgia, 'Times New Roman', serif" };
 
 const VERDICT_STYLES = {
-  TRUE:               { accent: "#16a34a", bg: "bg-green-600",    text: "text-green-400",  border: "border-green-700/40", Icon: CheckCircle2,  label: "True",               note: "This claim is supported by available evidence." },
+  VERIFIED:           { accent: "#10b981", bg: "bg-emerald-600",  text: "text-emerald-400",border: "border-emerald-700/40",Icon: ShieldCheck,   label: "Verified",           note: "This claim is fully verified and supported by institutional evidence." },
+  TRUE:               { accent: "#16a34a", bg: "bg-emerald-600",  text: "text-emerald-400",border: "border-emerald-700/40",Icon: CheckCircle2,  label: "Verified (True)",    note: "This claim is supported by authoritative evidence." },
   "MOSTLY TRUE":      { accent: "#059669", bg: "bg-emerald-600",  text: "text-emerald-400",border: "border-emerald-700/40",Icon: CheckCircle2,  label: "Mostly True",        note: "The core claim checks out; minor details are unconfirmed." },
-  "PARTLY TRUE":      { accent: "#d97706", bg: "bg-amber-600",    text: "text-amber-400",  border: "border-amber-700/40", Icon: AlertTriangle,  label: "Partly True",        note: "Some elements are accurate, but the overall picture is incomplete or misleading." },
+  "PARTIALLY TRUE":   { accent: "#d97706", bg: "bg-amber-600",    text: "text-amber-400",  border: "border-amber-700/40", Icon: AlertTriangle,  label: "Partially True",     note: "Some elements are accurate, but the overall picture is incomplete." },
+  "PARTLY TRUE":      { accent: "#d97706", bg: "bg-amber-600",    text: "text-amber-400",  border: "border-amber-700/40", Icon: AlertTriangle,  label: "Partially True",     note: "Some elements are accurate, but the overall picture is incomplete or misleading." },
   MISLEADING:         { accent: "#ea580c", bg: "bg-orange-600",   text: "text-orange-400", border: "border-orange-700/40",Icon: AlertTriangle,  label: "Misleading",         note: "The claim uses real facts in a misleading way or lacks critical context." },
   FALSE:              { accent: "#dc2626", bg: "bg-red-600",      text: "text-red-400",    border: "border-red-700/40",   Icon: XCircle,        label: "False",              note: "This claim is contradicted by the available evidence." },
   SATIRE:             { accent: "#7c3aed", bg: "bg-violet-600",   text: "text-violet-400", border: "border-violet-700/40",Icon: Sparkles,       label: "Satire",             note: "This originates from a satirical or parody source." },
-  UNVERIFIED:         { accent: "#64748b", bg: "bg-slate-600",    text: "text-slate-400",  border: "border-slate-600/40", Icon: HelpCircle,     label: "Unverified",         note: "There is not enough evidence to confirm or deny this claim." },
+  UNVERIFIED:         { accent: "#64748b", bg: "bg-slate-600",    text: "text-slate-400",  border: "border-slate-600/40", Icon: HelpCircle,     label: "Insufficient Evidence", note: "There is not enough evidence to confirm or deny this claim." },
   "INSUFFICIENT EVIDENCE": { accent: "#64748b", bg: "bg-slate-600", text: "text-slate-400", border: "border-slate-600/40", Icon: HelpCircle, label: "Insufficient Evidence", note: "We could not find adequate sources to assess this claim." },
 };
 
 function getVS(verdict) {
-  return VERDICT_STYLES[verdict] || VERDICT_STYLES.UNVERIFIED;
+  if (!verdict) return VERDICT_STYLES.UNVERIFIED;
+  const upper = verdict.toUpperCase().trim();
+  return VERDICT_STYLES[upper] || VERDICT_STYLES.UNVERIFIED;
 }
 
 /* ── tiny sub-components ─────────────────────────────────── */
@@ -40,8 +45,7 @@ function getVS(verdict) {
 function SectionHeading({ children }) {
   return (
     <h2
-      className="text-lg sm:text-xl font-semibold text-white/90 pb-3 mb-5 border-b border-white/[0.07]"
-      style={serif}
+      className="text-base sm:text-lg font-bold text-slate-900 dark:text-white pb-2.5 mb-4 border-b border-slate-200/80 dark:border-white/[0.07] tracking-tight font-sans"
     >
       {children}
     </h2>
@@ -50,7 +54,7 @@ function SectionHeading({ children }) {
 
 function Card({ children, className = "" }) {
   return (
-    <div className={`rounded-lg bg-white/[0.03] border border-white/[0.07] ${className}`}>
+    <div className={`rounded-2xl bg-white dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.08] shadow-sm dark:shadow-none ${className}`}>
       {children}
     </div>
   );
@@ -75,7 +79,7 @@ function MetricRow({ label, value, barPct, barColor = "bg-slate-500" }) {
 
 function EvidenceCard({ item, accentClass, stanceLabel }) {
   return (
-    <Card className="p-4 sm:p-5 flex flex-col justify-between gap-3">
+    <Card className="p-4 sm:p-5 flex flex-col justify-between gap-3 hover-lift transition-all duration-200 hover:border-slate-300 dark:hover:border-white/20">
       <div className="space-y-2">
         <div className="flex items-start justify-between gap-2">
           <span className="text-xs text-slate-400 truncate max-w-[200px]">
@@ -99,9 +103,10 @@ function EvidenceCard({ item, accentClass, stanceLabel }) {
             href={item.source_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-slate-400 hover:text-white flex items-center gap-1 transition-colors"
+            className="text-slate-400 hover:text-white flex items-center gap-1 transition-colors group"
           >
-            View source <ExternalLink className="w-3 h-3" />
+            <span>View source</span>
+            <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </a>
         )}
       </div>
@@ -199,7 +204,7 @@ export function FactCheckResult() {
   const verdictBarColor = vs.bg.replace("bg-", "bg-");
 
   return (
-    <div ref={resultRef} className="w-full max-w-3xl mx-auto px-4 sm:px-6 my-10 space-y-6 animate-fadeIn">
+    <div ref={resultRef} className="w-full max-w-3xl mx-auto px-4 sm:px-6 my-10 space-y-6 animate-result-reveal">
 
       {/* ── 1. VERDICT HEADER ──────────────────────────────── */}
       <div className="space-y-5">
@@ -208,19 +213,19 @@ export function FactCheckResult() {
           <div className="flex items-baseline gap-2">
             <span className="text-xs text-slate-500 font-medium">Fact-Check Report</span>
             <span className="text-xs text-slate-600">·</span>
-            <span className="text-xs text-slate-500 tabular-nums">{res.id?.slice(0, 12) || "—"}</span>
+            <span className="text-xs text-slate-500 tabular-nums font-mono">{res.id?.slice(0, 12) || "—"}</span>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={handleVerifyAgain}
-              className="px-3 py-1.5 rounded-md bg-white/[0.06] hover:bg-white/[0.1] text-slate-300 hover:text-white border border-white/[0.08] text-xs font-medium flex items-center gap-1.5 transition-colors"
+              className="btn-press px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-white/[0.06] dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/[0.08] text-xs font-medium flex items-center gap-1.5 transition-all duration-150 hover:-translate-y-0.5 active:translate-y-0"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               New check
             </button>
             <button
               onClick={() => setShowSocialCardModal(true)}
-              className="px-3 py-1.5 rounded-md bg-white/[0.06] hover:bg-white/[0.1] text-slate-300 hover:text-white border border-white/[0.08] text-xs font-medium flex items-center gap-1.5 transition-colors"
+              className="btn-press px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-white/[0.06] dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/[0.08] text-xs font-medium flex items-center gap-1.5 transition-all duration-150 hover:-translate-y-0.5 active:translate-y-0"
             >
               <Share2 className="w-3.5 h-3.5" />
               Share
@@ -228,27 +233,26 @@ export function FactCheckResult() {
           </div>
         </div>
 
-        {/* Verdict banner */}
+        {/* Verdict banner with subtle glow and smooth icon scale */}
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-3">
             <div
-              className={`w-12 h-12 sm:w-14 sm:h-14 rounded-lg ${vs.bg} flex items-center justify-center shrink-0`}
+              className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl ${vs.bg} flex items-center justify-center shrink-0 shadow-lg shadow-black/10 transition-transform duration-300 hover:scale-105 relative overflow-hidden`}
             >
-              <vs.Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+              <vs.Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white animate-soft-pulse" />
             </div>
             <div>
               <h1
-                className="text-2xl sm:text-3xl font-bold text-white leading-tight"
-                style={serif}
+                className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white leading-tight font-sans tracking-tight"
               >
                 {vs.label}
               </h1>
-              <p className="text-sm text-slate-400 mt-0.5 max-w-lg leading-snug">{vs.note}</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400 mt-0.5 max-w-lg leading-snug">{vs.note}</p>
             </div>
           </div>
 
           {/* Claim quoted */}
-          <blockquote className="pl-4 border-l-2 border-slate-700 text-slate-200 text-sm sm:text-base leading-relaxed italic">
+          <blockquote className="pl-4 border-l-2 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-sm sm:text-base leading-relaxed italic">
             "{res.primary_claim}"
           </blockquote>
 
@@ -257,7 +261,7 @@ export function FactCheckResult() {
             {res.category && <span>{res.category}</span>}
             {res.location && res.location !== "Global" && <span>· {res.location}</span>}
             {res.processing_time_ms && (
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-1 font-mono">
                 <Clock className="w-3 h-3" />
                 {res.processing_time_ms}ms
               </span>
@@ -270,16 +274,16 @@ export function FactCheckResult() {
       <Card className="p-5 sm:p-6 space-y-4">
         <div className="grid grid-cols-3 gap-4 sm:gap-6 text-center">
           <div>
-            <div className="text-2xl sm:text-3xl font-semibold text-white tabular-nums">{Math.round(res.confidence)}%</div>
-            <div className="text-xs text-slate-500 mt-1">Confidence</div>
+            <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tabular-nums">{Math.round(res.confidence)}%</div>
+            <div className="text-xs text-slate-500 mt-1 font-medium">Confidence</div>
           </div>
           <div>
-            <div className={`text-lg sm:text-xl font-semibold ${vs.text} capitalize`}>{(res.evidence_strength || "None").toLowerCase()}</div>
-            <div className="text-xs text-slate-500 mt-1">Evidence</div>
+            <div className={`text-lg sm:text-xl font-bold ${vs.text} capitalize`}>{(res.evidence_strength || "None").toLowerCase()}</div>
+            <div className="text-xs text-slate-500 mt-1 font-medium">Evidence</div>
           </div>
           <div>
-            <div className="text-2xl sm:text-3xl font-semibold text-white tabular-nums">{totalSourcesCount}</div>
-            <div className="text-xs text-slate-500 mt-1">Sources</div>
+            <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tabular-nums">{totalSourcesCount}</div>
+            <div className="text-xs text-slate-500 mt-1 font-medium">Sources</div>
           </div>
         </div>
       </Card>

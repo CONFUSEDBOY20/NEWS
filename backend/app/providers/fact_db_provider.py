@@ -1,13 +1,20 @@
 import json
 import os
+import shutil
+import tempfile
+import asyncio
+import threading
+import logging
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 from app.providers.base import BaseFactDatabaseProvider
 from app.schemas.fact_check import EvidenceItem, VerdictEnum
 from app.core.config import settings
 
+logger = logging.getLogger("truthlens.db")
+
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data")
-DB_FILE = os.path.join(DATA_DIR, "database.json")
+SEED_FILE = os.path.join(DATA_DIR, "database.json")
 
 STOPWORDS = {
     "the", "and", "a", "an", "in", "on", "at", "to", "for", "of", "with", "by", "from",
@@ -20,65 +27,121 @@ STOPWORDS = {
     "very", "found", "yesterday", "today", "tomorrow", "recent", "random", "completely"
 }
 
-class FactDatabaseProvider(BaseFactDatabaseProvider):
+
+def is_firestore_configured() -> bool:
+    """Return True only when all required Firebase credentials are set."""
+    return bool(
+        settings.FIREBASE_PROJECT_ID and
+        settings.FIREBASE_CLIENT_EMAIL and
+        settings.FIREBASE_PRIVATE_KEY
+    )
+
+
+class JsonFactDatabaseProvider(BaseFactDatabaseProvider):
     def __init__(self):
         os.makedirs(DATA_DIR, exist_ok=True)
-        self.db_file = DB_FILE
+        self._lock = None
+        self._tlock = threading.RLock()
         self._ensure_db()
 
+    @property
+    def _async_lock(self):
+        if not hasattr(self, "_lock") or self._lock is None:
+            self._lock = asyncio.Lock()
+        return self._lock
+
+    @property
+    def _thread_lock(self):
+        if not hasattr(self, "_tlock") or self._tlock is None:
+            self._tlock = threading.RLock()
+        return self._tlock
+
+    @property
+    def db_file(self) -> str:
+        return os.getenv("TRUTHLENS_DATA_FILE") or os.path.join(DATA_DIR, "runtime_database.json")
+
     def _ensure_db(self):
-        if not os.path.exists(self.db_file):
-            initial_data = {
-                "fact_checks": [],
-                "raw_data": self._get_initial_raw_data(),
-                "fact_articles": self._get_initial_articles(),
-                "admin_logs": [
-                    {
-                        "id": "log-001",
-                        "admin_id": "system@truthlens.ai",
-                        "action": "SYSTEM_INIT",
-                        "target_collection": "system",
-                        "target_id": "root",
-                        "timestamp": datetime.now().isoformat(),
-                        "details": "TruthLens Database & Seed verification index initialized successfully."
-                    }
-                ],
-                "system_settings": {
-                    "news_categories": ["All", "Politics", "Technology", "Health", "Economy", "Climate", "Science", "Entertainment"],
-                    "supported_languages": [
-                        {"code": "en", "name": "English"},
-                        {"code": "hi", "name": "Hindi (हिंदी)"}
+        with self._thread_lock:
+            target_path = self.db_file
+            target_dir = os.path.dirname(target_path)
+            if target_dir:
+                os.makedirs(target_dir, exist_ok=True)
+            if not os.path.exists(target_path):
+                if os.path.exists(SEED_FILE) and os.path.abspath(SEED_FILE) != os.path.abspath(target_path):
+                    try:
+                        with open(SEED_FILE, "r", encoding="utf-8") as sf:
+                            seed_data = json.load(sf)
+                        self._write_db(seed_data)
+                        return
+                    except Exception:
+                        pass
+                initial_data = {
+                    "fact_checks": [],
+                    "raw_data": self._get_initial_raw_data(),
+                    "fact_articles": self._get_initial_articles(),
+                    "admin_logs": [
+                        {
+                            "id": "log-001",
+                            "admin_id": "system@truthlens.ai",
+                            "action": "SYSTEM_INIT",
+                            "target_collection": "system",
+                            "target_id": "root",
+                            "timestamp": datetime.now().isoformat(),
+                            "details": "TruthLens Database & Seed verification index initialized successfully."
+                        }
                     ],
-                    "confidence_threshold_true": 80.0,
-                    "confidence_threshold_partial": 55.0,
-                    "enabled_providers": {
-                        "fact_database": True,
-                        "news_api": True,
-                        "gemini_ai": True,
-                        "search_graph": True,
-                        "image_forensics": True
-                    },
-                    "cache_duration_hours": 4,
-                    "rate_limit_per_minute": 60,
-                    "maintenance_mode": False,
-                    "allow_public_submissions": True
+                    "system_settings": {
+                        "news_categories": ["All", "Politics", "Technology", "Health", "Economy", "Climate", "Science", "Entertainment"],
+                        "supported_languages": [
+                            {"code": "en", "name": "English"},
+                            {"code": "hi", "name": "Hindi (हिंदी)"}
+                        ],
+                        "confidence_threshold_true": 80.0,
+                        "confidence_threshold_partial": 55.0,
+                        "enabled_providers": {
+                            "fact_database": True,
+                            "news_api": True,
+                            "gemini_ai": True,
+                            "search_graph": True,
+                            "image_forensics": True
+                        },
+                        "cache_duration_hours": 4,
+                        "rate_limit_per_minute": 60,
+                        "maintenance_mode": False,
+                        "allow_public_submissions": True
+                    }
                 }
-            }
-            with open(self.db_file, "w", encoding="utf-8") as f:
-                json.dump(initial_data, f, indent=2, ensure_ascii=False)
+                self._write_db(initial_data)
 
     def _read_db(self) -> Dict[str, Any]:
-        try:
-            with open(self.db_file, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except Exception:
-            self._ensure_db()
-            with open(self.db_file, "r", encoding="utf-8") as f:
-                return json.load(f)
+        with self._thread_lock:
+            try:
+                with open(self.db_file, "r", encoding="utf-8") as f:
+                    return json.load(f)
+            except Exception:
+                self._ensure_db()
+                with open(self.db_file, "r", encoding="utf-8") as f:
+                    return json.load(f)
 
     def _write_db(self, data: Dict[str, Any]):
-        with open(self.db_file, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
+        with self._thread_lock:
+            target_path = self.db_file
+            dir_name = os.path.dirname(target_path) or "."
+            os.makedirs(dir_name, exist_ok=True)
+            fd, tmp_path = tempfile.mkstemp(dir=dir_name, prefix=".tmp_db_", suffix=".json")
+            try:
+                with os.fdopen(fd, "w", encoding="utf-8") as f:
+                    json.dump(data, f, indent=2, ensure_ascii=False)
+                    f.flush()
+                    os.fsync(f.fileno())
+                os.replace(tmp_path, target_path)
+            except Exception:
+                if os.path.exists(tmp_path):
+                    try:
+                        os.remove(tmp_path)
+                    except OSError:
+                        pass
+                raise
 
     def _get_initial_raw_data(self) -> List[Dict[str, Any]]:
         return [
@@ -261,16 +324,12 @@ class FactDatabaseProvider(BaseFactDatabaseProvider):
         raw_items = data.get("raw_data", [])
         results: List[EvidenceItem] = []
         
-        # Meaningful keyword set
         query_words = {w.lower() for w in query.split() if len(w) > 2 and w.lower() not in STOPWORDS}
         
         for item in raw_items:
             title_claim = f"{item.get('title', '')} {item.get('claim', '')} {' '.join(item.get('tags', []))}".lower()
-            
-            # Check meaningful overlap
             matched_words = [w for w in query_words if w in title_claim]
             
-            # Match if at least 2 specific keywords match or query is exact substring
             if len(matched_words) >= 2 or (len(query_words) == 1 and list(query_words)[0] in title_claim and len(list(query_words)[0]) > 4):
                 stance = "SUPPORTS" if item.get("verdict") == "TRUE" else "CONTRADICTS"
                 results.append(
@@ -290,100 +349,287 @@ class FactDatabaseProvider(BaseFactDatabaseProvider):
         return results
 
     async def save_fact_check(self, record: Dict[str, Any]) -> str:
-        data = self._read_db()
-        data.setdefault("fact_checks", []).insert(0, record)
-        data.setdefault("verifications", []).insert(0, record)
-        if len(data["fact_checks"]) > 500:
-            data["fact_checks"] = data["fact_checks"][:500]
-        if len(data["verifications"]) > 500:
-            data["verifications"] = data["verifications"][:500]
-        self._write_db(data)
-        return record.get("id", "")
+        async with self._async_lock:
+            with self._thread_lock:
+                data = self._read_db()
+                data.setdefault("fact_checks", []).insert(0, record)
+                data.setdefault("verifications", []).insert(0, record)
+                if len(data["fact_checks"]) > 500:
+                    data["fact_checks"] = data["fact_checks"][:500]
+                if len(data["verifications"]) > 500:
+                    data["verifications"] = data["verifications"][:500]
+                self._write_db(data)
+                return record.get("id", "")
 
     async def get_fact_check(self, check_id: str) -> Optional[Dict[str, Any]]:
-        data = self._read_db()
-        for fc in data.get("verifications", []) + data.get("fact_checks", []):
-            if fc.get("id") == check_id:
-                return fc
-        return None
+        async with self._async_lock:
+            with self._thread_lock:
+                data = self._read_db()
+                for fc in data.get("verifications", []) + data.get("fact_checks", []):
+                    if fc.get("id") == check_id:
+                        return fc
+                return None
 
     # Raw Data CRUD
     def get_all_raw_data(self) -> List[Dict[str, Any]]:
-        return self._read_db().get("raw_data", [])
+        with self._thread_lock:
+            return self._read_db().get("raw_data", [])
 
     def add_raw_data(self, item: Dict[str, Any]) -> Dict[str, Any]:
-        data = self._read_db()
-        data.setdefault("raw_data", []).insert(0, item)
-        self._write_db(data)
-        self.add_admin_log("admin@truthlens.ai", "CREATE", "raw_data", item.get("id"), f"Created raw record: {item.get('title')}")
-        return item
+        with self._thread_lock:
+            data = self._read_db()
+            data.setdefault("raw_data", []).insert(0, item)
+            self._write_db(data)
+            self.add_admin_log("admin@truthlens.ai", "CREATE", "raw_data", item.get("id"), f"Created raw record: {item.get('title')}")
+            return item
 
     def update_raw_data(self, item_id: str, updates: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        data = self._read_db()
-        for idx, item in enumerate(data.get("raw_data", [])):
-            if item.get("id") == item_id:
-                data["raw_data"][idx].update(updates)
-                data["raw_data"][idx]["updated_at"] = datetime.now().isoformat()
-                self._write_db(data)
-                self.add_admin_log("admin@truthlens.ai", "UPDATE", "raw_data", item_id, f"Updated raw record: {updates.get('title', item_id)}")
-                return data["raw_data"][idx]
-        return None
+        with self._thread_lock:
+            data = self._read_db()
+            for idx, item in enumerate(data.get("raw_data", [])):
+                if item.get("id") == item_id:
+                    data["raw_data"][idx].update(updates)
+                    data["raw_data"][idx]["updated_at"] = datetime.now().isoformat()
+                    self._write_db(data)
+                    self.add_admin_log("admin@truthlens.ai", "UPDATE", "raw_data", item_id, f"Updated raw record: {updates.get('title', item_id)}")
+                    return data["raw_data"][idx]
+            return None
 
     def delete_raw_data(self, item_id: str) -> bool:
-        data = self._read_db()
-        initial_len = len(data.get("raw_data", []))
-        data["raw_data"] = [item for item in data.get("raw_data", []) if item.get("id") != item_id]
-        if len(data["raw_data"]) < initial_len:
-            self._write_db(data)
-            self.add_admin_log("admin@truthlens.ai", "DELETE", "raw_data", item_id, f"Deleted raw record: {item_id}")
-            return True
-        return False
+        with self._thread_lock:
+            data = self._read_db()
+            initial_len = len(data.get("raw_data", []))
+            data["raw_data"] = [item for item in data.get("raw_data", []) if item.get("id") != item_id]
+            if len(data["raw_data"]) < initial_len:
+                self._write_db(data)
+                self.add_admin_log("admin@truthlens.ai", "DELETE", "raw_data", item_id, f"Deleted raw record: {item_id}")
+                return True
+            return False
 
     # Fact Articles CRUD
     def get_all_articles(self) -> List[Dict[str, Any]]:
-        return self._read_db().get("fact_articles", [])
+        with self._thread_lock:
+            return self._read_db().get("fact_articles", [])
 
     def get_article_by_id_or_slug(self, identifier: str) -> Optional[Dict[str, Any]]:
-        for art in self.get_all_articles():
-            if art.get("id") == identifier or art.get("slug") == identifier:
-                return art
-        return None
+        with self._thread_lock:
+            for art in self.get_all_articles():
+                if art.get("id") == identifier or art.get("slug") == identifier:
+                    return art
+            return None
 
     def add_article(self, article: Dict[str, Any]) -> Dict[str, Any]:
-        data = self._read_db()
-        data.setdefault("fact_articles", []).insert(0, article)
-        self._write_db(data)
-        self.add_admin_log("admin@truthlens.ai", "CREATE", "fact_articles", article.get("id"), f"Created article: {article.get('title')}")
-        return article
+        with self._thread_lock:
+            data = self._read_db()
+            data.setdefault("fact_articles", []).insert(0, article)
+            self._write_db(data)
+            self.add_admin_log("admin@truthlens.ai", "CREATE", "fact_articles", article.get("id"), f"Created article: {article.get('title')}")
+            return article
 
     def update_article(self, article_id: str, updates: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        data = self._read_db()
-        for idx, item in enumerate(data.get("fact_articles", [])):
-            if item.get("id") == article_id:
-                data["fact_articles"][idx].update(updates)
-                self._write_db(data)
-                self.add_admin_log("admin@truthlens.ai", "UPDATE", "fact_articles", article_id, f"Updated article: {article_id}")
-                return data["fact_articles"][idx]
-        return None
+        with self._thread_lock:
+            data = self._read_db()
+            for idx, item in enumerate(data.get("fact_articles", [])):
+                if item.get("id") == article_id:
+                    data["fact_articles"][idx].update(updates)
+                    self._write_db(data)
+                    self.add_admin_log("admin@truthlens.ai", "UPDATE", "fact_articles", article_id, f"Updated article: {article_id}")
+                    return data["fact_articles"][idx]
+            return None
 
     def delete_article(self, article_id: str) -> bool:
-        data = self._read_db()
-        initial_len = len(data.get("fact_articles", []))
-        data["fact_articles"] = [art for art in data.get("fact_articles", []) if art.get("id") != article_id]
-        if len(data["fact_articles"]) < initial_len:
-            self._write_db(data)
-            self.add_admin_log("admin@truthlens.ai", "DELETE", "fact_articles", article_id, f"Deleted article: {article_id}")
-            return True
-        return False
+        with self._thread_lock:
+            data = self._read_db()
+            initial_len = len(data.get("fact_articles", []))
+            data["fact_articles"] = [art for art in data.get("fact_articles", []) if art.get("id") != article_id]
+            if len(data["fact_articles"]) < initial_len:
+                self._write_db(data)
+                self.add_admin_log("admin@truthlens.ai", "DELETE", "fact_articles", article_id, f"Deleted article: {article_id}")
+                return True
+            return False
 
     # Admin Logs
     def get_admin_logs(self, limit: int = 100) -> List[Dict[str, Any]]:
-        return self._read_db().get("admin_logs", [])[:limit]
+        with self._thread_lock:
+            return self._read_db().get("admin_logs", [])[:limit]
 
     def add_admin_log(self, admin_id: str, action: str, target_collection: str, target_id: Optional[str], details: str):
-        data = self._read_db()
+        with self._thread_lock:
+            data = self._read_db()
+            log_entry = {
+                "id": f"log-{int(datetime.now().timestamp()*1000)}",
+                "admin_id": admin_id,
+                "action": action,
+                "target_collection": target_collection,
+                "target_id": target_id,
+                "timestamp": datetime.now().isoformat(),
+                "details": details,
+                "ip_address": "127.0.0.1"
+            }
+            data.setdefault("admin_logs", []).insert(0, log_entry)
+            if len(data["admin_logs"]) > 500:
+                data["admin_logs"] = data["admin_logs"][:500]
+            self._write_db(data)
+
+    # Settings
+    def get_settings(self) -> Dict[str, Any]:
+        with self._thread_lock:
+            return self._read_db().get("system_settings", {})
+
+    def update_settings(self, updates: Dict[str, Any]) -> Dict[str, Any]:
+        with self._thread_lock:
+            data = self._read_db()
+            data.setdefault("system_settings", {}).update(updates)
+            self._write_db(data)
+            self.add_admin_log("admin@truthlens.ai", "SETTINGS_CHANGE", "system_settings", "config", "Updated system thresholds and provider configurations")
+            return data["system_settings"]
+
+
+class FirestoreFactDatabaseProvider(BaseFactDatabaseProvider):
+    """Google Cloud Firestore implementation of BaseFactDatabaseProvider."""
+
+    def __init__(self):
+        import firebase_admin
+        from firebase_admin import credentials, firestore
+
+        if not firebase_admin._apps:
+            cred = credentials.Certificate({
+                "project_id": settings.FIREBASE_PROJECT_ID,
+                "client_email": settings.FIREBASE_CLIENT_EMAIL,
+                "private_key": settings.FIREBASE_PRIVATE_KEY
+            })
+            firebase_admin.initialize_app(cred)
+
+        self.db = firestore.client()
+        logger.info("FirestoreFactDatabaseProvider initialized (storage: firestore)")
+
+    async def search_fact_database(self, query: str) -> List[EvidenceItem]:
+        docs = self.db.collection("raw_data").stream()
+        results: List[EvidenceItem] = []
+        query_words = {w.lower() for w in query.split() if len(w) > 2 and w.lower() not in STOPWORDS}
+
+        for doc in docs:
+            item = doc.to_dict() or {}
+            title_claim = f"{item.get('title', '')} {item.get('claim', '')} {' '.join(item.get('tags', []))}".lower()
+            matched_words = [w for w in query_words if w in title_claim]
+
+            if len(matched_words) >= 2 or (len(query_words) == 1 and list(query_words)[0] in title_claim and len(list(query_words)[0]) > 4):
+                stance = "SUPPORTS" if item.get("verdict") == "TRUE" else "CONTRADICTS"
+                results.append(
+                    EvidenceItem(
+                        id=f"db-{item.get('id')}",
+                        source_name=item.get("source", "TruthLens Internal FactDB"),
+                        source_url=item.get("source_url", "https://truthlens.ai/db"),
+                        title=item.get("title", ""),
+                        publication_date=item.get("verification_date") or item.get("publication_date"),
+                        evidence_text=item.get("evidence", ""),
+                        reliability_score=float(item.get("reliability_score", 90.0)),
+                        source_type="fact_checker",
+                        stance=stance,
+                        reliability_label=f"Verified Archive ({item.get('verdict')})"
+                    )
+                )
+        return results
+
+    async def save_fact_check(self, record: Dict[str, Any]) -> str:
+        doc_id = record.get("id") or f"verif-{int(datetime.now().timestamp()*1000)}"
+        record["id"] = doc_id
+        self.db.collection("fact_checks").document(doc_id).set(record, merge=True)
+        self.db.collection("verifications").document(doc_id).set(record, merge=True)
+        return doc_id
+
+    async def get_fact_check(self, check_id: str) -> Optional[Dict[str, Any]]:
+        doc = self.db.collection("verifications").document(check_id).get()
+        if not doc.exists:
+            doc = self.db.collection("fact_checks").document(check_id).get()
+        return doc.to_dict() if doc.exists else None
+
+    # Raw Data CRUD
+    def get_all_raw_data(self) -> List[Dict[str, Any]]:
+        docs = self.db.collection("raw_data").stream()
+        return [d.to_dict() for d in docs if d.to_dict()]
+
+    def add_raw_data(self, item: Dict[str, Any]) -> Dict[str, Any]:
+        doc_id = item.get("id") or f"raw-{int(datetime.now().timestamp()*1000)}"
+        item["id"] = doc_id
+        self.db.collection("raw_data").document(doc_id).set(item, merge=True)
+        self.add_admin_log("admin@truthlens.ai", "CREATE", "raw_data", doc_id, f"Created raw record: {item.get('title')}")
+        return item
+
+    def update_raw_data(self, item_id: str, updates: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        doc_ref = self.db.collection("raw_data").document(item_id)
+        doc = doc_ref.get()
+        if not doc.exists:
+            return None
+        updates["updated_at"] = datetime.now().isoformat()
+        doc_ref.set(updates, merge=True)
+        updated_doc = doc_ref.get()
+        updated_data = updated_doc.to_dict() if updated_doc.exists else updates
+        self.add_admin_log("admin@truthlens.ai", "UPDATE", "raw_data", item_id, f"Updated raw record: {updates.get('title', item_id)}")
+        return updated_data
+
+    def delete_raw_data(self, item_id: str) -> bool:
+        doc_ref = self.db.collection("raw_data").document(item_id)
+        if not doc_ref.get().exists:
+            return False
+        doc_ref.delete()
+        self.add_admin_log("admin@truthlens.ai", "DELETE", "raw_data", item_id, f"Deleted raw record: {item_id}")
+        return True
+
+    # Fact Articles CRUD
+    def get_all_articles(self) -> List[Dict[str, Any]]:
+        docs = self.db.collection("fact_articles").stream()
+        return [d.to_dict() for d in docs if d.to_dict()]
+
+    def get_article_by_id_or_slug(self, identifier: str) -> Optional[Dict[str, Any]]:
+        doc = self.db.collection("fact_articles").document(identifier).get()
+        if doc.exists:
+            return doc.to_dict()
+        docs = self.db.collection("fact_articles").where("slug", "==", identifier).limit(1).stream()
+        for d in docs:
+            return d.to_dict()
+        return None
+
+    def add_article(self, article: Dict[str, Any]) -> Dict[str, Any]:
+        doc_id = article.get("id") or f"art-{int(datetime.now().timestamp()*1000)}"
+        article["id"] = doc_id
+        self.db.collection("fact_articles").document(doc_id).set(article, merge=True)
+        self.add_admin_log("admin@truthlens.ai", "CREATE", "fact_articles", doc_id, f"Created article: {article.get('title')}")
+        return article
+
+    def update_article(self, article_id: str, updates: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        doc_ref = self.db.collection("fact_articles").document(article_id)
+        if not doc_ref.get().exists:
+            return None
+        doc_ref.set(updates, merge=True)
+        self.add_admin_log("admin@truthlens.ai", "UPDATE", "fact_articles", article_id, f"Updated article: {article_id}")
+        updated_doc = doc_ref.get()
+        return updated_doc.to_dict() if updated_doc.exists else updates
+
+    def delete_article(self, article_id: str) -> bool:
+        doc_ref = self.db.collection("fact_articles").document(article_id)
+        if not doc_ref.get().exists:
+            return False
+        doc_ref.delete()
+        self.add_admin_log("admin@truthlens.ai", "DELETE", "fact_articles", article_id, f"Deleted article: {article_id}")
+        return True
+
+    # Admin Logs
+    def get_admin_logs(self, limit: int = 100) -> List[Dict[str, Any]]:
+        try:
+            from firebase_admin import firestore
+            docs = self.db.collection("admin_logs").order_by("timestamp", direction=firestore.Query.DESCENDING).limit(limit).stream()
+            return [d.to_dict() for d in docs if d.to_dict()]
+        except Exception:
+            docs = self.db.collection("admin_logs").stream()
+            logs = [d.to_dict() for d in docs if d.to_dict()]
+            logs.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
+            return logs[:limit]
+
+    def add_admin_log(self, admin_id: str, action: str, target_collection: str, target_id: Optional[str], details: str):
+        log_id = f"log-{int(datetime.now().timestamp()*1000)}"
         log_entry = {
-            "id": f"log-{int(datetime.now().timestamp()*1000)}",
+            "id": log_id,
             "admin_id": admin_id,
             "action": action,
             "target_collection": target_collection,
@@ -392,18 +638,34 @@ class FactDatabaseProvider(BaseFactDatabaseProvider):
             "details": details,
             "ip_address": "127.0.0.1"
         }
-        data.setdefault("admin_logs", []).insert(0, log_entry)
-        if len(data["admin_logs"]) > 500:
-            data["admin_logs"] = data["admin_logs"][:500]
-        self._write_db(data)
+        self.db.collection("admin_logs").document(log_id).set(log_entry, merge=True)
+        self.db.collection("system_logs").document(log_id).set(log_entry, merge=True)
 
     # Settings
     def get_settings(self) -> Dict[str, Any]:
-        return self._read_db().get("system_settings", {})
+        doc = self.db.collection("system_settings").document("config").get()
+        return doc.to_dict() if doc.exists else {}
 
     def update_settings(self, updates: Dict[str, Any]) -> Dict[str, Any]:
-        data = self._read_db()
-        data.setdefault("system_settings", {}).update(updates)
-        self._write_db(data)
+        doc_ref = self.db.collection("system_settings").document("config")
+        doc_ref.set(updates, merge=True)
         self.add_admin_log("admin@truthlens.ai", "SETTINGS_CHANGE", "system_settings", "config", "Updated system thresholds and provider configurations")
-        return data["system_settings"]
+        doc = doc_ref.get()
+        return doc.to_dict() if doc.exists else updates
+
+
+def get_fact_database_provider() -> BaseFactDatabaseProvider:
+    """Return FirestoreFactDatabaseProvider if Firebase environment variables are set, else JsonFactDatabaseProvider."""
+    if is_firestore_configured():
+        logger.info("Selected FirestoreFactDatabaseProvider (storage: firestore)")
+        return FirestoreFactDatabaseProvider()
+    else:
+        logger.info("Selected JsonFactDatabaseProvider (storage: json)")
+        return JsonFactDatabaseProvider()
+
+
+class FactDatabaseProvider:
+    """Polymorphic factory class returning either Firestore or JSON database provider."""
+
+    def __new__(cls, *args, **kwargs):
+        return get_fact_database_provider()

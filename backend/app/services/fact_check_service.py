@@ -3,6 +3,7 @@ import time
 import uuid
 import httpx
 import re
+from app.utils.url_safety import fetch_public_url, UnsafeURLError
 from datetime import datetime, timezone
 from typing import Optional, List
 from app.schemas.fact_check import (
@@ -84,24 +85,20 @@ class FactCheckService:
     async def verify_url(self, url: str, language: str = "en") -> FactCheckResponse:
         start_time = time.time()
         
-        # 1. Fetch URL content
+        # 1. Fetch URL content (with SSRF protection)
         extracted_text = ""
         page_title = url
-        try:
-            async with httpx.AsyncClient(timeout=8.0, follow_redirects=True) as client:
-                resp = await client.get(url, headers={"User-Agent": "TruthLens Fact-Check Bot/2.0"})
-                if resp.status_code == 200:
-                    html_content = resp.text
-                    # Extract basic title and paragraphs
-                    title_match = re.search(r"<title>(.*?)</title>", html_content, re.IGNORECASE | re.DOTALL)
-                    if title_match:
-                        page_title = title_match.group(1).strip()
-                    # Strip tags
-                    clean_p = re.findall(r"<p[^>]*>(.*?)</p>", html_content, re.IGNORECASE | re.DOTALL)
-                    text_parts = [re.sub(r"<[^>]+>", "", p).strip() for p in clean_p]
-                    extracted_text = " ".join([p for p in text_parts if len(p) > 20])[:2000]
-        except Exception:
-            extracted_text = page_title
+        resp = await fetch_public_url(url, timeout=8.0, max_bytes=2 * 1024 * 1024)
+        if resp.status_code == 200:
+            html_content = resp.text
+            # Extract basic title and paragraphs
+            title_match = re.search(r"<title>(.*?)</title>", html_content, re.IGNORECASE | re.DOTALL)
+            if title_match:
+                page_title = title_match.group(1).strip()
+            # Strip tags
+            clean_p = re.findall(r"<p[^>]*>(.*?)</p>", html_content, re.IGNORECASE | re.DOTALL)
+            text_parts = [re.sub(r"<[^>]+>", "", p).strip() for p in clean_p]
+            extracted_text = " ".join([p for p in text_parts if len(p) > 20])[:2000]
 
         if not extracted_text:
             extracted_text = page_title

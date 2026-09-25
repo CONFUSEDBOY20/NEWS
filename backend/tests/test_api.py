@@ -124,3 +124,24 @@ def test_admin_login_and_crud():
     # 4. Delete Raw Data
     del_resp = client.delete(f"/api/v1/admin/raw-data/{item_id}", headers=headers)
     assert del_resp.status_code == 200
+
+def test_fact_check_url_ssrf_protection():
+    """Verify submitting loopback/internal URLs to the fact check endpoints returns 400."""
+    # Test main /api/fact-check/url
+    resp = client.post(
+        "/api/fact-check/url",
+        json={"url": "http://127.0.0.1:8000/api/health", "language": "en"}
+    )
+    assert resp.status_code == 400
+    data = resp.json()
+    err_msg = data.get("error", {}).get("message", "") if isinstance(data.get("error"), dict) else str(data)
+    assert "cannot be checked" in err_msg or "valid" in err_msg or "HTTP_400" in str(data)
+
+    # Test v1 /api/v1/fact-check/url
+    resp_v1 = client.post(
+        "/api/v1/fact-check/url",
+        json={"url": "http://127.0.0.1:8000/api/health", "language": "en"}
+    )
+    assert resp_v1.status_code == 400
+
+

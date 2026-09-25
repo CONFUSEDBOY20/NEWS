@@ -118,11 +118,14 @@ async def request_lifecycle_and_rate_limit_middleware(request: Request, call_nex
 @app.get("/health", tags=["System Health"])
 @app.get("/api/health", tags=["System Health"])
 async def root_health_check():
+    from app.providers.fact_db_provider import is_firestore_configured
+    storage_mode = "firestore" if is_firestore_configured() else "json"
     return {
         "status": "ok",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "version": "2.0.0",
         "service": "TruthLens Fact-Checking Engine",
+        "storage": storage_mode,
         "providers": {
             "fact_database": "active",
             "search_graph": "active",
@@ -130,6 +133,7 @@ async def root_health_check():
             "news_wire": "active"
         }
     }
+
 
 # Mount Versioned API (v1)
 app.include_router(v1_router, prefix="/api/v1")

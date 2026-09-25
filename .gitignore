@@ -10,6 +10,9 @@ __pycache__/
 *$py.class
 *.so
 .Python
+backend/data/runtime_database.json
+backend/data/*.tmp_db_*
+
 env/
 venv/
 ENV/

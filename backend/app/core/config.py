@@ -55,6 +55,7 @@ class Settings(BaseModel):
     FIREBASE_PRIVATE_KEY: str = os.getenv("FIREBASE_PRIVATE_KEY", "").replace("\\n", "\n")
     
     # Rate Limiting & Verification Thresholds
+    TRUTHLENS_DATA_FILE: str = os.getenv("TRUTHLENS_DATA_FILE", os.path.join(_backend_dir, "data", "runtime_database.json"))
     RATE_LIMIT_PER_MINUTE: int = int(os.getenv("RATE_LIMIT_PER_MINUTE", "60"))
     CONFIDENCE_THRESHOLD_TRUE: float = 80.0
     CONFIDENCE_THRESHOLD_PARTIAL: float = 55.0
@@ -62,3 +63,4 @@ class Settings(BaseModel):
     MAINTENANCE_MODE: bool = False
 
 settings = Settings()
+

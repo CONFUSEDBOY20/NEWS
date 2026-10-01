@@ -319,18 +319,46 @@ const FALLBACK_WORLD_NEWS = [
 
 export const api = {
   // Public Fact-Checking
-  verifyUrl: async (url, language = "en") => {
+  verifyUrl: async (url, language = "en", title = "") => {
     try {
       const res = await fetch(`${API_BASE}/fact-check/url`, {
         method: "POST",
         headers: getHeaders(),
-        body: JSON.stringify({ url, language }),
+        body: JSON.stringify({ url, language, title }),
       });
-      if (res.ok) return await res.json();
+      if (res.ok) {
+        const data = await res.json();
+        if (title && data) {
+          data.primary_claim = title;
+          data.article_title = title;
+          data.article_url = url;
+        }
+        return data;
+      }
     } catch {
       // Graceful fallback to client forensic engine
     }
-    return generateSimulatedVerification(url, "url");
+    const simulated = generateSimulatedVerification(title || url, "url");
+    if (title && simulated) {
+      simulated.primary_claim = title;
+      simulated.article_title = title;
+      simulated.submitted_input = url;
+    }
+    return simulated;
+  },
+
+  getLiveNews: async ({ category = "", q = "", country = "" } = {}) => {
+    try {
+      const params = new URLSearchParams();
+      if (category && category !== "Top" && category !== "All") params.set("category", category);
+      if (q) params.set("q", q);
+      if (country) params.set("country", country);
+      const res = await fetch(`/api/news?${params.toString()}`);
+      if (res.ok) return await res.json();
+    } catch {
+      // Fallback
+    }
+    return null;
   },
 
   verifyText: async (text, language = "en") => {

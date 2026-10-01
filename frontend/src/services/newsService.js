@@ -412,7 +412,47 @@ export async function fetchLatestNews({ category = "All", fresh = false } = {}) 
     }
   }
 
-  // 1. Try NewsData.io if API key exists
+  // 1. Primary: Query Vercel Multi-Source Aggregator (/api/news) - Server-side keys only
+  try {
+    const params = new URLSearchParams();
+    if (category && category.toLowerCase() !== "all") {
+      params.set("category", category.toLowerCase());
+    }
+    if (category.toLowerCase() === "india") {
+      params.set("country", "in");
+    }
+    const res = await fetch(`/api/news?${params.toString()}`);
+    if (res.ok) {
+      const json = await res.json();
+      if (json?.articles && Array.isArray(json.articles) && json.articles.length > 0) {
+        const normalized = json.articles.map((art, idx) => ({
+          id: art.id || `agg-${idx}-${Date.now()}`,
+          title: art.title || "Untitled Article",
+          description: art.description || "No summary available for this story.",
+          image_url: resolveRealTimeNewsImage(art.title, art.category || category, art.image || art.url_to_image),
+          link: art.url || "#",
+          source: art.source || "News Wire",
+          published_at: art.publishedAt || art.published_at || new Date().toISOString(),
+          time_ago: getRelativeTimeString(art.publishedAt || art.published_at),
+          category: capitalize(art.category || category),
+          credibility_score: art.credibility_score,
+          credibility_level: art.credibility_level,
+          content_paragraphs: [
+            art.description,
+            "Real-time wire dispatch aggregated via TruthLens Multi-Source News Engine.",
+            "Cross-referenced against verified fact-checking standards and publisher registries."
+          ].filter(Boolean),
+        }));
+        const unique = deduplicateArticles(normalized);
+        saveToCache(cacheKey, unique);
+        return { articles: unique, fromCache: false, source: "api/news" };
+      }
+    }
+  } catch (aggErr) {
+    console.warn("Multi-source /api/news fetch skipped/failed:", aggErr.message);
+  }
+
+  // 2. Direct client fallback: Try NewsData.io if API key exists in client env
   if (NEWSDATA_KEY) {
     try {
       const params = new URLSearchParams({

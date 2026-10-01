@@ -6,6 +6,22 @@ from app.services.news_service import NewsService
 router = APIRouter(prefix="/news", tags=["News Feeds"])
 news_service = NewsService()
 
+@router.get("", response_model=NewsFeedResponse)
+@router.get("/", response_model=NewsFeedResponse)
+async def get_live_news(
+    q: Optional[str] = Query(None, description="Keyword or claim query"),
+    category: Optional[str] = Query(None, description="Category filter"),
+    country: Optional[str] = Query(None, description="Country filter (e.g. 'in', 'us')"),
+    page: int = Query(1, ge=1),
+    page_size: int = Query(20, ge=1, le=50),
+    fresh: bool = Query(False, description="Bypass short-lived cache and pull live wires"),
+):
+    if q and q.strip():
+        return await news_service.search_news(query=q.strip(), page=page, page_size=page_size)
+    if (country and country.lower() == "in") or (category and category.lower() in {"india", "nation"}):
+        return await news_service.get_india_news(category=category, page=page, page_size=page_size, fresh=fresh)
+    return await news_service.get_world_news(category=category, page=page, page_size=page_size, fresh=fresh)
+
 @router.get("/world", response_model=NewsFeedResponse)
 async def get_world_news(
     category: Optional[str] = Query(None, description="Category filter (Politics, Tech, Health, Economy, Climate, Science)"),
@@ -35,3 +51,4 @@ async def search_news(
 @router.get("/ticker", response_model=NewsFeedResponse)
 async def get_live_ticker():
     return await news_service.get_ticker()
+

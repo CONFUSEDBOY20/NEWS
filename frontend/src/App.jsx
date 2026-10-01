@@ -6,6 +6,7 @@ import { FactCheckHero } from "./components/FactCheckHero";
 import { FactCheckProgress } from "./components/FactCheckProgress";
 import { FactCheckResult } from "./components/FactCheckResult";
 import { HistorySidebar } from "./components/HistorySidebar";
+import { LiveNewsView } from "./components/LiveNewsView";
 import { WorldNewsView } from "./components/WorldNewsView";
 import { IndiaNewsView } from "./components/IndiaNewsView";
 import { FactArticlesView } from "./components/FactArticlesView";
@@ -49,6 +50,8 @@ function MainContent() {
               {!isVerifying && verificationResult && <FactCheckResult />}
             </>
           )}
+
+          {activeView === "live-news" && <LiveNewsView />}
 
           {activeView === "world-news" && <WorldNewsView />}
 
@@ -136,6 +139,11 @@ function MainContent() {
                 News Coverage
               </h4>
               <ul className="space-y-2">
+                <li>
+                  <button onClick={() => setActiveView("live-news")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                    Live News Aggregator
+                  </button>
+                </li>
                 <li>
                   <button onClick={() => setActiveView("world-news")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                     World Wire Headlines

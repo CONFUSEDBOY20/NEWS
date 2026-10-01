@@ -126,17 +126,19 @@ export function FactCheckHero() {
 
   useEffect(() => {
     if (!inputPreload) return;
-    const { type, value, autoStart } = inputPreload;
+    const { type, value, title, autoStart } = inputPreload;
     if (type === "url") {
       setActiveTab("url");
       setInputValue(value);
+      if (title) setActiveClaimText(title);
     } else {
       setActiveTab("text");
       setInputValue(value);
+      if (title) setActiveClaimText(title);
     }
     setInputPreload(null);
     if (autoStart && value) {
-      triggerVerification(type || "text", value);
+      triggerVerification(type || "text", value, title);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputPreload]);
@@ -183,7 +185,7 @@ export function FactCheckHero() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const triggerVerification = async (tabToUse, valToUse) => {
+  const triggerVerification = async (tabToUse, valToUse, titleToUse) => {
     const tab = tabToUse || activeTab;
     const val = (valToUse !== undefined ? valToUse : inputValue).trim();
     setInputError(null);
@@ -208,7 +210,7 @@ export function FactCheckHero() {
       }
     }
 
-    const claimToVerify = tab === "image" ? imageFile?.name || "Uploaded Claim Image" : val;
+    const claimToVerify = titleToUse || (tab === "image" ? imageFile?.name || "Uploaded Claim Image" : val);
     setActiveClaimText(claimToVerify);
     setIsVerifying(true);
     setVerificationResult(null);
@@ -227,11 +229,19 @@ export function FactCheckHero() {
       let result;
       const langParam = selectedLanguage === "auto" ? language : selectedLanguage;
       if (tab === "url") {
-        result = await api.verifyUrl(val, langParam);
+        result = await api.verifyUrl(val, langParam, titleToUse);
       } else if (tab === "text") {
         result = await api.verifyText(val, langParam);
       } else if (tab === "image") {
         result = await api.verifyImage(imageFile, langParam);
+      }
+
+      if (titleToUse && result) {
+        result.primary_claim = titleToUse;
+        result.article_title = titleToUse;
+        if (tab === "url") {
+          result.article_url = val;
+        }
       }
 
       clearInterval(stageTimer);
@@ -1073,9 +1083,16 @@ export function FactCheckHero() {
           onClose={() => setSelectedNewsArticle(null)}
           onDeepVerify={(art) => {
             setSelectedNewsArticle(null);
-            setActiveTab("text");
-            setInputValue(art.title);
-            triggerVerification("text", art.title);
+            const hasValidUrl = art.link && art.link.startsWith("http");
+            if (hasValidUrl) {
+              setActiveTab("url");
+              setInputValue(art.link);
+              triggerVerification("url", art.link, art.title);
+            } else {
+              setActiveTab("text");
+              setInputValue(art.title);
+              triggerVerification("text", art.title, art.title);
+            }
           }}
         />
       )}

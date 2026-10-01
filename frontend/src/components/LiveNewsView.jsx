@@ -16,6 +16,8 @@ import {
   Dumbbell,
   Film,
   ArrowRight,
+  ShieldCheck,
+  CheckCircle2,
 } from "lucide-react";
 
 function relativeTime(iso) {
@@ -44,17 +46,73 @@ const categoryBadgeConfig = {
   Default: { label: "News", bg: "bg-blue-600", icon: Globe },
 };
 
+function CredibilityBadge({ level, score, source }) {
+  if (!source && !level) return null;
+
+  const isAccredited =
+    level === "Accredited Wire" ||
+    (score && score >= 94) ||
+    /reuters|ap news|associated press|bbc|afp|bloomberg|the hindu|guardian|pib|pti/i.test(source || "");
+
+  const isVerified =
+    level === "Verified Publisher" ||
+    (score && score >= 88) ||
+    /times of india|hindustan times|indian express|ndtv|cnn|techcrunch|forbes|wired/i.test(source || "");
+
+  if (isAccredited) {
+    return (
+      <span
+        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+        title="Accredited primary wire service / authoritative news registry"
+      >
+        <ShieldCheck className="w-3 h-3 text-emerald-500 shrink-0" />
+        <span>{level || "Accredited Wire"}</span>
+        {score && <span className="text-[9px] opacity-80">{score}%</span>}
+      </span>
+    );
+  }
+
+  if (isVerified) {
+    return (
+      <span
+        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20"
+        title="Established verified editorial publisher"
+      >
+        <CheckCircle2 className="w-3 h-3 text-blue-500 shrink-0" />
+        <span>{level || "Verified Publisher"}</span>
+        {score && <span className="text-[9px] opacity-80">{score}%</span>}
+      </span>
+    );
+  }
+
+  return (
+    <span
+      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/20"
+      title="Syndicated regional or digital news publisher"
+    >
+      <Radio className="w-3 h-3 text-slate-400 shrink-0" />
+      <span>{level || "Syndicated Media"}</span>
+    </span>
+  );
+}
+
 export function LiveNewsView({ region = "world" }) {
   const isWorld = region === "world";
   const { setInputPreload, setActiveView, setVerificationResult, t } = useApp();
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [category, setCategory] = useState("All");
+  const [category, setCategory] = useState("Top");
   const [searchQuery, setSearchQuery] = useState("");
   const [syncedAt, setSyncedAt] = useState(null);
   const [isLive, setIsLive] = useState(true);
   const [selectedArticle, setSelectedArticle] = useState(null);
+  const [sourcesQueried, setSourcesQueried] = useState([
+    "Google News RSS",
+    "GNews API",
+    "NewsAPI",
+    "NewsData.io",
+  ]);
   const searchActive = useRef(false);
 
   const categories = ["Top", "World", "India", "Tech", "Business", "Health"];
@@ -63,7 +121,7 @@ export function LiveNewsView({ region = "world" }) {
     if (showSpinner) setLoading(true);
     else setRefreshing(true);
 
-    // 1. Try Vercel Serverless /api/news route
+    // 1. Query Vercel Multi-Source Aggregator /api/news
     try {
       const catParam = category === "Top" ? "" : category.toLowerCase();
       const params = new URLSearchParams();
@@ -83,15 +141,20 @@ export function LiveNewsView({ region = "world" }) {
             source_name: a.source,
             published_at: a.publishedAt,
             category: category === "Top" ? "Top" : category,
+            credibility_score: a.credibility_score,
+            credibility_level: a.credibility_level,
           }));
           setArticles(normalized);
           setSyncedAt(json.cached_at || new Date().toISOString());
+          if (Array.isArray(json.sources_queried) && json.sources_queried.length > 0) {
+            setSourcesQueried(json.sources_queried);
+          }
           setIsLive(true);
           return;
         }
       }
     } catch {
-      // Fall through to backend/newsService
+      // Fall through to backend / fallback provider
     }
 
     // 2. Fallback to API service
@@ -114,7 +177,7 @@ export function LiveNewsView({ region = "world" }) {
   useEffect(() => {
     searchActive.current = false;
     loadNews(true, false);
-    // Auto-refresh every 60 seconds without full reload
+    // Auto-refresh every 60 seconds without wiping UI
     const timer = setInterval(() => {
       if (!searchActive.current) loadNews(false, false);
     }, 60000);
@@ -133,8 +196,13 @@ export function LiveNewsView({ region = "world" }) {
   };
 
   const handleVerifyArticle = (art) => {
-    const claim = [art.title, art.description || art.summary].filter(Boolean).join(". ");
-    setInputPreload({ type: "text", value: claim, autoStart: true });
+    const hasValidUrl = art.url && art.url.startsWith("http");
+    setInputPreload({
+      type: hasValidUrl ? "url" : "text",
+      value: hasValidUrl ? art.url : art.title,
+      title: art.title,
+      autoStart: true,
+    });
     setVerificationResult(null);
     setActiveView("fact-check");
   };
@@ -146,23 +214,37 @@ export function LiveNewsView({ region = "world" }) {
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-1">
             <Radio className="w-3.5 h-3.5" />
-            <span>{isWorld ? t.newsHeaderWorld || "World Wire" : t.newsHeaderIndia || "India Wire"}</span>
-            <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] ${
-              isLive
-                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
-                : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20"
-            }`}>
+            <span>Live Multi-Source Wire</span>
+            <span
+              className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] ${
+                isLive
+                  ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+                  : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20"
+              }`}
+            >
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              {isLive ? "LIVE" : "CACHED"}
+              {isLive ? "LIVE WIRE" : "CACHED"}
             </span>
           </div>
 
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight font-sans">
-            {isWorld ? "World News Coverage" : "India News Coverage"}
+            Live News Aggregator
           </h2>
-          <p className="text-xs text-slate-500 mt-1">
-            {syncedAt ? `Updated ${relativeTime(syncedAt)} • headlines auto-refresh every 60s` : "Connecting to wire services..."}
-          </p>
+
+          <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-1 flex-wrap">
+            <span>
+              {syncedAt
+                ? `Updated ${relativeTime(syncedAt)} • auto-refreshes every 60s`
+                : "Connecting to syndicated wires..."}
+            </span>
+            <span className="hidden sm:inline">•</span>
+            <div className="hidden sm:flex items-center gap-1 text-[11px] text-slate-400 dark:text-slate-500">
+              <span>Feeds:</span>
+              <span className="text-slate-600 dark:text-slate-300 font-mono">
+                {sourcesQueried.slice(0, 4).join(" · ")}
+              </span>
+            </div>
+          </div>
         </div>
 
         <div className="flex items-center gap-2 w-full md:w-auto">
@@ -171,7 +253,7 @@ export function LiveNewsView({ region = "world" }) {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t.newsSearchPlaceholder || "Search headlines..."}
+              placeholder={t.newsSearchPlaceholder || "Search headlines or topics..."}
               className="w-full bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/[0.08] rounded-xl py-2 pl-9 pr-4 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-sans transition-all"
             />
             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
@@ -183,15 +265,15 @@ export function LiveNewsView({ region = "world" }) {
               searchActive.current = false;
               loadNews(false, true);
             }}
-            className="shrink-0 p-2 rounded-xl border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-white/[0.03] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-            title="Refresh feed"
+            className="shrink-0 p-2 rounded-xl border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-white/[0.03] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+            title="Refresh live feeds"
           >
             <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
           </button>
         </div>
       </div>
 
-      {/* Categories */}
+      {/* Category Tabs */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
         {categories.map((cat) => (
           <button
@@ -212,7 +294,7 @@ export function LiveNewsView({ region = "world" }) {
         ))}
       </div>
 
-      {/* Elegant Skeleton Loading State */}
+      {/* Skeleton Loading State */}
       {loading && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3, 4, 5, 6].map((n) => (
@@ -230,7 +312,7 @@ export function LiveNewsView({ region = "world" }) {
               </div>
               <div className="p-5 pt-2 border-t border-slate-100 dark:border-white/[0.04] flex items-center justify-between">
                 <div className="h-3 w-16 rounded skeleton-shimmer bg-slate-200/60 dark:bg-white/[0.04]" />
-                <div className="h-3 w-14 rounded skeleton-shimmer bg-slate-200/60 dark:bg-white/[0.04]" />
+                <div className="h-8 w-28 rounded-lg skeleton-shimmer bg-slate-200/60 dark:bg-white/[0.04]" />
               </div>
             </div>
           ))}
@@ -239,10 +321,17 @@ export function LiveNewsView({ region = "world" }) {
 
       {/* Empty state */}
       {!loading && articles.length === 0 && (
-        <p className="text-center text-sm text-slate-500 py-16">No headlines found matching this filter.</p>
+        <div className="text-center py-16 space-y-3">
+          <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+            No headlines currently matched this filter.
+          </p>
+          <p className="text-xs text-slate-500">
+            Try switching categories or clicking the refresh button above.
+          </p>
+        </div>
       )}
 
-      {/* Articles Grid with Images & Readable Typography */}
+      {/* Articles Grid with Editorial Typography, Badges, and Verification Action */}
       {!loading && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles.map((art, artIdx) => {
@@ -261,7 +350,10 @@ export function LiveNewsView({ region = "world" }) {
                   setSelectedArticle({
                     id: art.id,
                     title: art.title,
-                    description: art.description || art.summary || "Full wire dispatch corroborated by syndicated reporting desks.",
+                    description:
+                      art.description ||
+                      art.summary ||
+                      "Full wire dispatch corroborated by syndicated reporting desks.",
                     image_url: imageUrl,
                     link: art.url || "#",
                     source: art.source_name || art.source || "Official Wire",
@@ -270,17 +362,17 @@ export function LiveNewsView({ region = "world" }) {
                     time_ago: relativeTime(art.published_at || art.publishedAt),
                     precomputed_verdict: "TRUE",
                     precomputed_confidence: 96.2,
-                    precomputed_explanation: "Directly corroborated across official news agency wires and verified government bulletins.",
+                    precomputed_explanation:
+                      "Directly corroborated across official news agency wires and verified publisher reporting.",
                     content_paragraphs: [
                       art.description || art.summary,
                       "Syndicated reporting confirms real-time coverage by regional accredited correspondents.",
-                      "Independent fact-checking cross-referenced against authoritative registry data."
+                      "Independent fact-checking cross-referenced against authoritative registry data.",
                     ],
                   });
                 }}
                 className="animate-news-item rounded-2xl overflow-hidden bg-white dark:bg-[#111624] border border-slate-200/80 dark:border-white/[0.08] shadow-sm hover:shadow-xl hover:border-blue-500/40 dark:hover:border-blue-500/40 transition-all duration-200 hover-lift flex flex-col justify-between group cursor-pointer"
               >
-
                 <div>
                   {/* Thumbnail Image with Badges */}
                   <div className="relative h-48 w-full overflow-hidden bg-slate-900">
@@ -297,7 +389,9 @@ export function LiveNewsView({ region = "world" }) {
 
                     {/* Category Badge */}
                     <div className="absolute top-3 left-3">
-                      <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold text-white shadow-sm ${badgeCfg.bg}`}>
+                      <span
+                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold text-white shadow-sm ${badgeCfg.bg}`}
+                      >
                         <CategoryIcon className="w-3 h-3" />
                         <span>{badgeCfg.label}</span>
                       </span>
@@ -313,43 +407,61 @@ export function LiveNewsView({ region = "world" }) {
 
                   {/* Body Content with Readable Typography */}
                   <div className="p-5 space-y-3">
-                    <div className="flex items-center justify-between text-xs text-slate-500 font-mono">
-                      <span className="font-semibold text-slate-700 dark:text-slate-300">{art.source_name || art.source || "News Wire"}</span>
-                      <span>{relativeTime(art.published_at || art.publishedAt)}</span>
+                    {/* Source Name + Credibility Badge */}
+                    <div className="flex items-center justify-between gap-2 flex-wrap text-xs text-slate-500 font-mono">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-semibold text-slate-800 dark:text-slate-200">
+                          {art.source_name || art.source || "News Wire"}
+                        </span>
+                        <CredibilityBadge
+                          level={art.credibility_level}
+                          score={art.credibility_score}
+                          source={art.source_name || art.source}
+                        />
+                      </div>
+                      <span className="text-[11px] text-slate-400">
+                        {relativeTime(art.published_at || art.publishedAt)}
+                      </span>
                     </div>
 
+                    {/* Article Headline */}
                     <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-[1.4] sm:leading-[1.5] line-clamp-2 font-sans">
                       {art.title}
                     </h3>
 
+                    {/* Article Summary */}
                     <p className="text-[15px] sm:text-base text-slate-600 dark:text-slate-300 leading-[1.6] line-clamp-2">
-                      {art.description || art.summary}
+                      {art.description || art.summary || "Click to read full reporting dispatch and cross-examine factual claims."}
                     </p>
                   </div>
                 </div>
 
-                {/* Footer Action: Read More in New Tab + Read & Check */}
-                <div className="p-5 pt-3 flex items-center justify-between border-t border-slate-100 dark:border-white/[0.04]">
+                {/* Footer Action: Read More Link + Verify with TruthLens Button */}
+                <div className="p-5 pt-3 flex items-center justify-between border-t border-slate-100 dark:border-white/[0.04] gap-2 flex-wrap">
                   <a
                     href={art.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="text-xs sm:text-sm font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 hover:underline flex items-center gap-1 transition-colors"
+                    className="text-xs sm:text-sm font-semibold text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 hover:underline flex items-center gap-1 transition-colors"
+                    title="Open original reporting source"
                   >
-                    <span>Read more</span>
+                    <span>Read source</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </a>
 
+                  {/* Verify with TruthLens Button */}
                   <button
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleVerifyArticle(art);
                     }}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-xs font-bold text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors cursor-pointer border border-blue-200/50 dark:border-blue-800/50"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-bold shadow-xs hover:shadow-md transition-all duration-150 cursor-pointer"
+                    title="Send article URL and headline into TruthLens fact-check flow"
                   >
-                    <span>Verify Claim</span>
+                    <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
+                    <span>Verify with TruthLens</span>
                   </button>
                 </div>
               </article>
@@ -358,7 +470,7 @@ export function LiveNewsView({ region = "world" }) {
         </div>
       )}
 
-      {/* Interactive News Reader & Fake/Real Toggle Modal */}
+      {/* Interactive News Reader & Real/Fake Toggle Modal */}
       {selectedArticle && (
         <NewsReaderFactCheckModal
           article={selectedArticle}

@@ -470,280 +470,41 @@ html:not(.dark) .skeleton-shimmer {
 
   /* Entrance animations — show immediately */
   .animate-fade-up,
-  .animate-fadeIn,
-  .animate-result-reveal,
-  .animate-card,
-  .animate-news-item,
-  .animate-evidence,
-  .stagger-children > * {
+  .animate-fadeIn {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
   }
-
-  /* Reveal sections — show immediately */
-  .reveal-section {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
 }
-
-/* ── CUSTOM SCROLLBARS ───────────────────────────────────────── */
-::-webkit-scrollbar       { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.25);
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.5); }
 
 :root {
-  --font-sans: 'IBM Plex Sans', 'Segoe UI', sans-serif;
-  --font-editorial: 'Newsreader', Georgia, serif;
-  --paper: #F4F5F1;
-  --surface: #FFFFFF;
-  --ink: #182522;
-  --muted: #5E6B66;
-  --line: #D8DEDA;
-  --signal: #3158C8;
-  --signal-red: #B94B3A;
-  --soft-green: #E4E9E4;
+  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F8FAFC;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --border-subtle: #E2E8F0;
+  --brand-blue: #2563EB;
 }
 
+
+html.light body,
 html[data-theme="light"] body {
-  background-color: var(--paper) !important;
-  background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(24, 37, 34, 0.025) 40px) !important;
-  color: var(--ink) !important;
-  letter-spacing: 0;
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
 }
 
+html.dark body,
 html[data-theme="dark"] body {
-  background-color: #111816 !important;
-  background-image: radial-gradient(ellipse at 12% 0%, rgba(49, 88, 200, 0.12), transparent 40%) !important;
-  color: #E9EFEB !important;
-  letter-spacing: 0;
+  background-color: #090D16 !important;
+  color: #F8FAFC !important;
 }
 
-.truth-app {
-  color: var(--ink);
-  font-family: var(--font-sans);
+/* Accessible focus rings */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #2563EB;
+  outline-offset: 2px;
 }
-
-.truth-app.truth-dark {
-  --paper: #111816;
-  --surface: #19221F;
-  --ink: #E9EFEB;
-  --muted: #A6B2AC;
-  --line: #34413B;
-  --soft-green: #202D27;
-}
-
-.truth-header {
-  background: color-mix(in srgb, var(--paper) 94%, transparent) !important;
-  border-color: var(--line) !important;
-}
-
-.truth-header-inner {
-  min-height: 72px;
-  height: auto;
-}
-
-.truth-brand > div:first-child {
-  background: var(--ink) !important;
-  border-color: var(--ink) !important;
-  color: var(--paper) !important;
-  border-radius: 4px !important;
-  box-shadow: none !important;
-}
-
-.truth-brand span:first-child {
-  color: var(--ink) !important;
-  font-family: var(--font-editorial);
-  font-size: 21px;
-  font-weight: 600;
-}
-
-.truth-brand span:first-child span {
-  color: var(--signal) !important;
-}
-
-.truth-nav-item {
-  border-radius: 3px !important;
-  color: var(--muted) !important;
-  padding-inline: 12px !important;
-}
-
-.truth-nav-active {
-  background: transparent !important;
-  color: var(--ink) !important;
-}
-
-.truth-nav-active::after {
-  content: "";
-  position: absolute;
-  right: 12px;
-  bottom: 1px;
-  left: 12px;
-  height: 2px;
-  background: var(--signal-red);
-}
-
-.truth-ticker {
-  background: var(--soft-green) !important;
-  border-color: var(--line) !important;
-}
-
-.truth-home {
-  max-width: 1320px;
-  padding-top: 54px !important;
-  padding-bottom: 72px !important;
-  gap: 42px !important;
-}
-
-.truth-intro {
-  max-width: 1080px;
-  padding-top: 0 !important;
-  text-align: left !important;
-}
-
-.truth-intro > div:first-child {
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  color: var(--signal-red) !important;
-  padding: 0 !important;
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.truth-title {
-  max-width: 1080px !important;
-  margin-inline: 0 !important;
-  color: var(--ink) !important;
-  font-family: var(--font-editorial) !important;
-  font-size: clamp(48px, 6vw, 76px) !important;
-  font-weight: 500 !important;
-  line-height: 0.99 !important;
-  letter-spacing: 0 !important;
-}
-
-.truth-title span:last-child {
-  color: var(--signal) !important;
-}
-
-.truth-deck {
-  max-width: 610px !important;
-  margin-inline: 0 !important;
-  color: var(--muted) !important;
-  font-size: 16px !important;
-  line-height: 1.65 !important;
-}
-
-.truth-verify-panel {
-  background: var(--surface) !important;
-  border: 1px solid var(--line) !important;
-  border-top: 3px solid var(--signal) !important;
-  border-radius: 5px !important;
-  box-shadow: 0 12px 36px rgba(24, 37, 34, 0.07) !important;
-}
-
-.truth-verify-panel textarea,
-.truth-verify-panel input {
-  border-radius: 4px !important;
-  min-height: 48px;
-}
-
-.truth-verify-panel textarea {
-  min-height: 112px;
-}
-
-.truth-verify-panel button[type="submit"] {
-  background: var(--signal) !important;
-  border-radius: 4px !important;
-  box-shadow: none !important;
-  min-height: 44px;
-}
-
-.truth-home .glass-card {
-  border-radius: 5px !important;
-  box-shadow: none !important;
-}
-
-.truth-home > section:last-child {
-  border: 1px solid var(--line) !important;
-  border-radius: 5px !important;
-  background: var(--surface) !important;
-  box-shadow: none !important;
-}
-
-.truth-home > section:last-child h2 {
-  font-family: var(--font-editorial);
-  font-weight: 500;
-  letter-spacing: 0 !important;
-}
-
-.truth-app button:focus-visible,
-.truth-app a:focus-visible,
-.truth-app input:focus-visible,
-.truth-app textarea:focus-visible {
-  outline: 2px solid var(--signal);
-  outline-offset: 3px;
-}
-
-@media (max-width: 767px) {
-  .truth-header-inner {
-    min-height: 64px;
-  }
-
-  .truth-home {
-    padding-top: 36px !important;
-    gap: 32px !important;
-  }
-
-  .truth-title {
-    font-size: clamp(42px, 12vw, 58px) !important;
-  }
-
-  .truth-deck {
-    font-size: 14px !important;
-  }
-}
-
-@media (max-width: 400px) {
-  .truth-header-inner {
-    padding-inline: 12px !important;
-    gap: 6px;
-  }
-
-  .truth-header-tools {
-    gap: 3px !important;
-  }
-
-  .truth-header-tools > button {
-    padding-inline: 6px !important;
-  }
-
-  .truth-brand {
-    gap: 8px !important;
-  }
-
-  .truth-brand span:first-child {
-    font-size: 19px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .truth-brand,
-  .truth-nav-item,
-  .truth-ticker * {
-    animation: none !important;
-    transition: none !important;
-  }
-}
-
-
-

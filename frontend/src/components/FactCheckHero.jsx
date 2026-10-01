@@ -799,10 +799,10 @@ export function FactCheckHero() {
               How TruthLens works
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative items-center">
+            <div className="grid grid-cols-1 md:grid-cols-11 gap-4 items-center">
               
               {/* Step 1 */}
-              <div className="flex items-start gap-3">
+              <div className="md:col-span-3 flex items-start gap-3">
                 <div className="w-8 h-8 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-sm shrink-0 shadow-xs">
                   1
                 </div>
@@ -816,10 +816,15 @@ export function FactCheckHero() {
                 </div>
               </div>
 
+              {/* Arrow 1 */}
+              <div className="hidden md:flex md:col-span-1 justify-center text-slate-300 dark:text-slate-700">
+                <ArrowRight className="w-4 h-4" />
+              </div>
+
               {/* Step 2 */}
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 font-bold flex items-center justify-center text-sm shrink-0">
-                  <FileText className="w-4 h-4" />
+              <div className="md:col-span-3 flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold flex items-center justify-center text-sm shrink-0">
+                  <FileText className="w-4 h-4 text-slate-600 dark:text-slate-400" />
                 </div>
                 <div className="space-y-0.5">
                   <h4 className="text-xs font-bold text-slate-900 dark:text-white">
@@ -831,8 +836,13 @@ export function FactCheckHero() {
                 </div>
               </div>
 
+              {/* Arrow 2 */}
+              <div className="hidden md:flex md:col-span-1 justify-center text-slate-300 dark:text-slate-700">
+                <ArrowRight className="w-4 h-4" />
+              </div>
+
               {/* Step 3 */}
-              <div className="flex items-start gap-3">
+              <div className="md:col-span-3 flex items-start gap-3">
                 <div className="w-8 h-8 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center text-sm shrink-0 shadow-xs">
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
@@ -847,6 +857,7 @@ export function FactCheckHero() {
               </div>
 
             </div>
+
           </div>
 
         </div>

@@ -12,6 +12,7 @@ import { FactArticlesView } from "./components/FactArticlesView";
 import { LiveDetectionView } from "./components/LiveDetectionView";
 import { AdminModal } from "./components/AdminModal";
 import { AdminDashboard } from "./components/AdminDashboard";
+import { API_BASE } from "./services/api";
 import { ShieldCheck, CheckCircle2, ArrowUpRight } from "lucide-react";
 
 function MainContent() {
@@ -151,7 +152,7 @@ function MainContent() {
                   </button>
                 </li>
                 <li>
-                  <a href="http://127.0.0.1:8000/api/docs" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                  <a href={`${API_BASE}/docs`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                     <span>REST API Documentation</span>
                     <ArrowUpRight className="w-3 h-3" />
                   </a>

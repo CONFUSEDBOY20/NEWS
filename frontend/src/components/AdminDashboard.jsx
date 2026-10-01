@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { api } from "../services/api";
+import { API_BASE, api } from "../services/api";
 import { useApp } from "../context/AppContext";
 import {
   LayoutDashboard,
@@ -121,7 +121,7 @@ export function AdminDashboard() {
   };
 
   const handleExportCsv = () => {
-    window.open("http://localhost:8000/api/admin/raw-data/export/csv", "_blank");
+    window.open(`${API_BASE}/admin/raw-data/export/csv`, "_blank");
   };
 
   // Filtered raw data

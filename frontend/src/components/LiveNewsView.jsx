@@ -233,7 +233,7 @@ export function LiveNewsView({ region = "world" }) {
       {/* Articles Grid with Images */}
       {!loading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {articles.map((art) => {
+          {articles.map((art, artIdx) => {
             const cat = art.category || "World";
             const badgeCfg = categoryBadgeConfig[cat] || categoryBadgeConfig.Default;
             const CategoryIcon = badgeCfg.icon;
@@ -242,8 +242,12 @@ export function LiveNewsView({ region = "world" }) {
             return (
               <article
                 key={art.id}
-                className="rounded-2xl overflow-hidden bg-white dark:bg-[#111624] border border-slate-200/80 dark:border-white/[0.08] shadow-sm hover:shadow-lg transition-all duration-200 hover-lift flex flex-col justify-between group"
+                style={{
+                  animationDelay: `${Math.min(artIdx, 8) * 40}ms`,
+                }}
+                className="animate-news-item rounded-2xl overflow-hidden bg-white dark:bg-[#111624] border border-slate-200/80 dark:border-white/[0.08] shadow-sm hover:shadow-lg transition-shadow duration-200 hover-lift flex flex-col justify-between group"
               >
+
                 <div>
                   {/* Thumbnail Image with Badges */}
                   <div className="relative h-40 w-full overflow-hidden bg-slate-900">

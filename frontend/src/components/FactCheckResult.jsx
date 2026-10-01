@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useApp } from "../context/AppContext";
 import { SocialFactCardModal } from "./SocialFactCardModal";
 import { DisinformationSpreadGraph } from "./DisinformationSpreadGraph";
+import { useInView } from "../utils/animations";
 import {
   ShieldCheck,
   CheckCircle2,
@@ -102,9 +103,15 @@ function SectionHeading({ children }) {
   );
 }
 
-function Card({ children, className = "" }) {
+function Card({ children, className = "", animateIn = false, delay = 0 }) {
+  const [ref, inView] = useInView({ threshold: 0.08, triggerOnce: true });
+  const style = animateIn ? {
+    opacity: inView ? 1 : 0,
+    transform: inView ? "translateY(0)" : "translateY(10px)",
+    transition: `opacity 380ms cubic-bezier(0.16,1,0.3,1) ${delay}ms, transform 380ms cubic-bezier(0.16,1,0.3,1) ${delay}ms`,
+  } : {};
   return (
-    <div className={`rounded-2xl bg-white dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.08] shadow-sm dark:shadow-none ${className}`}>
+    <div ref={animateIn ? ref : undefined} style={style} className={`rounded-2xl bg-white dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.08] shadow-sm dark:shadow-none ${className}`}>
       {children}
     </div>
   );
@@ -127,9 +134,18 @@ function MetricRow({ label, value, barPct, barColor = "bg-slate-500" }) {
   );
 }
 
-function EvidenceCard({ item, accentClass, stanceLabel }) {
+function EvidenceCard({ item, accentClass, stanceLabel, index = 0 }) {
+  const [ref, inView] = useInView({ threshold: 0.05, triggerOnce: true });
   return (
-    <Card className="p-4 sm:p-5 flex flex-col justify-between gap-3 hover-lift transition-all duration-200 hover:border-slate-300 dark:hover:border-white/20">
+    <div
+      ref={ref}
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? "translateY(0)" : "translateY(10px)",
+        transition: `opacity 320ms cubic-bezier(0.16,1,0.3,1) ${index * 60}ms, transform 320ms cubic-bezier(0.16,1,0.3,1) ${index * 60}ms`,
+      }}
+      className="rounded-2xl bg-white dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.08] shadow-sm dark:shadow-none p-4 sm:p-5 flex flex-col justify-between gap-3 hover-lift transition-all hover:border-slate-300 dark:hover:border-white/20"
+    >
       <div className="space-y-2">
         <div className="flex items-start justify-between gap-2">
           <span className="text-xs text-slate-400 truncate max-w-[200px]">
@@ -160,7 +176,7 @@ function EvidenceCard({ item, accentClass, stanceLabel }) {
           </a>
         )}
       </div>
-    </Card>
+    </div>
   );
 }
 
@@ -322,7 +338,7 @@ const avgSourceCredibility = allEvidence.length > 0
       </div>
 
       {/* ── 2. KEY METRICS ─────────────────────────────────── */}
-      <Card className="p-5 sm:p-6 space-y-4">
+      <Card animateIn delay={0} className="p-5 sm:p-6 space-y-4">
         <div className="grid grid-cols-3 gap-4 sm:gap-6 text-center">
           <div>
             <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tabular-nums">{Math.round(res.confidence)}%</div>
@@ -340,7 +356,7 @@ const avgSourceCredibility = allEvidence.length > 0
       </Card>
 
       {/* ── 3. DETAILED BREAKDOWN ──────────────────────────── */}
-      <Card className="p-5 sm:p-6 space-y-5">
+      <Card animateIn delay={60} className="p-5 sm:p-6 space-y-5">
         <SectionHeading>Verification breakdown</SectionHeading>
         <div className="space-y-4">
           <MetricRow
@@ -411,6 +427,7 @@ const avgSourceCredibility = allEvidence.length > 0
               <EvidenceCard
                 key={idx}
                 item={item}
+                index={idx}
                 accentClass="bg-green-900/40 text-green-400"
                 stanceLabel={item.stance === "CONTEXT" ? "Context" : "Supports"}
               />
@@ -434,6 +451,7 @@ const avgSourceCredibility = allEvidence.length > 0
               <EvidenceCard
                 key={idx}
                 item={item}
+                index={idx}
                 accentClass="bg-red-900/40 text-red-400"
                 stanceLabel="Contradicts"
               />
@@ -446,7 +464,7 @@ const avgSourceCredibility = allEvidence.length > 0
 
       {/* ── 7. SOURCES ─────────────────────────────────────── */}
       {sourceIntelligenceList.length > 0 && (
-        <Card className="p-5 sm:p-6 space-y-4">
+        <Card animateIn delay={120} className="p-5 sm:p-6 space-y-4">
           <SectionHeading>Sources referenced</SectionHeading>
           <div className="divide-y divide-white/[0.05]">
             {sourceIntelligenceList.map((src, idx) => (
@@ -463,7 +481,7 @@ const avgSourceCredibility = allEvidence.length > 0
       )}
 
       {/* ── 8. ANALYSIS ────────────────────────────────────── */}
-      <Card className="p-5 sm:p-6 space-y-4">
+      <Card animateIn delay={180} className="p-5 sm:p-6 space-y-4">
         <SectionHeading>Analysis</SectionHeading>
 
         <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-line">

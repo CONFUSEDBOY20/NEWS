@@ -342,8 +342,17 @@ export function FactCheckHero() {
     const val = (overrides.value !== undefined ? overrides.value : inputValue).trim();
 
     if (tab === "url") {
-      if (!val || !val.startsWith("http")) {
-        setInputError("Please enter a valid news URL starting with http:// or https://");
+      // Strict URL validation: must be http or https, parseable, and have a hostname
+      try {
+        const parsed = new URL(val);
+        if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+          throw new Error("Invalid protocol");
+        }
+        if (!parsed.hostname || parsed.hostname.length < 3) {
+          throw new Error("Invalid hostname");
+        }
+      } catch {
+        setInputError("Please enter a valid news URL (e.g. https://example.com/article)");
         return;
       }
     } else if (tab === "text") {

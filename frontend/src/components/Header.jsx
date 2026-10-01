@@ -122,9 +122,10 @@ export function Header() {
             onClick={() => setLanguage(language === "en" ? "hi" : "en")}
             className="btn-press flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-mono font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/[0.08] transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
             title="Toggle Language"
+            aria-label={`Switch to ${language === "en" ? "Hindi" : "English"}`}
           >
-            <Languages className="w-3.5 h-3.5 text-slate-400" />
-            <span>{language.toUpperCase()}</span>
+            <Languages className="w-3.5 h-3.5 text-slate-400" aria-hidden="true" />
+            <span aria-hidden="true">{language.toUpperCase()}</span>
           </button>
 
           {/* Dark / Light Mode */}
@@ -146,16 +147,19 @@ export function Header() {
             onClick={() => setShowAdminModal(true)}
             className="btn-press p-2 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/[0.05] transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
             title="Admin Suite"
+            aria-label="Open admin suite"
           >
-            <Lock className="w-3.5 h-3.5" />
+            <Lock className="w-3.5 h-3.5" aria-hidden="true" />
           </button>
 
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="btn-press md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/[0.08] transition-all duration-200"
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileMenuOpen}
           >
-            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+            {mobileMenuOpen ? <X className="w-4 h-4" aria-hidden="true" /> : <Menu className="w-4 h-4" aria-hidden="true" />}
           </button>
         </div>
 

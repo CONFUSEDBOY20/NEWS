@@ -22,22 +22,72 @@ import {
 const serif = { fontFamily: "'Source Serif 4', Georgia, 'Times New Roman', serif" };
 
 const VERDICT_STYLES = {
-  VERIFIED:           { accent: "#10b981", bg: "bg-emerald-600",  text: "text-emerald-400",border: "border-emerald-700/40",Icon: ShieldCheck,   label: "Verified",           note: "This claim is fully verified and supported by institutional evidence." },
-  TRUE:               { accent: "#16a34a", bg: "bg-emerald-600",  text: "text-emerald-400",border: "border-emerald-700/40",Icon: CheckCircle2,  label: "Verified (True)",    note: "This claim is supported by authoritative evidence." },
-  "MOSTLY TRUE":      { accent: "#059669", bg: "bg-emerald-600",  text: "text-emerald-400",border: "border-emerald-700/40",Icon: CheckCircle2,  label: "Mostly True",        note: "The core claim checks out; minor details are unconfirmed." },
-  "PARTIALLY TRUE":   { accent: "#d97706", bg: "bg-amber-600",    text: "text-amber-400",  border: "border-amber-700/40", Icon: AlertTriangle,  label: "Partially True",     note: "Some elements are accurate, but the overall picture is incomplete." },
-  "PARTLY TRUE":      { accent: "#d97706", bg: "bg-amber-600",    text: "text-amber-400",  border: "border-amber-700/40", Icon: AlertTriangle,  label: "Partially True",     note: "Some elements are accurate, but the overall picture is incomplete or misleading." },
-  MISLEADING:         { accent: "#ea580c", bg: "bg-orange-600",   text: "text-orange-400", border: "border-orange-700/40",Icon: AlertTriangle,  label: "Misleading",         note: "The claim uses real facts in a misleading way or lacks critical context." },
-  FALSE:              { accent: "#dc2626", bg: "bg-red-600",      text: "text-red-400",    border: "border-red-700/40",   Icon: XCircle,        label: "False",              note: "This claim is contradicted by the available evidence." },
-  SATIRE:             { accent: "#7c3aed", bg: "bg-violet-600",   text: "text-violet-400", border: "border-violet-700/40",Icon: Sparkles,       label: "Satire",             note: "This originates from a satirical or parody source." },
-  UNVERIFIED:         { accent: "#64748b", bg: "bg-slate-600",    text: "text-slate-400",  border: "border-slate-600/40", Icon: HelpCircle,     label: "Insufficient Evidence", note: "There is not enough evidence to confirm or deny this claim." },
-  "INSUFFICIENT EVIDENCE": { accent: "#64748b", bg: "bg-slate-600", text: "text-slate-400", border: "border-slate-600/40", Icon: HelpCircle, label: "Insufficient Evidence", note: "We could not find adequate sources to assess this claim." },
+  VERIFIED: {
+    accent: "#10b981",
+    bg: "bg-emerald-600",
+    text: "text-emerald-400",
+    border: "border-emerald-700/40",
+    Icon: ShieldCheck,
+    label: "Verified",
+    note: "Fully verified with strong institutional evidence."
+  },
+  "LIKELY TRUE": {
+    accent: "#16a34a",
+    bg: "bg-emerald-600",
+    text: "text-emerald-400",
+    border: "border-emerald-700/40",
+    Icon: CheckCircle2,
+    label: "Likely True",
+    note: "Strong evidence supports the claim, though some uncertainty remains."
+  },
+  MISLEADING: {
+    accent: "#ea580c",
+    bg: "bg-orange-600",
+    text: "text-orange-400",
+    border: "border-orange-700/40",
+    Icon: AlertTriangle,
+    label: "Misleading",
+    note: "Facts are presented in a misleading way or key context is missing."
+  },
+  SUSPICIOUS: {
+    accent: "#d97706",
+    bg: "bg-amber-600",
+    text: "text-amber-400",
+    border: "border-amber-700/40",
+    Icon: AlertTriangle,
+    label: "Suspicious",
+    note: "Evidence is contradictory or insufficient, raising doubts."
+  },
+  UNVERIFIED: {
+    accent: "#64748b",
+    bg: "bg-slate-600",
+    text: "text-slate-400",
+    border: "border-slate-600/40",
+    Icon: HelpCircle,
+    label: "Unverified",
+    note: "Not enough evidence to confirm or deny the claim."
+  },
+  "INSUFFICIENT EVIDENCE": {
+    accent: "#64748b",
+    bg: "bg-slate-600",
+    text: "text-slate-400",
+    border: "border-slate-600/40",
+    Icon: HelpCircle,
+    label: "Insufficient Evidence",
+    note: "Unable to locate adequate sources to assess this claim."
+  }
 };
 
 function getVS(verdict) {
   if (!verdict) return VERDICT_STYLES.UNVERIFIED;
-  const upper = verdict.toUpperCase().trim();
-  return VERDICT_STYLES[upper] || VERDICT_STYLES.UNVERIFIED;
+  const map = {
+    "TRUE": "VERIFIED",
+    "FALSE": "MISLEADING",
+    "PARTLY TRUE": "LIKELY TRUE",
+    "PARTIALLY TRUE": "LIKELY TRUE",
+  };
+  const key = map[verdict.toUpperCase().trim()] || verdict.toUpperCase().trim();
+  return VERDICT_STYLES[key] || VERDICT_STYLES.UNVERIFIED;
 }
 
 /* ── tiny sub-components ─────────────────────────────────── */
@@ -138,7 +188,8 @@ export function FactCheckResult() {
   const totalSourcesCount = supportingItems.length + contradictingItems.length;
 
   const allEvidence = [...supportingItems, ...contradictingItems];
-  const avgSourceCredibility = allEvidence.length > 0
+  const neutralItems = allEvidence.filter(i => i.stance === "CONTEXT");
+const avgSourceCredibility = allEvidence.length > 0
     ? Math.round(allEvidence.reduce((acc, curr) => acc + (curr.reliability_score || 85), 0) / allEvidence.length)
     : Math.round(res.confidence || 85);
 

@@ -292,12 +292,35 @@ html:not(.dark) textarea::placeholder {
   animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* ── SCANLINE (radar / fact-check laser animation) ───────────── */
+@keyframes scanline {
+  0% { transform: translateY(-100%); opacity: 0; }
+  20% { opacity: 0.8; }
+  80% { opacity: 0.8; }
+  100% { transform: translateY(350%); opacity: 0; }
+}
+.animate-scanline {
+  animation: scanline 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* ── SHIMMER (scanning progress gradient) ─────────────────────── */
+@keyframes shimmerMove {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(59,130,246,0.3) 50%, rgba(255,255,255,0) 100%);
+  background-size: 200% 100%;
+  animation: shimmerMove 1.8s infinite;
+}
+
 /* ── FADE-IN (modals, overlays, toasts) ──────────────────────── */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(4px); }
   to   { opacity: 1; transform: translateY(0);   }
 }
 .animate-fadeIn {
+
   animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 

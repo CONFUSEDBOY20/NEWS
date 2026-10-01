@@ -8,6 +8,7 @@ import {
   POPULAR_INVESTIGATIONS,
 } from "../services/newsService";
 import { ArticleDetailModal } from "./ArticleDetailModal";
+import { NewsReaderFactCheckModal } from "./NewsReaderFactCheckModal";
 import {
   FileText,
   Link2,
@@ -65,6 +66,9 @@ export function FactCheckHero() {
 
   // Selected Investigation for Modal
   const [selectedInvestigation, setSelectedInvestigation] = useState(null);
+
+  // Selected News Article for Reader & Fact-Check Modal
+  const [selectedNewsArticle, setSelectedNewsArticle] = useState(null);
 
   const categories = ["All", "India", "World", "Technology", "Health", "Environment", "Politics"];
 
@@ -724,56 +728,68 @@ export function FactCheckHero() {
                 {newsArticles.slice(0, 4).map((art) => (
                   <article
                     key={art.id}
-                    className="bg-white dark:bg-[#0F172A] rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs hover:shadow-md transition-shadow group flex flex-col justify-between"
+                    onClick={() => setSelectedNewsArticle(art)}
+                    className="bg-white dark:bg-[#0F172A] rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs hover:shadow-lg hover:border-blue-500/40 dark:hover:border-blue-500/40 transition-all duration-200 group flex flex-col justify-between cursor-pointer"
                   >
                     <div>
-                      {/* Image Thumbnail */}
-                      <div className="relative h-28 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+                      {/* Image Thumbnail with Original News Photo */}
+                      <div className="relative h-32 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
                         <img
                           src={art.image_url}
                           alt={art.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           loading="lazy"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80";
+                          }}
                         />
+                        {/* Live Wire Badge */}
+                        <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-md text-[10px] font-bold text-white border border-white/10">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                          <span>LIVE</span>
+                        </div>
+
+                        {/* Category Badge */}
+                        <div className="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-slate-950/70 backdrop-blur-md text-[10px] font-bold text-blue-300 border border-slate-700/50">
+                          {art.category || newsCategory}
+                        </div>
                       </div>
 
                       {/* Content */}
-                      <div className="p-3 space-y-1.5">
-                        <span className={`text-[10px] font-bold tracking-wider uppercase ${getCategoryColor(art.category)}`}>
-                          {art.category || newsCategory}
-                        </span>
-                        <h3
-                          onClick={() => {
-                            setActiveTab("text");
-                            setInputValue(art.title);
-                            window.scrollTo({ top: 0, behavior: "smooth" });
-                          }}
-                          className="text-xs font-bold text-slate-900 dark:text-white leading-snug line-clamp-2 hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer font-sans"
-                        >
+                      <div className="p-3.5 space-y-2">
+                        <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono">
+                          <span className="truncate max-w-[130px] font-medium text-slate-600 dark:text-slate-300">
+                            {art.source || "Official Wire"}
+                          </span>
+                          <span>{art.time_ago || "recently"}</span>
+                        </div>
+
+                        <h3 className="text-xs font-bold text-slate-900 dark:text-white leading-snug line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors font-sans">
                           {art.title}
                         </h3>
+
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                          {art.description}
+                        </p>
                       </div>
                     </div>
 
-                    {/* Footer Time & External Link */}
-                    <div className="px-3 pb-3 pt-1 flex items-center justify-between text-[11px] text-slate-400">
-                      <span>{art.time_ago || "recently"}</span>
-                      {art.link && art.link !== "#" && (
-                        <a
-                          href={art.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:text-blue-600 transition-colors"
-                          title="Open original article"
-                        >
-                          <ExternalLink className="w-3 h-3" />
-                        </a>
-                      )}
+                    {/* Interactive CTA to Open Reader & Fake/Real Toggle */}
+                    <div className="px-3.5 pb-3.5 pt-1 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+                      <span className="text-[11px] font-semibold text-blue-600 dark:text-blue-400 flex items-center gap-1 group-hover:underline">
+                        <span>Read & Check</span>
+                        <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                      </span>
+                      <span className="px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/50 text-[10px] font-mono text-blue-600 dark:text-blue-400 border border-blue-200/50 dark:border-blue-800/50">
+                        AI Verify
+                      </span>
                     </div>
                   </article>
                 ))}
               </div>
             )}
+
 
           </div>
 
@@ -783,10 +799,10 @@ export function FactCheckHero() {
               How TruthLens works
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative items-center">
+            <div className="grid grid-cols-1 md:grid-cols-11 gap-4 items-center">
               
               {/* Step 1 */}
-              <div className="flex items-start gap-3">
+              <div className="md:col-span-3 flex items-start gap-3">
                 <div className="w-8 h-8 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-sm shrink-0 shadow-xs">
                   1
                 </div>
@@ -800,10 +816,15 @@ export function FactCheckHero() {
                 </div>
               </div>
 
+              {/* Arrow 1 */}
+              <div className="hidden md:flex md:col-span-1 justify-center text-slate-300 dark:text-slate-700">
+                <ArrowRight className="w-4 h-4" />
+              </div>
+
               {/* Step 2 */}
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 font-bold flex items-center justify-center text-sm shrink-0">
-                  <FileText className="w-4 h-4" />
+              <div className="md:col-span-3 flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold flex items-center justify-center text-sm shrink-0">
+                  <FileText className="w-4 h-4 text-slate-600 dark:text-slate-400" />
                 </div>
                 <div className="space-y-0.5">
                   <h4 className="text-xs font-bold text-slate-900 dark:text-white">
@@ -815,8 +836,13 @@ export function FactCheckHero() {
                 </div>
               </div>
 
+              {/* Arrow 2 */}
+              <div className="hidden md:flex md:col-span-1 justify-center text-slate-300 dark:text-slate-700">
+                <ArrowRight className="w-4 h-4" />
+              </div>
+
               {/* Step 3 */}
-              <div className="flex items-start gap-3">
+              <div className="md:col-span-3 flex items-start gap-3">
                 <div className="w-8 h-8 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center text-sm shrink-0 shadow-xs">
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
@@ -831,6 +857,7 @@ export function FactCheckHero() {
               </div>
 
             </div>
+
           </div>
 
         </div>
@@ -923,6 +950,20 @@ export function FactCheckHero() {
             content: `INVESTIGATION DOSSIER\n\n${selectedInvestigation.description}\n\nEvidence Analysis:\n${selectedInvestigation.evidence_summary}\n\nOfficial Fact Verification:\nTruthLens cross-referenced technical metrics, official public agency archives, and digital media artifacts. The findings conclude that this viral claim lacks necessary factual backing or manipulates legitimate data out of context.`,
           }}
           onClose={() => setSelectedInvestigation(null)}
+        />
+      )}
+
+      {/* Latest News Reader & Fact-Check Modal Window */}
+      {selectedNewsArticle && (
+        <NewsReaderFactCheckModal
+          article={selectedNewsArticle}
+          onClose={() => setSelectedNewsArticle(null)}
+          onDeepVerify={(art) => {
+            setSelectedNewsArticle(null);
+            setActiveTab("text");
+            setInputValue(art.title);
+            triggerVerification("text", art.title);
+          }}
         />
       )}
 

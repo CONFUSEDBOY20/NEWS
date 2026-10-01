@@ -5,7 +5,7 @@ const AppContext = createContext();
 
 export function AppProvider({ children }) {
   const [language, setLanguage] = useState(() => localStorage.getItem("truthlens_lang") || "en");
-  const [theme, setTheme] = useState(() => localStorage.getItem("truthlens_theme") || "dark");
+  const [theme, setTheme] = useState(() => localStorage.getItem("truthlens_theme") || "light");
   const [activeView, setActiveView] = useState("fact-check"); // fact-check, world-news, india-news, articles, admin
   const [history, setHistory] = useState(() => {
     try {

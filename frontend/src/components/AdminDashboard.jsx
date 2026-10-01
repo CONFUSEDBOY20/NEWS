@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { API_BASE, api } from "../services/api";
 import { useApp } from "../context/AppContext";
 import {
@@ -10,20 +10,13 @@ import {
   LogOut,
   Plus,
   Search,
-  Filter,
   Download,
-  Upload,
   Edit2,
   Trash2,
-  CheckCircle2,
-  AlertTriangle,
-  XCircle,
-  Clock,
   ShieldCheck,
   Save,
   X,
   Loader2,
-  Sliders,
   TrendingUp,
   BarChart2
 } from "lucide-react";
@@ -51,11 +44,7 @@ export function AdminDashboard() {
   const [editingArticle, setEditingArticle] = useState(null);
   const [showArticleModal, setShowArticleModal] = useState(false);
 
-  useEffect(() => {
-    loadDashboardData();
-  }, []);
-
-  const loadDashboardData = async () => {
+  const loadDashboardData = useCallback(async () => {
     setLoading(true);
     try {
       const [statsRes, rawRes, logsRes, setsRes, artsRes] = await Promise.allSettled([
@@ -76,7 +65,11 @@ export function AdminDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [showToast]);
+
+  useEffect(() => {
+    loadDashboardData();
+  }, [loadDashboardData]);
 
   const handleLogout = () => {
     localStorage.removeItem("truthlens_admin_token");

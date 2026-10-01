@@ -9,7 +9,6 @@ import {
   Clock,
   Sparkles,
   Share2,
-  Maximize2,
   ArrowRight,
   Globe,
   Radio,
@@ -22,7 +21,7 @@ import { api } from "../services/api";
 import { useApp } from "../context/AppContext";
 
 export function NewsReaderFactCheckModal({ article, onClose, onDeepVerify }) {
-  const { showToast, setVerificationResult, setActiveTab, setInputValue, setActiveClaimText } = useApp();
+  const { showToast, setInputValue, setActiveClaimText } = useApp();
 
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationStage, setVerificationStage] = useState(0); // 0: idle, 1: claims, 2: wires, 3: forensic, 4: consensus

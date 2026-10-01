@@ -29,14 +29,12 @@ import {
   HelpCircle,
   UploadCloud,
   X,
-  ExternalLink,
   RefreshCw,
 } from "lucide-react";
 
 export function FactCheckHero() {
   const {
     language,
-    setLanguage,
     inputPreload,
     setInputPreload,
     setIsVerifying,
@@ -140,6 +138,7 @@ export function FactCheckHero() {
     if (autoStart && value) {
       triggerVerification(type || "text", value);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputPreload]);
 
   // Load Latest News based on active category
@@ -331,17 +330,6 @@ export function FactCheckHero() {
         <span>{statusText || "Needs Review"}</span>
       </span>
     );
-  };
-
-  const getCategoryColor = (cat) => {
-    const c = (cat || "").toLowerCase();
-    if (c.includes("india")) return "text-red-600 dark:text-red-400";
-    if (c.includes("world")) return "text-blue-600 dark:text-blue-400";
-    if (c.includes("tech")) return "text-purple-600 dark:text-purple-400";
-    if (c.includes("health")) return "text-emerald-600 dark:text-emerald-400";
-    if (c.includes("env") || c.includes("climat")) return "text-teal-600 dark:text-teal-400";
-    if (c.includes("politic")) return "text-amber-600 dark:text-amber-400";
-    return "text-blue-600 dark:text-blue-400";
   };
 
   return (

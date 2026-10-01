@@ -1,21 +1,5 @@
 import React, { useState } from "react";
-import {
-  Globe,
-  Radio,
-  ShieldCheck,
-  AlertTriangle,
-  Flame,
-  Info,
-  Layers,
-  ArrowRight,
-  ExternalLink,
-  Activity,
-  CheckCircle2,
-  XCircle,
-  Zap,
-  Filter,
-  X
-} from "lucide-react";
+import { Globe, X } from "lucide-react";
 
 export function DisinformationSpreadGraph({ result }) {
   const [selectedNode, setSelectedNode] = useState(null);

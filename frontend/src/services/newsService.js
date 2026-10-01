@@ -821,15 +821,6 @@ function deduplicateArticles(list) {
   });
 }
 
-function getCategoryFallbackImage(category) {
-  const cat = (category || "").toLowerCase();
-  if (cat.includes("india") || cat.includes("politic")) return EDITORIAL_ASSETS.parliament;
-  if (cat.includes("tech")) return EDITORIAL_ASSETS.ai_chip;
-  if (cat.includes("health")) return EDITORIAL_ASSETS.vaccine;
-  if (cat.includes("world")) return EDITORIAL_ASSETS.earth;
-  if (cat.includes("env") || cat.includes("climat")) return "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=800&q=80";
-  return EDITORIAL_ASSETS.railways;
-}
 
 function capitalize(str) {
   if (!str) return "General";

@@ -1,5 +1,5 @@
 import React from "react";
-import { X, Clock, User, Tag, ShieldCheck, Share2 } from "lucide-react";
+import { X, Clock, User, Share2 } from "lucide-react";
 import { useApp } from "../context/AppContext";
 
 export function ArticleDetailModal({ article, onClose }) {

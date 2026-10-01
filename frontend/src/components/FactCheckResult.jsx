@@ -7,20 +7,14 @@ import {
   ShieldCheck,
   CheckCircle2,
   AlertTriangle,
-  XCircle,
   HelpCircle,
   ExternalLink,
   Copy,
   RefreshCw,
   Clock,
   Share2,
-  Sparkles,
   Check,
 } from "lucide-react";
-
-/* ── helpers ─────────────────────────────────────────────── */
-
-const serif = { fontFamily: "'Source Serif 4', Georgia, 'Times New Roman', serif" };
 
 const VERDICT_STYLES = {
   VERIFIED: {
@@ -183,7 +177,7 @@ function EvidenceCard({ item, accentClass, stanceLabel, index = 0 }) {
 /* ── main component ──────────────────────────────────────── */
 
 export function FactCheckResult() {
-  const { verificationResult, setVerificationResult, t, showToast, language } = useApp();
+  const { verificationResult, setVerificationResult, showToast } = useApp();
   const [copied, setCopied] = useState(false);
   const [showSocialCardModal, setShowSocialCardModal] = useState(false);
   const resultRef = useRef(null);
@@ -192,7 +186,7 @@ export function FactCheckResult() {
     if (verificationResult && resultRef.current) {
       resultRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-  }, [verificationResult?.id]);
+  }, [verificationResult]);
 
   if (!verificationResult) return null;
 
@@ -204,8 +198,7 @@ export function FactCheckResult() {
   const totalSourcesCount = supportingItems.length + contradictingItems.length;
 
   const allEvidence = [...supportingItems, ...contradictingItems];
-  const neutralItems = allEvidence.filter(i => i.stance === "CONTEXT");
-const avgSourceCredibility = allEvidence.length > 0
+  const avgSourceCredibility = allEvidence.length > 0
     ? Math.round(allEvidence.reduce((acc, curr) => acc + (curr.reliability_score || 85), 0) / allEvidence.length)
     : Math.round(res.confidence || 85);
 

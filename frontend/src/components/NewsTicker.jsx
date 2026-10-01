@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { fetchTrendingTicker } from "../services/newsService";
 import { useApp } from "../context/AppContext";
-import { ChevronLeft, ChevronRight, RefreshCw } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export function NewsTicker() {
   const [headlines, setHeadlines] = useState([]);

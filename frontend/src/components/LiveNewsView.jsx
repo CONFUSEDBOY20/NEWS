@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { api } from "../services/api";
 import { useApp } from "../context/AppContext";
 import { resolveRealTimeNewsImage } from "../services/newsService";
 import { NewsReaderFactCheckModal } from "./NewsReaderFactCheckModal";
 import {
   Search,
-  Clock,
-  Loader2,
   RefreshCw,
   Radio,
   Globe,
@@ -30,20 +28,6 @@ function relativeTime(iso) {
   if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
   return `${Math.floor(seconds / 86400)}d ago`;
 }
-
-const categoryImages = {
-  World: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
-  Politics: "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=800&q=80",
-  Technology: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
-  Science: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=800&q=80",
-  Health: "https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=800&q=80",
-  Business: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
-  Economy: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
-  Environment: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80",
-  Climate: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80",
-  Sports: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=800&q=80",
-  Entertainment: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=800&q=80",
-};
 
 const categoryBadgeConfig = {
   World: { label: "World", bg: "bg-blue-600", icon: Globe },
@@ -73,26 +57,49 @@ export function LiveNewsView({ region = "world" }) {
   const [selectedArticle, setSelectedArticle] = useState(null);
   const searchActive = useRef(false);
 
-  const categories = isWorld
-    ? ["All", "Politics", "Technology", "Health", "Economy", "Climate", "Science"]
-    : ["All", "Politics", "Science", "Economy", "Technology", "Climate", "Health"];
+  const categories = ["Top", "World", "India", "Tech", "Business", "Health"];
 
-  useEffect(() => {
-    searchActive.current = false;
-    loadNews(true, false);
-    const timer = setInterval(() => {
-      if (!searchActive.current) loadNews(false, false);
-    }, 45000);
-    return () => clearInterval(timer);
-  }, [category, region]);
-
-  const loadNews = async (showSpinner, fresh) => {
+  const loadNews = useCallback(async (showSpinner, fresh) => {
     if (showSpinner) setLoading(true);
     else setRefreshing(true);
+
+    // 1. Try Vercel Serverless /api/news route
     try {
+      const catParam = category === "Top" ? "" : category.toLowerCase();
+      const params = new URLSearchParams();
+      if (catParam) params.set("category", catParam);
+      if (searchQuery.trim()) params.set("q", searchQuery.trim());
+
+      const res = await fetch(`/api/news?${params.toString()}`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json?.articles && Array.isArray(json.articles) && json.articles.length > 0) {
+          const normalized = json.articles.map((a, idx) => ({
+            id: a.id || `live-${idx}-${Date.now()}`,
+            title: a.title,
+            description: a.description,
+            url_to_image: a.image,
+            url: a.url,
+            source_name: a.source,
+            published_at: a.publishedAt,
+            category: category === "Top" ? "Top" : category,
+          }));
+          setArticles(normalized);
+          setSyncedAt(json.cached_at || new Date().toISOString());
+          setIsLive(true);
+          return;
+        }
+      }
+    } catch {
+      // Fall through to backend/newsService
+    }
+
+    // 2. Fallback to API service
+    try {
+      const apiCat = category === "Top" ? "All" : category;
       const data = isWorld
-        ? await api.getWorldNews(category, fresh)
-        : await api.getIndiaNews(category, fresh);
+        ? await api.getWorldNews(apiCat, fresh)
+        : await api.getIndiaNews(apiCat, fresh);
       setArticles(data.articles || []);
       setSyncedAt(data.synced_at || new Date().toISOString());
       setIsLive(data.is_live !== false);
@@ -102,7 +109,17 @@ export function LiveNewsView({ region = "world" }) {
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, [category, isWorld, searchQuery]);
+
+  useEffect(() => {
+    searchActive.current = false;
+    loadNews(true, false);
+    // Auto-refresh every 60 seconds without full reload
+    const timer = setInterval(() => {
+      if (!searchActive.current) loadNews(false, false);
+    }, 60000);
+    return () => clearInterval(timer);
+  }, [loadNews]);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -112,15 +129,7 @@ export function LiveNewsView({ region = "world" }) {
       return;
     }
     searchActive.current = true;
-    setLoading(true);
-    try {
-      const data = await api.searchNews(searchQuery.trim());
-      setArticles(data.articles || []);
-      setSyncedAt(data.synced_at || new Date().toISOString());
-      setIsLive(data.is_live !== false);
-    } finally {
-      setLoading(false);
-    }
+    loadNews(true, false);
   };
 
   const handleVerifyArticle = (art) => {
@@ -152,7 +161,7 @@ export function LiveNewsView({ region = "world" }) {
             {isWorld ? "World News Coverage" : "India News Coverage"}
           </h2>
           <p className="text-xs text-slate-500 mt-1">
-            {syncedAt ? `Updated ${relativeTime(syncedAt)} • headlines auto-refresh every 45s` : "Connecting to wire services..."}
+            {syncedAt ? `Updated ${relativeTime(syncedAt)} • headlines auto-refresh every 60s` : "Connecting to wire services..."}
           </p>
         </div>
 
@@ -192,7 +201,7 @@ export function LiveNewsView({ region = "world" }) {
               setSearchQuery("");
               setCategory(cat);
             }}
-            className={`btn-press px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-150 shrink-0 cursor-pointer hover:-translate-y-0.5 active:translate-y-0 ${
+            className={`btn-press px-4 py-2 rounded-full text-xs font-medium transition-all duration-150 shrink-0 cursor-pointer hover:-translate-y-0.5 active:translate-y-0 ${
               category === cat
                 ? "bg-blue-600 text-white font-semibold shadow-md shadow-blue-600/20"
                 : "bg-slate-100 dark:bg-white/[0.03] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-slate-200/60 dark:border-white/[0.04]"
@@ -205,21 +214,21 @@ export function LiveNewsView({ region = "world" }) {
 
       {/* Elegant Skeleton Loading State */}
       {loading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3, 4, 5, 6].map((n) => (
             <div
               key={n}
               className="rounded-2xl overflow-hidden bg-white dark:bg-[#111624] border border-slate-200/80 dark:border-white/[0.08] shadow-sm flex flex-col justify-between"
             >
               <div>
-                <div className="h-40 w-full skeleton-shimmer bg-slate-200/60 dark:bg-white/[0.04]" />
-                <div className="p-4 space-y-3">
+                <div className="h-48 w-full skeleton-shimmer bg-slate-200/60 dark:bg-white/[0.04]" />
+                <div className="p-5 space-y-3">
                   <div className="h-3 w-20 rounded skeleton-shimmer bg-slate-200/60 dark:bg-white/[0.04]" />
-                  <div className="h-4 w-5/6 rounded skeleton-shimmer bg-slate-200/60 dark:bg-white/[0.04]" />
-                  <div className="h-3 w-full rounded skeleton-shimmer bg-slate-200/60 dark:bg-white/[0.04]" />
+                  <div className="h-5 w-5/6 rounded skeleton-shimmer bg-slate-200/60 dark:bg-white/[0.04]" />
+                  <div className="h-4 w-full rounded skeleton-shimmer bg-slate-200/60 dark:bg-white/[0.04]" />
                 </div>
               </div>
-              <div className="p-4 pt-1 border-t border-slate-100 dark:border-white/[0.04] flex items-center justify-between">
+              <div className="p-5 pt-2 border-t border-slate-100 dark:border-white/[0.04] flex items-center justify-between">
                 <div className="h-3 w-16 rounded skeleton-shimmer bg-slate-200/60 dark:bg-white/[0.04]" />
                 <div className="h-3 w-14 rounded skeleton-shimmer bg-slate-200/60 dark:bg-white/[0.04]" />
               </div>
@@ -233,18 +242,18 @@ export function LiveNewsView({ region = "world" }) {
         <p className="text-center text-sm text-slate-500 py-16">No headlines found matching this filter.</p>
       )}
 
-      {/* Articles Grid with Images */}
+      {/* Articles Grid with Images & Readable Typography */}
       {!loading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles.map((art, artIdx) => {
             const cat = art.category || (isWorld ? "World" : "India");
             const badgeCfg = categoryBadgeConfig[cat] || categoryBadgeConfig.Default;
             const CategoryIcon = badgeCfg.icon;
-            const imageUrl = resolveRealTimeNewsImage(art.title, cat, art.url_to_image);
+            const imageUrl = resolveRealTimeNewsImage(art.title, cat, art.url_to_image || art.image);
 
             return (
               <article
-                key={art.id}
+                key={art.id || artIdx}
                 style={{
                   animationDelay: `${Math.min(artIdx, 8) * 40}ms`,
                 }}
@@ -255,10 +264,10 @@ export function LiveNewsView({ region = "world" }) {
                     description: art.description || art.summary || "Full wire dispatch corroborated by syndicated reporting desks.",
                     image_url: imageUrl,
                     link: art.url || "#",
-                    source: art.source_name || "Official Wire",
+                    source: art.source_name || art.source || "Official Wire",
                     category: cat,
-                    published_at: art.published_at,
-                    time_ago: relativeTime(art.published_at),
+                    published_at: art.published_at || art.publishedAt,
+                    time_ago: relativeTime(art.published_at || art.publishedAt),
                     precomputed_verdict: "TRUE",
                     precomputed_confidence: 96.2,
                     precomputed_explanation: "Directly corroborated across official news agency wires and verified government bulletins.",
@@ -269,12 +278,12 @@ export function LiveNewsView({ region = "world" }) {
                     ],
                   });
                 }}
-                className="animate-news-item rounded-2xl overflow-hidden bg-white dark:bg-[#111624] border border-slate-200/80 dark:border-white/[0.08] shadow-sm hover:shadow-lg hover:border-blue-500/40 dark:hover:border-blue-500/40 transition-all duration-200 hover-lift flex flex-col justify-between group cursor-pointer"
+                className="animate-news-item rounded-2xl overflow-hidden bg-white dark:bg-[#111624] border border-slate-200/80 dark:border-white/[0.08] shadow-sm hover:shadow-xl hover:border-blue-500/40 dark:hover:border-blue-500/40 transition-all duration-200 hover-lift flex flex-col justify-between group cursor-pointer"
               >
 
                 <div>
                   {/* Thumbnail Image with Badges */}
-                  <div className="relative h-40 w-full overflow-hidden bg-slate-900">
+                  <div className="relative h-48 w-full overflow-hidden bg-slate-900">
                     <img
                       src={imageUrl}
                       alt={art.title}
@@ -287,7 +296,7 @@ export function LiveNewsView({ region = "world" }) {
                     />
 
                     {/* Category Badge */}
-                    <div className="absolute top-2.5 left-2.5">
+                    <div className="absolute top-3 left-3">
                       <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold text-white shadow-sm ${badgeCfg.bg}`}>
                         <CategoryIcon className="w-3 h-3" />
                         <span>{badgeCfg.label}</span>
@@ -295,34 +304,42 @@ export function LiveNewsView({ region = "world" }) {
                     </div>
 
                     {/* Time Badge */}
-                    <div className="absolute top-2.5 right-2.5">
+                    <div className="absolute top-3 right-3">
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono text-white/90 bg-black/60 backdrop-blur-md">
-                        {relativeTime(art.published_at)}
+                        {relativeTime(art.published_at || art.publishedAt)}
                       </span>
                     </div>
                   </div>
 
-                  {/* Body Content */}
-                  <div className="p-4 space-y-2">
-                    <div className="flex items-center justify-between text-[11px] text-slate-500 font-mono">
-                      <span className="font-medium text-slate-700 dark:text-slate-300">{art.source_name}</span>
+                  {/* Body Content with Readable Typography */}
+                  <div className="p-5 space-y-3">
+                    <div className="flex items-center justify-between text-xs text-slate-500 font-mono">
+                      <span className="font-semibold text-slate-700 dark:text-slate-300">{art.source_name || art.source || "News Wire"}</span>
+                      <span>{relativeTime(art.published_at || art.publishedAt)}</span>
                     </div>
 
-                    <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-snug line-clamp-2">
+                    <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-[1.4] sm:leading-[1.5] line-clamp-2 font-sans">
                       {art.title}
                     </h3>
 
-                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2">
+                    <p className="text-[15px] sm:text-base text-slate-600 dark:text-slate-300 leading-[1.6] line-clamp-2">
                       {art.description || art.summary}
                     </p>
                   </div>
                 </div>
 
-                {/* Footer Action */}
-                <div className="p-4 pt-1 flex items-center justify-between border-t border-slate-100 dark:border-white/[0.04]">
-                  <span className="text-xs text-blue-600 dark:text-blue-400 font-semibold group-hover:underline">
-                    Read & Check
-                  </span>
+                {/* Footer Action: Read More in New Tab + Read & Check */}
+                <div className="p-5 pt-3 flex items-center justify-between border-t border-slate-100 dark:border-white/[0.04]">
+                  <a
+                    href={art.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="text-xs sm:text-sm font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 hover:underline flex items-center gap-1 transition-colors"
+                  >
+                    <span>Read more</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </a>
 
                   <button
                     type="button"
@@ -330,10 +347,9 @@ export function LiveNewsView({ region = "world" }) {
                       e.stopPropagation();
                       handleVerifyArticle(art);
                     }}
-                    className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-xs font-bold text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors cursor-pointer border border-blue-200/50 dark:border-blue-800/50"
                   >
-                    <span>Verify</span>
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                    <span>Verify Claim</span>
                   </button>
                 </div>
               </article>

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useApp } from "../context/AppContext";
 import { SocialFactCardModal } from "./SocialFactCardModal";
 import { DisinformationSpreadGraph } from "./DisinformationSpreadGraph";
+import { useInView } from "../utils/animations";
 import {
   ShieldCheck,
   CheckCircle2,
@@ -22,22 +23,72 @@ import {
 const serif = { fontFamily: "'Source Serif 4', Georgia, 'Times New Roman', serif" };
 
 const VERDICT_STYLES = {
-  VERIFIED:           { accent: "#10b981", bg: "bg-emerald-600",  text: "text-emerald-400",border: "border-emerald-700/40",Icon: ShieldCheck,   label: "Verified",           note: "This claim is fully verified and supported by institutional evidence." },
-  TRUE:               { accent: "#16a34a", bg: "bg-emerald-600",  text: "text-emerald-400",border: "border-emerald-700/40",Icon: CheckCircle2,  label: "Verified (True)",    note: "This claim is supported by authoritative evidence." },
-  "MOSTLY TRUE":      { accent: "#059669", bg: "bg-emerald-600",  text: "text-emerald-400",border: "border-emerald-700/40",Icon: CheckCircle2,  label: "Mostly True",        note: "The core claim checks out; minor details are unconfirmed." },
-  "PARTIALLY TRUE":   { accent: "#d97706", bg: "bg-amber-600",    text: "text-amber-400",  border: "border-amber-700/40", Icon: AlertTriangle,  label: "Partially True",     note: "Some elements are accurate, but the overall picture is incomplete." },
-  "PARTLY TRUE":      { accent: "#d97706", bg: "bg-amber-600",    text: "text-amber-400",  border: "border-amber-700/40", Icon: AlertTriangle,  label: "Partially True",     note: "Some elements are accurate, but the overall picture is incomplete or misleading." },
-  MISLEADING:         { accent: "#ea580c", bg: "bg-orange-600",   text: "text-orange-400", border: "border-orange-700/40",Icon: AlertTriangle,  label: "Misleading",         note: "The claim uses real facts in a misleading way or lacks critical context." },
-  FALSE:              { accent: "#dc2626", bg: "bg-red-600",      text: "text-red-400",    border: "border-red-700/40",   Icon: XCircle,        label: "False",              note: "This claim is contradicted by the available evidence." },
-  SATIRE:             { accent: "#7c3aed", bg: "bg-violet-600",   text: "text-violet-400", border: "border-violet-700/40",Icon: Sparkles,       label: "Satire",             note: "This originates from a satirical or parody source." },
-  UNVERIFIED:         { accent: "#64748b", bg: "bg-slate-600",    text: "text-slate-400",  border: "border-slate-600/40", Icon: HelpCircle,     label: "Insufficient Evidence", note: "There is not enough evidence to confirm or deny this claim." },
-  "INSUFFICIENT EVIDENCE": { accent: "#64748b", bg: "bg-slate-600", text: "text-slate-400", border: "border-slate-600/40", Icon: HelpCircle, label: "Insufficient Evidence", note: "We could not find adequate sources to assess this claim." },
+  VERIFIED: {
+    accent: "#10b981",
+    bg: "bg-emerald-600",
+    text: "text-emerald-400",
+    border: "border-emerald-700/40",
+    Icon: ShieldCheck,
+    label: "Verified",
+    note: "Fully verified with strong institutional evidence."
+  },
+  "LIKELY TRUE": {
+    accent: "#16a34a",
+    bg: "bg-emerald-600",
+    text: "text-emerald-400",
+    border: "border-emerald-700/40",
+    Icon: CheckCircle2,
+    label: "Likely True",
+    note: "Strong evidence supports the claim, though some uncertainty remains."
+  },
+  MISLEADING: {
+    accent: "#ea580c",
+    bg: "bg-orange-600",
+    text: "text-orange-400",
+    border: "border-orange-700/40",
+    Icon: AlertTriangle,
+    label: "Misleading",
+    note: "Facts are presented in a misleading way or key context is missing."
+  },
+  SUSPICIOUS: {
+    accent: "#d97706",
+    bg: "bg-amber-600",
+    text: "text-amber-400",
+    border: "border-amber-700/40",
+    Icon: AlertTriangle,
+    label: "Suspicious",
+    note: "Evidence is contradictory or insufficient, raising doubts."
+  },
+  UNVERIFIED: {
+    accent: "#64748b",
+    bg: "bg-slate-600",
+    text: "text-slate-400",
+    border: "border-slate-600/40",
+    Icon: HelpCircle,
+    label: "Unverified",
+    note: "Not enough evidence to confirm or deny the claim."
+  },
+  "INSUFFICIENT EVIDENCE": {
+    accent: "#64748b",
+    bg: "bg-slate-600",
+    text: "text-slate-400",
+    border: "border-slate-600/40",
+    Icon: HelpCircle,
+    label: "Insufficient Evidence",
+    note: "Unable to locate adequate sources to assess this claim."
+  }
 };
 
 function getVS(verdict) {
   if (!verdict) return VERDICT_STYLES.UNVERIFIED;
-  const upper = verdict.toUpperCase().trim();
-  return VERDICT_STYLES[upper] || VERDICT_STYLES.UNVERIFIED;
+  const map = {
+    "TRUE": "VERIFIED",
+    "FALSE": "MISLEADING",
+    "PARTLY TRUE": "LIKELY TRUE",
+    "PARTIALLY TRUE": "LIKELY TRUE",
+  };
+  const key = map[verdict.toUpperCase().trim()] || verdict.toUpperCase().trim();
+  return VERDICT_STYLES[key] || VERDICT_STYLES.UNVERIFIED;
 }
 
 /* ── tiny sub-components ─────────────────────────────────── */
@@ -52,9 +103,15 @@ function SectionHeading({ children }) {
   );
 }
 
-function Card({ children, className = "" }) {
+function Card({ children, className = "", animateIn = false, delay = 0 }) {
+  const [ref, inView] = useInView({ threshold: 0.08, triggerOnce: true });
+  const style = animateIn ? {
+    opacity: inView ? 1 : 0,
+    transform: inView ? "translateY(0)" : "translateY(10px)",
+    transition: `opacity 380ms cubic-bezier(0.16,1,0.3,1) ${delay}ms, transform 380ms cubic-bezier(0.16,1,0.3,1) ${delay}ms`,
+  } : {};
   return (
-    <div className={`rounded-2xl bg-white dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.08] shadow-sm dark:shadow-none ${className}`}>
+    <div ref={animateIn ? ref : undefined} style={style} className={`rounded-2xl bg-white dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.08] shadow-sm dark:shadow-none ${className}`}>
       {children}
     </div>
   );
@@ -77,9 +134,18 @@ function MetricRow({ label, value, barPct, barColor = "bg-slate-500" }) {
   );
 }
 
-function EvidenceCard({ item, accentClass, stanceLabel }) {
+function EvidenceCard({ item, accentClass, stanceLabel, index = 0 }) {
+  const [ref, inView] = useInView({ threshold: 0.05, triggerOnce: true });
   return (
-    <Card className="p-4 sm:p-5 flex flex-col justify-between gap-3 hover-lift transition-all duration-200 hover:border-slate-300 dark:hover:border-white/20">
+    <div
+      ref={ref}
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? "translateY(0)" : "translateY(10px)",
+        transition: `opacity 320ms cubic-bezier(0.16,1,0.3,1) ${index * 60}ms, transform 320ms cubic-bezier(0.16,1,0.3,1) ${index * 60}ms`,
+      }}
+      className="rounded-2xl bg-white dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.08] shadow-sm dark:shadow-none p-4 sm:p-5 flex flex-col justify-between gap-3 hover-lift transition-all hover:border-slate-300 dark:hover:border-white/20"
+    >
       <div className="space-y-2">
         <div className="flex items-start justify-between gap-2">
           <span className="text-xs text-slate-400 truncate max-w-[200px]">
@@ -110,7 +176,7 @@ function EvidenceCard({ item, accentClass, stanceLabel }) {
           </a>
         )}
       </div>
-    </Card>
+    </div>
   );
 }
 
@@ -138,7 +204,8 @@ export function FactCheckResult() {
   const totalSourcesCount = supportingItems.length + contradictingItems.length;
 
   const allEvidence = [...supportingItems, ...contradictingItems];
-  const avgSourceCredibility = allEvidence.length > 0
+  const neutralItems = allEvidence.filter(i => i.stance === "CONTEXT");
+const avgSourceCredibility = allEvidence.length > 0
     ? Math.round(allEvidence.reduce((acc, curr) => acc + (curr.reliability_score || 85), 0) / allEvidence.length)
     : Math.round(res.confidence || 85);
 
@@ -271,7 +338,7 @@ export function FactCheckResult() {
       </div>
 
       {/* ── 2. KEY METRICS ─────────────────────────────────── */}
-      <Card className="p-5 sm:p-6 space-y-4">
+      <Card animateIn delay={0} className="p-5 sm:p-6 space-y-4">
         <div className="grid grid-cols-3 gap-4 sm:gap-6 text-center">
           <div>
             <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tabular-nums">{Math.round(res.confidence)}%</div>
@@ -289,7 +356,7 @@ export function FactCheckResult() {
       </Card>
 
       {/* ── 3. DETAILED BREAKDOWN ──────────────────────────── */}
-      <Card className="p-5 sm:p-6 space-y-5">
+      <Card animateIn delay={60} className="p-5 sm:p-6 space-y-5">
         <SectionHeading>Verification breakdown</SectionHeading>
         <div className="space-y-4">
           <MetricRow
@@ -360,6 +427,7 @@ export function FactCheckResult() {
               <EvidenceCard
                 key={idx}
                 item={item}
+                index={idx}
                 accentClass="bg-green-900/40 text-green-400"
                 stanceLabel={item.stance === "CONTEXT" ? "Context" : "Supports"}
               />
@@ -383,6 +451,7 @@ export function FactCheckResult() {
               <EvidenceCard
                 key={idx}
                 item={item}
+                index={idx}
                 accentClass="bg-red-900/40 text-red-400"
                 stanceLabel="Contradicts"
               />
@@ -395,7 +464,7 @@ export function FactCheckResult() {
 
       {/* ── 7. SOURCES ─────────────────────────────────────── */}
       {sourceIntelligenceList.length > 0 && (
-        <Card className="p-5 sm:p-6 space-y-4">
+        <Card animateIn delay={120} className="p-5 sm:p-6 space-y-4">
           <SectionHeading>Sources referenced</SectionHeading>
           <div className="divide-y divide-white/[0.05]">
             {sourceIntelligenceList.map((src, idx) => (
@@ -412,7 +481,7 @@ export function FactCheckResult() {
       )}
 
       {/* ── 8. ANALYSIS ────────────────────────────────────── */}
-      <Card className="p-5 sm:p-6 space-y-4">
+      <Card animateIn delay={180} className="p-5 sm:p-6 space-y-4">
         <SectionHeading>Analysis</SectionHeading>
 
         <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-line">

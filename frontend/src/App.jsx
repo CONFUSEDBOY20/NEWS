@@ -28,8 +28,8 @@ function MainContent() {
   const isDark = theme === "dark";
 
   return (
-    <div className={`min-h-screen flex flex-col justify-between transition-colors duration-200 relative selection:bg-emerald-500/20 selection:text-emerald-400 font-sans ${
-      isDark ? "bg-[#090D16] text-slate-100" : "bg-[#F8FAFC] text-slate-900"
+    <div className={`truth-app min-h-screen flex flex-col justify-between transition-colors duration-200 relative font-sans ${
+      isDark ? "truth-dark" : "truth-light"
     }`}>
 
       <div className="relative z-10 flex-1 flex flex-col">
@@ -87,10 +87,10 @@ function MainContent() {
             {/* Col 1: Brand & Mission */}
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-md bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
+                <div className="w-6 h-6 rounded-md bg-blue-600/10 text-blue-600 flex items-center justify-center">
                   <ShieldCheck className="w-4 h-4" />
                 </div>
-                <span className="font-bold text-slate-900 dark:text-white text-sm">TruthLens</span>
+                <span className="font-bold text-slate-900 dark:text-white text-sm">Truth<span className="text-blue-600">Lens</span></span>
               </div>
               <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                 An open investigative web platform for automated multi-source news verification, media forensics, and claim analysis.
@@ -107,22 +107,22 @@ function MainContent() {
               </h4>
               <ul className="space-y-2">
                 <li>
-                  <button onClick={() => setActiveView("fact-check")} className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                  <button onClick={() => setActiveView("fact-check")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                     Article URL Fact-Check
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActiveView("fact-check")} className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                  <button onClick={() => setActiveView("fact-check")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                     Text Claim Cross-Examination
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActiveView("fact-check")} className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                  <button onClick={() => setActiveView("fact-check")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                     Image ELA & Forensic Audit
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActiveView("live-detect")} className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                  <button onClick={() => setActiveView("live-detect")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                     Live Misinformation Monitor
                   </button>
                 </li>
@@ -136,22 +136,22 @@ function MainContent() {
               </h4>
               <ul className="space-y-2">
                 <li>
-                  <button onClick={() => setActiveView("world-news")} className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                  <button onClick={() => setActiveView("world-news")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                     World Wire Headlines
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActiveView("india-news")} className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                  <button onClick={() => setActiveView("india-news")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                     India National Wire
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActiveView("articles")} className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                  <button onClick={() => setActiveView("articles")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                     Fact Investigation Dossiers
                   </button>
                 </li>
                 <li>
-                  <a href="http://127.0.0.1:8000/api/docs" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                  <a href="http://127.0.0.1:8000/api/docs" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                     <span>REST API Documentation</span>
                     <ArrowUpRight className="w-3 h-3" />
                   </a>

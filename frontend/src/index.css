@@ -134,11 +134,7 @@ html:not(.dark) .glass-card:hover {
   box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.08) !important;
 }
 
-html.light .text-white,
-html[data-theme="light"] .text-white,
-html:not(.dark) .text-white {
-  color: #0F172A !important;
-}
+/* Allow text-white to remain white on colored buttons and dark badges */
 
 html.light .text-slate-100,
 html[data-theme="light"] .text-slate-100,
@@ -242,14 +238,23 @@ html:not(.dark) textarea::placeholder {
   color: #94A3B8 !important;
 }
 
-/* ================= MODERN ANIMATION SYSTEM ================= */
+/* =================================================================
+   TRUTHLENS ANIMATION SYSTEM
+   Timing tiers:
+     MICRO      150–200ms  button hover, input focus, icon
+     COMPONENT  200–350ms  card entrance, dropdown, modal, accordion
+     PAGE       300–500ms  page entrance, section reveal, nav
+   ================================================================= */
 
-/* Hardware-Accelerated Smooth Ticker */
+/* ── Hardware-accelerated transform defaults ──────────────────── */
+.will-change-transform { will-change: transform; }
+.will-change-opacity   { will-change: opacity;   }
+
+/* ── TICKER (News Wire) ───────────────────────────────────────── */
 @keyframes ticker {
-  0% { transform: translate3d(0, 0, 0); }
-  100% { transform: translate3d(-50%, 0, 0); }
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
 }
-
 .animate-ticker {
   display: inline-flex;
   white-space: nowrap;
@@ -260,65 +265,91 @@ html:not(.dark) textarea::placeholder {
   animation-play-state: paused;
 }
 
-/* Subtle Breathing Pulse */
+/* ── SOFT PULSE (live indicator dots) ────────────────────────── */
 @keyframes softPulse {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.75;
-    transform: scale(0.96);
-  }
+  0%, 100% { opacity: 1;    transform: scale(1);    }
+  50%       { opacity: 0.7; transform: scale(0.94); }
 }
 .animate-soft-pulse {
   animation: softPulse 2.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* Subtle Floating Drift */
+/* ── FLOAT SLOW (ambient decorative elements) ────────────────── */
 @keyframes floatSlow {
-  0%, 100% {
-    transform: translate3d(0, 0, 0);
-  }
-  50% {
-    transform: translate3d(0, -6px, 0);
-  }
+  0%, 100% { transform: translate3d(0, 0, 0);   }
+  50%       { transform: translate3d(0, -6px, 0); }
 }
 .animate-float-slow {
   animation: floatSlow 6s ease-in-out infinite;
 }
 
-/* Fade Up Entrance */
+/* ── FADE-UP ENTRANCE (page / section level) ─────────────────── */
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 14px, 0);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
+  from { opacity: 0; transform: translate3d(0, 14px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0,    0); }
 }
 .animate-fade-up {
-  animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* Scanner Beam Effect */
+/* ── FADE-IN (modals, overlays, toasts) ──────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── RESULT REVEAL (verification result panel entrance) ──────── */
+@keyframes resultReveal {
+  from { opacity: 0; transform: scale(0.98) translate3d(0, 10px, 0); }
+  to   { opacity: 1; transform: scale(1)    translate3d(0, 0,    0); }
+}
+.animate-result-reveal {
+  animation: resultReveal 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── CARD ENTRANCE (list / grid items with stagger) ──────────── */
+@keyframes cardEntrance {
+  from { opacity: 0; transform: translate3d(0, 12px, 0) scale(0.99); }
+  to   { opacity: 1; transform: translate3d(0, 0,    0) scale(1);    }
+}
+.animate-card {
+  animation: cardEntrance 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Staggered entrance — set --stagger-i on each child */
+.stagger-children > * {
+  animation: cardEntrance 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--stagger-i, 0) * 55ms);
+}
+
+/* ── NEWS ITEM ENTRANCE (live news cards) ────────────────────── */
+@keyframes newsItemIn {
+  from { opacity: 0; transform: translate3d(0, 8px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0,  0); }
+}
+.animate-news-item {
+  animation: newsItemIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── EVIDENCE CARD ENTRANCE (staggered source reveal) ────────── */
+@keyframes evidenceIn {
+  from { opacity: 0; transform: translate3d(0, 10px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0,   0); }
+}
+.animate-evidence {
+  animation: evidenceIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+/* Use delay utilities: delay-75, delay-150, delay-225, delay-300 */
+
+/* ── SCANNER BEAM (verification progress) ───────────────────── */
 @keyframes scanBeam {
-  0% {
-    top: 0%;
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  80% {
-    opacity: 1;
-  }
-  100% {
-    top: 96%;
-    opacity: 0;
-  }
+  0%   { top: 0%;  opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { top: 96%; opacity: 0; }
 }
 .animate-scan-beam {
   position: absolute;
@@ -326,36 +357,16 @@ html:not(.dark) textarea::placeholder {
   right: 0;
   height: 2px;
   background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.9), transparent);
-  box-shadow: 0 0 14px 2px rgba(16, 185, 129, 0.6);
+  box-shadow: 0 0 14px 2px rgba(16, 185, 129, 0.5);
   pointer-events: none;
   animation: scanBeam 1.8s ease-in-out infinite;
 }
 
-/* Verification Result Reveal */
-@keyframes resultReveal {
-  from {
-    opacity: 0;
-    transform: scale(0.98) translate3d(0, 10px, 0);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translate3d(0, 0, 0);
-  }
-}
-.animate-result-reveal {
-  animation: resultReveal 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-/* Skeleton Loading Shimmer */
+/* ── SKELETON SHIMMER (loading placeholders) ─────────────────── */
 @keyframes skeletonShimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
 }
-
 .skeleton-shimmer {
   background: linear-gradient(
     90deg,
@@ -366,35 +377,49 @@ html:not(.dark) textarea::placeholder {
   background-size: 200% 100%;
   animation: skeletonShimmer 1.8s ease-in-out infinite;
 }
-
 html.light .skeleton-shimmer,
 html[data-theme="light"] .skeleton-shimmer,
 html:not(.dark) .skeleton-shimmer {
   background: linear-gradient(
     90deg,
     rgba(0, 0, 0, 0.04) 20%,
-    rgba(0, 0, 0, 0.08) 50%,
+    rgba(0, 0, 0, 0.09) 50%,
     rgba(0, 0, 0, 0.04) 80%
   ) !important;
   background-size: 200% 100% !important;
 }
 
-/* Fade In */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* ── EXPAND / COLLAPSE CHEVRON ROTATION ─────────────────────── */
+.chevron-open  { transform: rotate(180deg); transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1); }
+.chevron-close { transform: rotate(0deg);   transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* ── SECTION REVEAL (scroll into view via JS class toggle) ───── */
+.reveal-section {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 400ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.animate-fadeIn {
-  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.reveal-section.in-view {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-/* ================= ACCESSIBILITY: REDUCED MOTION ================= */
+/* ── FILTER PILL ACTIVE TRANSITION ──────────────────────────── */
+.filter-pill {
+  transition: background-color 150ms ease,
+              color 150ms ease,
+              transform 150ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 150ms ease;
+}
+.filter-pill:hover  { transform: translateY(-1px); }
+.filter-pill:active { transform: translateY(0) scale(0.97); }
+
+/* =================================================================
+   PREFERS-REDUCED-MOTION
+   - Disable all decorative movement
+   - Keep instant state transitions (color, opacity for active state)
+   ================================================================= */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -405,33 +430,297 @@ html:not(.dark) .skeleton-shimmer {
     scroll-behavior: auto !important;
   }
 
-  .animate-ticker {
+  /* Essential state-change transitions — kept instant, not removed */
+  .btn-press:active    { transform: none !important; }
+  .hover-lift:hover    { transform: none !important; }
+  .filter-pill:hover   { transform: none !important; }
+  .filter-pill:active  { transform: none !important; }
+
+  /* Decorative / looping animations — completely off */
+  .animate-ticker,
+  .animate-float-slow,
+  .animate-soft-pulse,
+  .animate-scan-beam {
     animation: none !important;
     transform: none !important;
   }
 
-  .animate-scan-beam,
-  .animate-float-slow,
-  .animate-soft-pulse {
+  /* Entrance animations — show immediately */
+  .animate-fade-up,
+  .animate-fadeIn,
+  .animate-result-reveal,
+  .animate-card,
+  .animate-news-item,
+  .animate-evidence,
+  .stagger-children > * {
     animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Reveal sections — show immediately */
+  .reveal-section {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }
 
-/* Custom Scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
+/* ── CUSTOM SCROLLBARS ───────────────────────────────────────── */
+::-webkit-scrollbar       { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
   background: rgba(148, 163, 184, 0.25);
   border-radius: 9999px;
 }
+::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.5); }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.5);
+:root {
+  --font-sans: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+  --font-editorial: 'Newsreader', Georgia, serif;
+  --paper: #F4F5F1;
+  --surface: #FFFFFF;
+  --ink: #182522;
+  --muted: #5E6B66;
+  --line: #D8DEDA;
+  --signal: #3158C8;
+  --signal-red: #B94B3A;
+  --soft-green: #E4E9E4;
 }
+
+html[data-theme="light"] body {
+  background-color: var(--paper) !important;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(24, 37, 34, 0.025) 40px) !important;
+  color: var(--ink) !important;
+  letter-spacing: 0;
+}
+
+html[data-theme="dark"] body {
+  background-color: #111816 !important;
+  background-image: radial-gradient(ellipse at 12% 0%, rgba(49, 88, 200, 0.12), transparent 40%) !important;
+  color: #E9EFEB !important;
+  letter-spacing: 0;
+}
+
+.truth-app {
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+.truth-app.truth-dark {
+  --paper: #111816;
+  --surface: #19221F;
+  --ink: #E9EFEB;
+  --muted: #A6B2AC;
+  --line: #34413B;
+  --soft-green: #202D27;
+}
+
+.truth-header {
+  background: color-mix(in srgb, var(--paper) 94%, transparent) !important;
+  border-color: var(--line) !important;
+}
+
+.truth-header-inner {
+  min-height: 72px;
+  height: auto;
+}
+
+.truth-brand > div:first-child {
+  background: var(--ink) !important;
+  border-color: var(--ink) !important;
+  color: var(--paper) !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+}
+
+.truth-brand span:first-child {
+  color: var(--ink) !important;
+  font-family: var(--font-editorial);
+  font-size: 21px;
+  font-weight: 600;
+}
+
+.truth-brand span:first-child span {
+  color: var(--signal) !important;
+}
+
+.truth-nav-item {
+  border-radius: 3px !important;
+  color: var(--muted) !important;
+  padding-inline: 12px !important;
+}
+
+.truth-nav-active {
+  background: transparent !important;
+  color: var(--ink) !important;
+}
+
+.truth-nav-active::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  bottom: 1px;
+  left: 12px;
+  height: 2px;
+  background: var(--signal-red);
+}
+
+.truth-ticker {
+  background: var(--soft-green) !important;
+  border-color: var(--line) !important;
+}
+
+.truth-home {
+  max-width: 1320px;
+  padding-top: 54px !important;
+  padding-bottom: 72px !important;
+  gap: 42px !important;
+}
+
+.truth-intro {
+  max-width: 1080px;
+  padding-top: 0 !important;
+  text-align: left !important;
+}
+
+.truth-intro > div:first-child {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: var(--signal-red) !important;
+  padding: 0 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.truth-title {
+  max-width: 1080px !important;
+  margin-inline: 0 !important;
+  color: var(--ink) !important;
+  font-family: var(--font-editorial) !important;
+  font-size: clamp(48px, 6vw, 76px) !important;
+  font-weight: 500 !important;
+  line-height: 0.99 !important;
+  letter-spacing: 0 !important;
+}
+
+.truth-title span:last-child {
+  color: var(--signal) !important;
+}
+
+.truth-deck {
+  max-width: 610px !important;
+  margin-inline: 0 !important;
+  color: var(--muted) !important;
+  font-size: 16px !important;
+  line-height: 1.65 !important;
+}
+
+.truth-verify-panel {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-top: 3px solid var(--signal) !important;
+  border-radius: 5px !important;
+  box-shadow: 0 12px 36px rgba(24, 37, 34, 0.07) !important;
+}
+
+.truth-verify-panel textarea,
+.truth-verify-panel input {
+  border-radius: 4px !important;
+  min-height: 48px;
+}
+
+.truth-verify-panel textarea {
+  min-height: 112px;
+}
+
+.truth-verify-panel button[type="submit"] {
+  background: var(--signal) !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+  min-height: 44px;
+}
+
+.truth-home .glass-card {
+  border-radius: 5px !important;
+  box-shadow: none !important;
+}
+
+.truth-home > section:last-child {
+  border: 1px solid var(--line) !important;
+  border-radius: 5px !important;
+  background: var(--surface) !important;
+  box-shadow: none !important;
+}
+
+.truth-home > section:last-child h2 {
+  font-family: var(--font-editorial);
+  font-weight: 500;
+  letter-spacing: 0 !important;
+}
+
+.truth-app button:focus-visible,
+.truth-app a:focus-visible,
+.truth-app input:focus-visible,
+.truth-app textarea:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+
+@media (max-width: 767px) {
+  .truth-header-inner {
+    min-height: 64px;
+  }
+
+  .truth-home {
+    padding-top: 36px !important;
+    gap: 32px !important;
+  }
+
+  .truth-title {
+    font-size: clamp(42px, 12vw, 58px) !important;
+  }
+
+  .truth-deck {
+    font-size: 14px !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .truth-header-inner {
+    padding-inline: 12px !important;
+    gap: 6px;
+  }
+
+  .truth-header-tools {
+    gap: 3px !important;
+  }
+
+  .truth-header-tools > button {
+    padding-inline: 6px !important;
+  }
+
+  .truth-brand {
+    gap: 8px !important;
+  }
+
+  .truth-brand span:first-child {
+    font-size: 19px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .truth-brand,
+  .truth-nav-item,
+  .truth-ticker * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+
+

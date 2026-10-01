@@ -1,5 +1,6 @@
 import React from "react";
 import { useApp } from "../context/AppContext";
+import { getVerificationStageLabel } from "../utils/animations";
 import {
   Check,
   CircleDot,
@@ -14,6 +15,14 @@ import {
 
 export function FactCheckProgress() {
   const { verificationStage, activeClaimText } = useApp();
+  // Stage label comes from centralized animation system, tied to real pipeline stage
+  // Type defaults to 'text'; for image type, the filename in activeClaimText serves as the cue
+  const submissionType = activeClaimText && /\.(png|jpg|jpeg|webp|gif|bmp)$/i.test(activeClaimText)
+    ? "image"
+    : activeClaimText?.startsWith("http")
+    ? "url"
+    : "text";
+  const currentStageLabel = getVerificationStageLabel(verificationStage, submissionType);
 
   // The 4 required checklist items for Step 2
   const checklistItems = [
@@ -160,7 +169,7 @@ export function FactCheckProgress() {
                       {isCompleted
                         ? "Completed & verified"
                         : isCurrent
-                        ? item.detail
+                        ? currentStageLabel
                         : "Queued"}
                     </span>
                   </div>

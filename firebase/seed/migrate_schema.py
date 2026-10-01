@@ -62,21 +62,35 @@ def transform_to_production_schema(source_data: dict) -> dict:
         }
     ])
 
-    # 3. Verifications (Mapped from fact_checks and raw_data)
-    verifications = []
-    claims = []
-    sources = []
-    evidence = []
+    # 3. Verifications (Mapped from existing verifications, fact_checks, and raw_data)
+    verifications = list(source_data.get("verifications", []))
+    claims = list(source_data.get("claims", []))
+    sources = list(source_data.get("sources", []))
+    evidence = list(source_data.get("evidence", []))
+
+    existing_verif_ids = {v.get("id") for v in verifications if isinstance(v, dict) and v.get("id")}
+    existing_claim_ids = {c.get("claim_id") for c in claims if isinstance(c, dict) and c.get("claim_id")}
+    existing_evidence_ids = {e.get("evidence_id") for e in evidence if isinstance(e, dict) and e.get("evidence_id")}
 
     # Map raw_data into verifications, claims, sources, evidence
     raw_records = source_data.get("raw_data", [])
     for idx, raw in enumerate(raw_records):
+        if not isinstance(raw, dict):
+            continue
         v_id = raw.get("id", f"verif-{idx+1:04d}")
+        if v_id in existing_verif_ids:
+            continue
+        existing_verif_ids.add(v_id)
+
         claim_text = raw.get("claim", raw.get("title", ""))
         source_name = raw.get("source", "Official Verified Wire")
         source_url = raw.get("source_url", "")
         verdict = raw.get("verdict", "UNVERIFIED")
-        confidence = float(raw.get("reliability_score", 85.0))
+        rel_score = raw.get("reliability_score")
+        try:
+            confidence = float(rel_score) if rel_score is not None else 85.0
+        except (ValueError, TypeError):
+            confidence = 85.0
         
         # Verification Doc
         verif_doc = {
@@ -105,36 +119,44 @@ def transform_to_production_schema(source_data: dict) -> dict:
         verifications.append(verif_doc)
 
         # Claim Doc
-        claims.append({
-            "claim_id": f"claim-{v_id}",
-            "statement": claim_text,
-            "entity": raw.get("entities", ["General"])[0] if raw.get("entities") else "General",
-            "category": raw.get("category", "General"),
-            "verdict": verdict,
-            "first_spotted_at": raw.get("publication_date", now_iso),
-            "verification_count": 1,
-            "created_at": raw.get("created_at", now_iso),
-            "updated_at": raw.get("updated_at", now_iso)
-        })
+        claim_id = f"claim-{v_id}"
+        if claim_id not in existing_claim_ids:
+            existing_claim_ids.add(claim_id)
+            claims.append({
+                "claim_id": claim_id,
+                "statement": claim_text,
+                "entity": raw.get("entities", ["General"])[0] if raw.get("entities") else "General",
+                "category": raw.get("category", "General"),
+                "verdict": verdict,
+                "first_spotted_at": raw.get("publication_date", now_iso),
+                "verification_count": 1,
+                "created_at": raw.get("created_at", now_iso),
+                "updated_at": raw.get("updated_at", now_iso)
+            })
 
         # Evidence Doc
-        evidence.append({
-            "evidence_id": f"evid-{v_id}",
-            "verification_id": v_id,
-            "claim_id": f"claim-{v_id}",
-            "source_name": source_name,
-            "url": source_url,
-            "title": raw.get("title", ""),
-            "snippet": raw.get("evidence", ""),
-            "stance": "SUPPORTS" if verdict == "TRUE" else "CONTRADICTS",
-            "reliability_score": confidence,
-            "published_date": raw.get("publication_date", now_iso),
-            "created_at": raw.get("created_at", now_iso)
-        })
+        evid_id = f"evid-{v_id}"
+        if evid_id not in existing_evidence_ids:
+            existing_evidence_ids.add(evid_id)
+            evidence.append({
+                "evidence_id": evid_id,
+                "verification_id": v_id,
+                "claim_id": claim_id,
+                "source_name": source_name,
+                "url": source_url,
+                "title": raw.get("title", ""),
+                "snippet": raw.get("evidence", ""),
+                "stance": "SUPPORTS" if verdict == "TRUE" else "CONTRADICTS",
+                "reliability_score": confidence,
+                "published_date": raw.get("publication_date", now_iso),
+                "created_at": raw.get("created_at", now_iso)
+            })
 
     # Deduplicate sources
-    seen_sources = set()
+    seen_sources = {s.get("name") for s in sources if isinstance(s, dict) and s.get("name")}
     for raw in raw_records:
+        if not isinstance(raw, dict):
+            continue
         src_name = raw.get("source", "Primary Media Source")
         if src_name not in seen_sources:
             seen_sources.add(src_name)
@@ -149,11 +171,11 @@ def transform_to_production_schema(source_data: dict) -> dict:
                 "updated_at": now_iso
             })
 
-    # 4. News Articles
-    news_articles = source_data.get("fact_articles", [])
+    # 4. News Articles (preserve existing if present, fallback to fact_articles)
+    news_articles = source_data.get("news_articles") or source_data.get("fact_articles", [])
 
     # 5. Verification History
-    verification_history = [
+    verification_history = source_data.get("verification_history") or [
         {
             "history_id": "hist-001",
             "verification_id": verifications[0]["id"] if verifications else "verif-001",
@@ -165,7 +187,7 @@ def transform_to_production_schema(source_data: dict) -> dict:
     ]
 
     # 6. Image Analysis
-    image_analysis = [
+    image_analysis = source_data.get("image_analysis") or [
         {
             "analysis_id": "img-001",
             "verification_id": "verif-sample-img",
@@ -184,7 +206,7 @@ def transform_to_production_schema(source_data: dict) -> dict:
     ]
 
     # 7. System Logs
-    system_logs = source_data.get("admin_logs", [])
+    system_logs = source_data.get("system_logs") or source_data.get("admin_logs", [])
 
     return {
         "users": users,
@@ -233,19 +255,31 @@ def run_migration(dry_run: bool = False, live_firestore: bool = False):
                 from firebase_admin import credentials, firestore
                 if settings.FIREBASE_PROJECT_ID and settings.FIREBASE_CLIENT_EMAIL and settings.FIREBASE_PRIVATE_KEY:
                     if not firebase_admin._apps:
+                        # Ensure escaped newlines in PEM format are parsed correctly
+                        private_key = settings.FIREBASE_PRIVATE_KEY.replace("\\n", "\n")
                         cred = credentials.Certificate({
                             "project_id": settings.FIREBASE_PROJECT_ID,
                             "client_email": settings.FIREBASE_CLIENT_EMAIL,
-                            "private_key": settings.FIREBASE_PRIVATE_KEY
+                            "private_key": private_key
                         })
                         firebase_admin.initialize_app(cred)
                     db = firestore.client()
                     for col_name, items in migrated.items():
                         if isinstance(items, list):
-                            for doc in items:
-                                doc_id = doc.get("id") or doc.get("uid") or doc.get("admin_id") or doc.get("claim_id") or doc.get("source_id") or doc.get("evidence_id") or doc.get("article_id") or doc.get("analysis_id") or doc.get("history_id")
-                                if doc_id:
-                                    db.collection(col_name).document(doc_id).set(doc, merge=True)
+                            for idx, doc in enumerate(items):
+                                if not isinstance(doc, dict):
+                                    continue
+                                doc_id = (
+                                    doc.get("id") or doc.get("uid") or doc.get("admin_id") or
+                                    doc.get("claim_id") or doc.get("source_id") or doc.get("evidence_id") or
+                                    doc.get("article_id") or doc.get("analysis_id") or doc.get("history_id") or
+                                    f"doc-{idx+1:04d}"
+                                )
+                                db.collection(col_name).document(str(doc_id)).set(doc, merge=True)
+                        elif isinstance(items, dict):
+                            for key, val in items.items():
+                                val_dict = val if isinstance(val, dict) else {"value": val}
+                                db.collection(col_name).document(str(key)).set(val_dict, merge=True)
                     print("[SUCCESS] Firestore collections synced successfully.")
                 else:
                     print("[SKIP] Firebase credentials not configured in environment. Skipped live push.")

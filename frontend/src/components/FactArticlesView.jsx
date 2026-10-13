@@ -8,6 +8,7 @@ export function FactArticlesView() {
   const { t } = useApp();
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedArticle, setSelectedArticle] = useState(null);
 
   useEffect(() => {
@@ -16,11 +17,15 @@ export function FactArticlesView() {
 
   const loadArticles = async () => {
     setLoading(true);
+    setError(null);
     try {
       const data = await api.getArticles();
       setArticles(data || []);
-    } catch {
-      // Fallback
+    } catch (err) {
+      const msg = err.status === 429
+        ? "Too many requests, wait a minute."
+        : (err.message || "Verification service is unavailable. Please try again.");
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -48,6 +53,16 @@ export function FactArticlesView() {
         <div className="flex items-center justify-center py-24 gap-2 text-slate-400">
           <Loader2 className="w-6 h-6 text-emerald-500 animate-spin" />
           <span className="text-xs">Loading dossiers...</span>
+        </div>
+      ) : error ? (
+        <div className="p-8 text-center rounded-2xl border border-rose-500/20 bg-rose-500/10 space-y-3">
+          <p className="text-sm font-semibold text-rose-300">{error}</p>
+          <button
+            onClick={loadArticles}
+            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-xl cursor-pointer"
+          >
+            Retry
+          </button>
         </div>
       ) : articles.length === 0 ? (
         <div className="text-center py-24 text-slate-400 text-sm">

@@ -43,9 +43,18 @@ export function AdminDashboard() {
   const [articles, setArticles] = useState([]);
   const [editingArticle, setEditingArticle] = useState(null);
   const [showArticleModal, setShowArticleModal] = useState(false);
+  const [dashboardError, setDashboardError] = useState(null);
+
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem("truthlens_admin_token");
+    setIsAdminLoggedIn(false);
+    setActiveView("fact-check");
+    showToast("Signed out of admin portal.");
+  }, [setIsAdminLoggedIn, setActiveView, showToast]);
 
   const loadDashboardData = useCallback(async () => {
     setLoading(true);
+    setDashboardError(null);
     try {
       const [statsRes, rawRes, logsRes, setsRes, artsRes] = await Promise.allSettled([
         api.getAdminDashboard(),
@@ -55,7 +64,21 @@ export function AdminDashboard() {
         api.getArticles()
       ]);
 
-      if (statsRes.status === "fulfilled") setStats(statsRes.value);
+      if (statsRes.status === "fulfilled") {
+        setStats(statsRes.value);
+      } else {
+        const err = statsRes.reason;
+        if (err?.status === 401 || err?.status === 403) {
+          handleLogout();
+          return;
+        }
+        setDashboardError(
+          err?.status === 429
+            ? "Too many requests, wait a minute."
+            : (err?.message || "Failed to load admin dashboard records.")
+        );
+      }
+
       if (rawRes.status === "fulfilled") setRawData(rawRes.value || []);
       if (logsRes.status === "fulfilled") setLogs(logsRes.value || []);
       if (setsRes.status === "fulfilled") setSettingsData(setsRes.value || {});
@@ -65,18 +88,12 @@ export function AdminDashboard() {
     } finally {
       setLoading(false);
     }
-  }, [showToast]);
+  }, [handleLogout, showToast]);
 
   useEffect(() => {
     loadDashboardData();
   }, [loadDashboardData]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("truthlens_admin_token");
-    setIsAdminLoggedIn(false);
-    setActiveView("fact-check");
-    showToast("Signed out of admin portal.");
-  };
 
   // Raw Data Actions
   const handleSaveRecord = async (e) => {
@@ -193,6 +210,16 @@ export function AdminDashboard() {
       {loading ? (
         <div className="flex items-center justify-center py-24">
           <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
+        </div>
+      ) : dashboardError ? (
+        <div className="p-8 text-center rounded-2xl border border-rose-500/20 bg-rose-500/10 space-y-3">
+          <p className="text-sm font-semibold text-rose-300">{dashboardError}</p>
+          <button
+            onClick={loadDashboardData}
+            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-xl cursor-pointer"
+          >
+            Retry
+          </button>
         </div>
       ) : (
         <>

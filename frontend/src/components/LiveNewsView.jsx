@@ -107,6 +107,7 @@ export function LiveNewsView({ region = "world" }) {
   const [syncedAt, setSyncedAt] = useState(null);
   const [isLive, setIsLive] = useState(true);
   const [selectedArticle, setSelectedArticle] = useState(null);
+  const [error, setError] = useState(null);
   const [sourcesQueried, setSourcesQueried] = useState([
     "Google News RSS",
     "GNews API",
@@ -120,6 +121,7 @@ export function LiveNewsView({ region = "world" }) {
   const loadNews = useCallback(async (showSpinner, fresh) => {
     if (showSpinner) setLoading(true);
     else setRefreshing(true);
+    setError(null);
 
     // 1. Query Vercel Multi-Source Aggregator /api/news
     try {
@@ -150,6 +152,8 @@ export function LiveNewsView({ region = "world" }) {
             setSourcesQueried(json.sources_queried);
           }
           setIsLive(true);
+          setLoading(false);
+          setRefreshing(false);
           return;
         }
       }
@@ -166,7 +170,11 @@ export function LiveNewsView({ region = "world" }) {
       setArticles(data.articles || []);
       setSyncedAt(data.synced_at || new Date().toISOString());
       setIsLive(data.is_live !== false);
-    } catch {
+    } catch (err) {
+      const msg = err.status === 429
+        ? "Too many requests, wait a minute."
+        : (err.message || "Verification service is unavailable. Please try again.");
+      setError(msg);
       setIsLive(false);
     } finally {
       setLoading(false);
@@ -319,8 +327,21 @@ export function LiveNewsView({ region = "world" }) {
         </div>
       )}
 
+      {/* Error state */}
+      {error && !loading && (
+        <div className="p-8 text-center rounded-2xl border border-rose-500/20 bg-rose-500/10 space-y-3">
+          <p className="text-sm font-semibold text-rose-300">{error}</p>
+          <button
+            onClick={() => loadNews(true, true)}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl cursor-pointer"
+          >
+            Retry
+          </button>
+        </div>
+      )}
+
       {/* Empty state */}
-      {!loading && articles.length === 0 && (
+      {!loading && !error && articles.length === 0 && (
         <div className="text-center py-16 space-y-3">
           <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
             No headlines currently matched this filter.
@@ -332,7 +353,7 @@ export function LiveNewsView({ region = "world" }) {
       )}
 
       {/* Articles Grid with Editorial Typography, Badges, and Verification Action */}
-      {!loading && (
+      {!loading && !error && articles.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles.map((art, artIdx) => {
             const cat = art.category || (isWorld ? "World" : "India");

@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
-import { fileURLToPath } from 'url'
+import { fileURLToPath, pathToFileURL } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -11,7 +11,8 @@ function vercelNewsDevPlugin() {
     configureServer(server) {
       server.middlewares.use('/api/news', async (req, res, next) => {
         try {
-          const newsModule = await import(path.resolve(__dirname, '../api/news.js'))
+          const modulePath = pathToFileURL(path.resolve(__dirname, '../api/news.js')).href
+          const newsModule = await import(modulePath)
           const handler = newsModule.default
           const fullUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`)
           req.query = Object.fromEntries(fullUrl.searchParams.entries())

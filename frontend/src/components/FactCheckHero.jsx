@@ -7,9 +7,7 @@ import {
   fetchRecentChecks,
   fetchPopularInvestigations,
   resolveRealTimeNewsImage,
-  HERO_FEATURED_STORIES,
-  INITIAL_RECENT_CHECKS,
-  POPULAR_INVESTIGATIONS,
+  EDITORIAL_EXAMPLE_STORIES,
 } from "../services/newsService";
 import { ArticleDetailModal } from "./ArticleDetailModal";
 import { NewsReaderFactCheckModal } from "./NewsReaderFactCheckModal";
@@ -82,12 +80,13 @@ export function FactCheckHero() {
   ];
 
   // Dynamic Real-Time Side News States
-  const [featuredStories, setFeaturedStories] = useState(HERO_FEATURED_STORIES);
-  const [popularInvestigations, setPopularInvestigations] = useState(POPULAR_INVESTIGATIONS);
-  const [liveChecks, setLiveChecks] = useState(INITIAL_RECENT_CHECKS);
+  const [featuredStories, setFeaturedStories] = useState(EDITORIAL_EXAMPLE_STORIES);
+  const [popularInvestigations, setPopularInvestigations] = useState([]);
+  const [liveChecks, setLiveChecks] = useState([]);
 
   // Auto-scroll featured story carousel every 8 seconds
   useEffect(() => {
+    if (!featuredStories.length) return;
     const timer = setInterval(() => {
       setCarouselIndex((prev) => (prev + 1) % (featuredStories.length || 1));
     }, 8000);
@@ -150,7 +149,7 @@ export function FactCheckHero() {
 
   const loadNews = async (cat, fresh = false) => {
     setNewsLoading(true);
-    setNewsError(false);
+    setNewsError(null);
     try {
       const res = await fetchLatestNews({ category: cat, fresh });
       if (res?.articles && res.articles.length > 0) {
@@ -158,8 +157,11 @@ export function FactCheckHero() {
       } else {
         setNewsArticles([]);
       }
-    } catch {
-      setNewsError(true);
+    } catch (err) {
+      const msg = err.status === 429
+        ? "Too many requests, wait a minute."
+        : (err.message || "Verification service is unavailable. Please try again.");
+      setNewsError(msg);
     } finally {
       setNewsLoading(false);
     }
@@ -256,7 +258,15 @@ export function FactCheckHero() {
     } catch (err) {
       clearInterval(stageTimer);
       setIsVerifying(false);
-      setInputError(err.message || "Verification request failed. Please check your network connection.");
+      const is429 = err.status === 429 || err.code === "RATE_LIMITED";
+      const message = is429
+        ? "Too many requests, wait a minute."
+        : (err.message || "Verification service is unavailable. Please try again.");
+      setInputError({
+        message,
+        is429,
+        retryFn: () => triggerVerification(tab, val, titleToUse),
+      });
     }
   };
 
@@ -490,9 +500,20 @@ export function FactCheckHero() {
 
               {/* Error Message */}
               {inputError && (
-                <div className="text-[11px] text-red-600 dark:text-red-400 flex items-center gap-1.5 p-2 rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900">
-                  <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
-                  <span>{inputError}</span>
+                <div className="text-[11px] text-red-600 dark:text-red-400 flex items-center justify-between gap-1.5 p-2 rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900">
+                  <div className="flex items-center gap-1.5">
+                    <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+                    <span>{typeof inputError === "string" ? inputError : inputError.message}</span>
+                  </div>
+                  {typeof inputError === "object" && inputError.retryFn && (
+                    <button
+                      type="button"
+                      onClick={() => inputError.retryFn()}
+                      className="px-2 py-0.5 rounded bg-red-600 hover:bg-red-700 text-white font-semibold text-[10px] cursor-pointer"
+                    >
+                      Retry
+                    </button>
+                  )}
                 </div>
               )}
 
@@ -791,15 +812,19 @@ export function FactCheckHero() {
                   </div>
                 ))}
               </div>
-            ) : newsError && newsArticles.length === 0 ? (
-              <div className="p-8 text-center rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0F172A] space-y-3">
-                <p className="text-xs text-slate-500">Failed to load news for this category.</p>
+            ) : newsError ? (
+              <div className="p-8 text-center rounded-xl border border-red-200 dark:border-red-900/60 bg-red-50/30 dark:bg-red-950/20 space-y-3">
+                <p className="text-xs text-red-600 dark:text-red-400 font-medium">{newsError}</p>
                 <button
                   onClick={() => loadNews(newsCategory, true)}
                   className="px-3 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 cursor-pointer"
                 >
                   Retry News Fetch
                 </button>
+              </div>
+            ) : newsArticles.length === 0 ? (
+              <div className="p-8 text-center rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0F172A]">
+                <p className="text-xs text-slate-500">No headlines currently available in this category.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -822,10 +847,10 @@ export function FactCheckHero() {
                             e.target.src = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80";
                           }}
                         />
-                        {/* Live Wire Badge */}
+                        {/* Wire Status Badge */}
                         <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-md text-[10px] font-bold text-white border border-white/10">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                          <span>LIVE</span>
+                          <span className={`w-1.5 h-1.5 rounded-full ${art.is_delayed ? "bg-amber-400" : "bg-emerald-400 animate-pulse"}`} />
+                          <span>{art.is_delayed ? "DELAYED ~12H" : "LIVE"}</span>
                         </div>
 
                         {/* Category Badge */}

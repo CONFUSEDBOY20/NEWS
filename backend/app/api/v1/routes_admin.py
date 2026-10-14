@@ -1,5 +1,5 @@
-from fastapi import APIRouter, HTTPException, Depends, status
-from typing import Optional, List, Dict, Any
+from fastapi import APIRouter, HTTPException, Depends, status, Response
+from typing import Optional, List, Dict, Any, Union
 from app.schemas.admin import (
     LoginRequest,
     TokenResponse,
@@ -18,7 +18,7 @@ admin_service = AdminService()
 async def admin_login(payload: LoginRequest):
     if verify_admin_credentials(payload.email, payload.password):
         token = create_access_token(payload.email)
-        admin_service.fact_db.add_admin_log(payload.email, "LOGIN", "auth", "session", "Admin authenticated via v1 API")
+        admin_service.fact_db.add_admin_log(payload.email, "LOGIN", "auth", "session", "Admin authenticated successfully")
         return TokenResponse(
             access_token=token,
             admin={
@@ -37,25 +37,33 @@ async def admin_login(payload: LoginRequest):
 async def get_dashboard_overview(admin: dict = Depends(get_current_admin)):
     return admin_service.get_dashboard_stats()
 
-@router.get("/raw-data", response_model=List[RawDataRecord])
-async def get_raw_data(
+# Raw Data Management
+@router.get("/raw-data")
+async def list_raw_data(
     category: Optional[str] = None,
     verdict: Optional[str] = None,
+    region: Optional[str] = None,
+    language: Optional[str] = None,
     search: Optional[str] = None,
     admin: dict = Depends(get_current_admin)
 ):
-    return admin_service.get_raw_data(category=category, verdict=verdict, search=search)
+    return admin_service.list_raw_data(
+        category=category,
+        verdict=verdict,
+        region=region,
+        language=language,
+        search=search
+    )
 
-@router.post("/raw-data", response_model=RawDataRecord)
-async def create_raw_data(record: RawDataRecord, admin: dict = Depends(get_current_admin)):
+@router.post("/raw-data")
+async def create_raw_data(record: Union[RawDataRecord, Dict[str, Any]], admin: dict = Depends(get_current_admin)):
     return admin_service.create_raw_data(record)
 
-@router.put("/raw-data/{item_id}", response_model=RawDataRecord)
-async def update_raw_data(item_id: str, record: RawDataRecord, admin: dict = Depends(get_current_admin)):
-    payload_dict = record.model_dump() if hasattr(record, "model_dump") else record.dict()
-    updated = admin_service.update_raw_data(item_id, payload_dict)
+@router.put("/raw-data/{item_id}")
+async def update_raw_data(item_id: str, updates: Dict[str, Any], admin: dict = Depends(get_current_admin)):
+    updated = admin_service.update_raw_data(item_id, updates)
     if not updated:
-        raise HTTPException(status_code=404, detail="Record not found")
+        raise HTTPException(status_code=404, detail="Raw data record not found")
     return updated
 
 @router.delete("/raw-data/{item_id}")
@@ -65,18 +73,27 @@ async def delete_raw_data(item_id: str, admin: dict = Depends(get_current_admin)
         raise HTTPException(status_code=404, detail="Record not found")
     return {"message": "Record deleted successfully", "id": item_id}
 
-@router.get("/articles", response_model=List[FactArticle])
-async def get_fact_articles(admin: dict = Depends(get_current_admin)):
-    return admin_service.list_articles()
+@router.get("/raw-data/export/csv")
+async def export_raw_data_csv(admin: dict = Depends(get_current_admin)):
+    csv_str = admin_service.export_raw_data_csv()
+    return Response(
+        content=csv_str,
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=truthlens_raw_facts.csv"}
+    )
 
-@router.post("/articles", response_model=FactArticle)
-async def create_fact_article(article: FactArticle, admin: dict = Depends(get_current_admin)):
+# Fact Articles Management
+@router.get("/articles")
+async def list_fact_articles(category: Optional[str] = None, admin: dict = Depends(get_current_admin)):
+    return admin_service.list_articles(category=category)
+
+@router.post("/articles")
+async def create_fact_article(article: Union[FactArticle, Dict[str, Any]], admin: dict = Depends(get_current_admin)):
     return admin_service.create_article(article)
 
-@router.put("/articles/{article_id}", response_model=FactArticle)
-async def update_fact_article(article_id: str, article: FactArticle, admin: dict = Depends(get_current_admin)):
-    payload_dict = article.model_dump() if hasattr(article, "model_dump") else article.dict()
-    updated = admin_service.update_article(article_id, payload_dict)
+@router.put("/articles/{article_id}")
+async def update_fact_article(article_id: str, updates: Dict[str, Any], admin: dict = Depends(get_current_admin)):
+    updated = admin_service.update_article(article_id, updates)
     if not updated:
         raise HTTPException(status_code=404, detail="Article not found")
     return updated
@@ -88,15 +105,16 @@ async def delete_fact_article(article_id: str, admin: dict = Depends(get_current
         raise HTTPException(status_code=404, detail="Article not found")
     return {"message": "Article deleted successfully", "id": article_id}
 
-@router.get("/settings", response_model=SystemSettings)
+# Settings and Logs
+@router.get("/settings")
 async def get_system_settings(admin: dict = Depends(get_current_admin)):
     return admin_service.get_settings()
 
-@router.post("/settings", response_model=SystemSettings)
-async def update_system_settings(settings_payload: SystemSettings, admin: dict = Depends(get_current_admin)):
-    payload_dict = settings_payload.model_dump() if hasattr(settings_payload, "model_dump") else settings_payload.dict()
-    return admin_service.update_settings(payload_dict)
+@router.put("/settings")
+@router.post("/settings")
+async def update_system_settings(updates: Dict[str, Any], admin: dict = Depends(get_current_admin)):
+    return admin_service.update_settings(updates)
 
 @router.get("/logs")
-async def get_audit_logs(admin: dict = Depends(get_current_admin)):
-    return admin_service.get_logs()
+async def get_admin_logs(limit: int = 100, admin: dict = Depends(get_current_admin)):
+    return admin_service.get_logs(limit=limit)

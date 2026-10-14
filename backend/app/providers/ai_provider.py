@@ -5,7 +5,8 @@ import json
 import asyncio
 import logging
 from typing import List, Dict, Any, Optional
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 from app.providers.base import BaseAIProvider
 from app.schemas.fact_check import EvidenceItem, ExtractedClaim, VerdictEnum
 from app.core.config import settings
@@ -15,6 +16,7 @@ logger = logging.getLogger("truthlens.ai")
 class AIProvider(BaseAIProvider):
     def __init__(self):
         self.gemini_key = settings.GEMINI_API_KEY
+        self.client: Optional[genai.Client] = None
         self._init_gemini()
 
     def _init_gemini(self):
@@ -22,9 +24,12 @@ class AIProvider(BaseAIProvider):
         if key:
             self.gemini_key = key
             try:
-                genai.configure(api_key=key)
+                self.client = genai.Client(api_key=key)
             except Exception as e:
                 logger.warning(f"Failed to configure Gemini SDK: {e}")
+                self.client = None
+        else:
+            self.client = None
 
     async def extract_claims_and_entities(self, text: str, language: str = "en") -> Dict[str, Any]:
         clean_text = text.strip()
@@ -162,12 +167,13 @@ class AIProvider(BaseAIProvider):
         if not key:
             return None
 
-        try:
-            genai.configure(api_key=key)
-            model = genai.GenerativeModel("gemini-2.0-flash")
-        except Exception as e:
-            logger.warning(f"Error initializing GenerativeModel: {e}")
-            return None
+        client = getattr(self, "client", None)
+        if not client:
+            try:
+                client = genai.Client(api_key=key)
+            except Exception as e:
+                logger.warning(f"Error initializing Gemini client: {e}")
+                return None
 
         evidence_summary = ""
         if evidence_items:
@@ -217,11 +223,12 @@ Return ONLY a valid JSON object without any additional markdown text or preamble
 """
 
         try:
-            # Generate content asynchronously with timeout
+            # Generate content asynchronously with timeout using google-genai
             response = await asyncio.wait_for(
-                model.generate_content_async(
-                    prompt,
-                    generation_config=genai.types.GenerationConfig(
+                client.aio.models.generate_content(
+                    model="gemini-2.0-flash",
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
                         temperature=0.1,
                         response_mime_type="application/json"
                     )

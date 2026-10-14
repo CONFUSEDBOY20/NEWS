@@ -168,7 +168,10 @@ export function LiveDetectionView() {
         ...current,
       ]);
     } catch (err) {
-      setError(err.message || "Live detection failed");
+      const msg = err.status === 429
+        ? "Too many requests, wait a minute."
+        : (err.message || "Verification service is unavailable. Please try again.");
+      setError(msg);
     } finally {
       setIsLoading(false);
     }
@@ -412,7 +415,17 @@ export function LiveDetectionView() {
             icon={Radar}
             meta={snapshot ? `${snapshot.total_scanned} scanned • ${relativeTime(snapshot.synced_at)}` : "Waiting for scan"}
           >
-            {error && <div className="py-6 text-sm text-rose-300">{error}</div>}
+            {error && (
+              <div className="py-6 space-y-3">
+                <div className="text-sm text-rose-300">{error}</div>
+                <button
+                  onClick={loadDetections}
+                  className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl cursor-pointer"
+                >
+                  Retry
+                </button>
+              </div>
+            )}
             {!error && !snapshot && (
               <div className="flex items-center gap-2 py-10 text-sm text-slate-400">
                 <Loader2 className="h-4 w-4 animate-spin" />

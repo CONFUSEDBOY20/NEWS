@@ -1,19 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   X,
   Download,
-  Share2,
   Copy,
   Check,
-  Sparkles,
-  ShieldCheck,
-  CheckCircle2,
-  AlertTriangle,
-  XCircle,
-  HelpCircle,
-  Camera,
-  Layers,
-  Palette
+  Share2,
 } from "lucide-react";
 
 export function SocialFactCardModal({ isOpen, onClose, result, showToast }) {
@@ -75,7 +66,7 @@ export function SocialFactCardModal({ isOpen, onClose, result, showToast }) {
   };
 
   // Render high-res card to HTML5 Canvas
-  const renderCanvas = () => {
+  const renderCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -262,7 +253,7 @@ export function SocialFactCardModal({ isOpen, onClose, result, showToast }) {
     ctx.fillStyle = verdictInfo.color;
     ctx.fillText("truthlens.ai", width - 80, footerY);
     ctx.textAlign = "left";
-  };
+  }, [format, themeStyle, result, verdictInfo]);
 
   useEffect(() => {
     if (!isOpen || !result) return undefined;
@@ -270,7 +261,7 @@ export function SocialFactCardModal({ isOpen, onClose, result, showToast }) {
       renderCanvas();
     }, 50);
     return () => clearTimeout(timer);
-  }, [format, themeStyle, result, isOpen]);
+  }, [renderCanvas, isOpen, result]);
 
   if (!isOpen || !result) return null;
 
@@ -451,10 +442,11 @@ export function SocialFactCardModal({ isOpen, onClose, result, showToast }) {
             <button
               type="button"
               onClick={handleDownload}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-emerald-500 text-white text-xs font-bold uppercase tracking-wider shadow-lg shadow-indigo-500/20 hover:scale-[1.02] transition-transform cursor-pointer"
+              disabled={downloading}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-emerald-500 text-white text-xs font-bold uppercase tracking-wider shadow-lg shadow-indigo-500/20 hover:scale-[1.02] transition-transform cursor-pointer disabled:opacity-50"
             >
               <Download className="w-4 h-4" />
-              <span>Download Image</span>
+              <span>{downloading ? "Downloading..." : "Download Image"}</span>
             </button>
           </div>
         </div>

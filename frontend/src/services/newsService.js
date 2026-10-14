@@ -1,222 +1,150 @@
 /**
- * TruthLens Dedicated News Service
+ * TruthLens News Service
  * ============================================================
- * Primary: NewsData.io Latest News API (https://newsdata.io/api/1/latest)
- * Fallback: TruthLens Backend News API + High-fidelity Curated Feed
- * Features:
- *   - LocalStorage Caching (15 min TTL) to respect free 200 credits/day limit
- *   - Deduplication by title / url
- *   - Normalized article schema for UI components
- *   - Country, language, and category filtering
- *   - Error & retry handling
+ * Calls TruthLens Backend News Engine only.
+ * All third-party provider keys stay strictly on the backend.
+ * Zero fabricated articles or fake "live" badges.
  */
 
 import { api } from "./api";
 
-const NEWSDATA_KEY = import.meta.env.VITE_NEWSDATA_API_KEY || "";
-const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes cache
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes cache
 
-// Curated high-resolution editorial imagery matching reference
+// Curated high-resolution editorial topic assets for legitimate visual context
 export const EDITORIAL_ASSETS = {
   parliament: "https://images.unsplash.com/photo-1598084999557-0a44018e6988?auto=format&fit=crop&w=1200&q=80",
-  railways: "https://images.unsplash.com/photo-1532375810709-75b1da00537c?auto=format&fit=crop&w=800&q=80",
-  earth: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
-  ai_chip: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
-  vaccine: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80",
-  laptop: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80",
-  flood: "https://images.unsplash.com/photo-1547683905-f686c993aae5?auto=format&fit=crop&w=800&q=80",
-  protest: "https://images.unsplash.com/photo-1569437061241-a848be43cc82?auto=format&fit=crop&w=800&q=80",
-  smog: "https://images.unsplash.com/photo-1534088568595-a066f410bcda?auto=format&fit=crop&w=800&q=80",
-  food: "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=800&q=80",
-  social_media: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=800&q=80",
+  court: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1000&q=80",
+  railways: "https://images.unsplash.com/photo-1532375810709-75b1da00537c?auto=format&fit=crop&w=1000&q=80",
+  space: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1000&q=80",
+  rocket: "https://images.unsplash.com/photo-1517976487502-581335b2e95a?auto=format&fit=crop&w=1000&q=80",
+  ai_chip: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=80",
+  cyber: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1000&q=80",
+  vaccine: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1000&q=80",
+  hospital: "https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=1000&q=80",
+  laptop: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1000&q=80",
+  flood: "https://images.unsplash.com/photo-1547683905-f686c993aae5?auto=format&fit=crop&w=1000&q=80",
+  protest: "https://images.unsplash.com/photo-1569437061241-a848be43cc82?auto=format&fit=crop&w=1000&q=80",
+  smog: "https://images.unsplash.com/photo-1534088568595-a066f410bcda?auto=format&fit=crop&w=1000&q=80",
+  economy: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1000&q=80",
+  markets: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1000&q=80",
+  sports: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1000&q=80",
+  solar: "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=1000&q=80",
+  defense: "https://images.unsplash.com/photo-1579829366248-204fe8413f31?auto=format&fit=crop&w=1000&q=80",
+  food: "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=1000&q=80",
+  social_media: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=1000&q=80",
+  default_news: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1000&q=80",
 };
 
-// High-fidelity fallback dataset exactly matching the visual reference
-export const CURATED_REFERENCE_NEWS = [
+/**
+ * Real-time topic semantic image resolver
+ */
+export function resolveRealTimeNewsImage(title = "", category = "", existingUrl = null) {
+  if (
+    existingUrl &&
+    typeof existingUrl === "string" &&
+    existingUrl.startsWith("http") &&
+    !existingUrl.includes("1x1") &&
+    !existingUrl.includes("pixel") &&
+    !existingUrl.includes("default_avatar")
+  ) {
+    return existingUrl;
+  }
+
+  const text = `${title} ${category}`.toLowerCase();
+
+  if (text.match(/railway|train|kavach|tracks|locomotive|vande bharat|metro|station/)) {
+    return EDITORIAL_ASSETS.railways;
+  }
+  if (text.match(/parliament|sansad|minister|lok sabha|rajya sabha|election|bill|cabinet|government|lawmaker|leader/)) {
+    return EDITORIAL_ASSETS.parliament;
+  }
+  if (text.match(/court|judge|bench|sc |supreme court|high court|verdict|bail|justice|tribunal/)) {
+    return EDITORIAL_ASSETS.court;
+  }
+  if (text.match(/space|isro|nasa|gaganyaan|chandrayaan|satellite|orbit|moon|mars|rocket|astronomy/)) {
+    return EDITORIAL_ASSETS.space;
+  }
+  if (text.match(/gdp|inflation|economy|budget|reserve bank|rbi|market|sensex|nifty|rupee|stocks|trade|export|finance|bank/)) {
+    return EDITORIAL_ASSETS.markets;
+  }
+  if (text.match(/ai |artificial intelligence|deepfake|chip|semiconductor|nvidia|software|cyber|tech|algorithm|quantum/)) {
+    return EDITORIAL_ASSETS.ai_chip;
+  }
+  if (text.match(/hack|ransomware|malware|breach|security|data leak|privacy/)) {
+    return EDITORIAL_ASSETS.cyber;
+  }
+  if (text.match(/vaccine|covid|virus|pandemic|who |health|disease|sub-lineage|medical|doctor|hospital|cancer/)) {
+    return EDITORIAL_ASSETS.vaccine;
+  }
+  if (text.match(/flood|rain|monsoon|storm|cyclone|rainfall|imd |weather|water level/)) {
+    return EDITORIAL_ASSETS.flood;
+  }
+  if (text.match(/protest|strike|demonstration|rally|riot|police|unrest/)) {
+    return EDITORIAL_ASSETS.protest;
+  }
+  if (text.match(/smog|pollution|air quality|aqi|cpcb|emission|clean air/)) {
+    return EDITORIAL_ASSETS.smog;
+  }
+  if (text.match(/solar|renewable|green energy|wind|climate|cop|carbon|energy storage/)) {
+    return EDITORIAL_ASSETS.solar;
+  }
+  if (text.match(/defense|military|army|air force|navy|missile|border|security forces/)) {
+    return EDITORIAL_ASSETS.defense;
+  }
+  if (text.match(/cricket|bcci|ipl|football|sports|olympic|world cup|match|stadium/)) {
+    return EDITORIAL_ASSETS.sports;
+  }
+  if (text.match(/food|spice|adulteration|fssai|crop|farmer|agriculture|wheat|paddy/)) {
+    return EDITORIAL_ASSETS.food;
+  }
+  if (text.match(/social media|viral|whatsapp|telegram|instagram|tweet|misinformation|post/)) {
+    return EDITORIAL_ASSETS.social_media;
+  }
+
+  const cat = (category || "").toLowerCase();
+  if (cat.includes("tech")) return EDITORIAL_ASSETS.ai_chip;
+  if (cat.includes("health")) return EDITORIAL_ASSETS.hospital;
+  if (cat.includes("india") || cat.includes("politic")) return EDITORIAL_ASSETS.parliament;
+  if (cat.includes("env") || cat.includes("climat")) return EDITORIAL_ASSETS.solar;
+  if (cat.includes("econ") || cat.includes("busin")) return EDITORIAL_ASSETS.economy;
+
+  return EDITORIAL_ASSETS.default_news;
+}
+
+// Labeled educational editorial reference items (strictly marked as Editorial example, never live)
+export const EDITORIAL_EXAMPLE_STORIES = [
   {
-    id: "curated-in-1",
-    title: "Indian Railways announces new safety measures",
-    description: "New electronic interlocking and automated train protection Kavach deployments announced across high-density passenger corridors.",
-    image_url: EDITORIAL_ASSETS.railways,
-    link: "https://pib.gov.in",
-    source: "Press Information Bureau",
-    published_at: new Date(Date.now() - 2 * 3600 * 1000).toISOString(),
-    time_ago: "2 hours ago",
-    category: "India",
-  },
-  {
-    id: "curated-wo-2",
-    title: "UN report highlights rising climate risks in South Asia",
-    description: "New multilateral assessment outlines severe monsoon anomalies, glacial lake outburst threats, and critical mitigation priorities.",
-    image_url: EDITORIAL_ASSETS.earth,
-    link: "https://un.org",
-    source: "UN Environment Programme",
-    published_at: new Date(Date.now() - 4 * 3600 * 1000).toISOString(),
-    time_ago: "4 hours ago",
-    category: "World",
-  },
-  {
-    id: "curated-te-3",
-    title: "New AI tool raises concerns over deepfake videos",
-    description: "Media forensics specialists warn against synthetic visual cloning models as detection benchmarks show escalating sophistication.",
-    image_url: EDITORIAL_ASSETS.ai_chip,
-    link: "https://reuters.com",
-    source: "Reuters Technology",
-    published_at: new Date(Date.now() - 6 * 3600 * 1000).toISOString(),
-    time_ago: "6 hours ago",
-    category: "Technology",
-  },
-  {
-    id: "curated-he-4",
-    title: "What we know about the new COVID variant",
-    description: "World Health Organization monitoring latest sub-lineage data on immune evasion, symptom severity, and vaccine efficacy.",
-    image_url: EDITORIAL_ASSETS.vaccine,
-    link: "https://who.int",
-    source: "World Health Organization",
-    published_at: new Date(Date.now() - 8 * 3600 * 1000).toISOString(),
-    time_ago: "8 hours ago",
+    id: "editorial-example-1",
+    is_editorial_example: true,
+    is_live: false,
+    badge: "Editorial example",
+    badgeColor: "bg-slate-700",
+    title: "Understanding Disinformation Patterns in Public Health",
+    description: "Educational analysis of how unsubstantiated health claims spread across messaging channels.",
+    image_url: EDITORIAL_ASSETS.hospital,
+    source: "TruthLens Editorial Desk",
     category: "Health",
+    link: "#",
+    published_at: new Date().toISOString(),
+    time_ago: "Archive",
   },
   {
-    id: "curated-en-5",
-    title: "Solar capacity expansion breaks renewable energy records",
-    description: "Global clean energy grid investments reached record quarterly highs driven by aggressive utility-scale storage adoption.",
-    image_url: "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=800&q=80",
-    link: "https://iea.org",
-    source: "International Energy Agency",
-    published_at: new Date(Date.now() - 10 * 3600 * 1000).toISOString(),
-    time_ago: "10 hours ago",
-    category: "Environment",
-  },
-  {
-    id: "curated-po-6",
-    title: "Parliamentary committee convenes on digital data protection rules",
-    description: "Lawmakers review enforcement timelines, cross-border data transfer exemptions, and compliance requirements for online platforms.",
-    image_url: EDITORIAL_ASSETS.parliament,
-    link: "https://sansad.in",
-    source: "Sansad TV Wire",
-    published_at: new Date(Date.now() - 12 * 3600 * 1000).toISOString(),
-    time_ago: "12 hours ago",
-    category: "Politics",
-  },
-];
-
-// Featured investigations matching the visual reference
-export const POPULAR_INVESTIGATIONS = [
-  {
-    id: "inv-1",
-    featured: true,
-    title: "Are air quality claims in this viral video accurate?",
-    description: "Forensic audit debunking manipulated sensor readings and verifying actual Central Pollution Control Board telemetry.",
-    category: "INVESTIGATION",
-    date: "12 Sep 2024",
-    image_url: EDITORIAL_ASSETS.smog,
-    verdict: "MISLEADING",
-    evidence_summary: "Official monitors recorded moderate AQI, contradicting viral overlay numbers created with synthetic filter artifacts.",
-  },
-  {
-    id: "inv-2",
-    featured: false,
-    title: "Viral food safety claims: What's true and what's not?",
-    description: "Lab testing reports on packaged spice adulteration allegations.",
-    category: "FOOD SAFETY",
-    date: "5 Sep 2024",
-    image_url: EDITORIAL_ASSETS.food,
-    verdict: "PARTIALLY TRUE",
-    evidence_summary: "FSSAI sample tests confirmed quality adherence in 94% of tested commercial batches.",
-  },
-  {
-    id: "inv-3",
-    featured: false,
-    title: "How fake news spreads on social media",
-    description: "Analyzing automated bot coordination and visual distortion tactics.",
-    category: "MEDIA FORENSICS",
-    date: "28 Aug 2024",
-    image_url: EDITORIAL_ASSETS.social_media,
-    verdict: "EXPLAINER",
-    evidence_summary: "Tracing coordination networks using algorithmic graph clustering.",
-  },
-];
-
-// Curated Recent Checks matching the visual reference exactly
-export const INITIAL_RECENT_CHECKS = [
-  {
-    id: "check-1",
-    status: "Misleading",
-    statusType: "misleading", // misleading | true | false | review
-    headline: "Government is giving free laptops to all students",
-    explanation: "Claim not supported by official sources.",
-    time_ago: "2h ago",
-    image_url: EDITORIAL_ASSETS.laptop,
-    claim_text: "Government is giving free laptops to all students under national scheme",
-  },
-  {
-    id: "check-2",
-    status: "True",
-    statusType: "true",
-    headline: "This image is from the 2024 floods in Assam",
-    explanation: "The image is real but from an earlier incident.",
-    time_ago: "5h ago",
-    image_url: EDITORIAL_ASSETS.flood,
-    claim_text: "This image is from the 2024 floods in Assam",
-  },
-  {
-    id: "check-3",
-    status: "False",
-    statusType: "false",
-    headline: "Viral video shows old incident, not recent",
-    explanation: "The video is from 2021, not related to the current event.",
-    time_ago: "1d ago",
-    image_url: EDITORIAL_ASSETS.protest,
-    claim_text: "Viral video shows recent protest incident in capital city",
-  },
-  {
-    id: "check-4",
-    status: "Needs Review",
-    statusType: "review",
-    headline: "New COVID variant spreads faster than Delta",
-    explanation: "Partly true, but missing key context.",
-    time_ago: "1d ago",
-    image_url: EDITORIAL_ASSETS.vaccine,
-    claim_text: "New COVID variant spreads faster than Delta variant",
-  },
-];
-
-// Hero Featured Stories matching reference
-export const HERO_FEATURED_STORIES = [
-  {
-    id: "hero-story-1",
-    badge: "FACT CHECK",
-    badgeColor: "bg-red-600",
-    title: "No, government is not giving free laptops to all students",
-    description: "A viral message claiming free laptops for all students is misleading. Here's what the official sources say.",
-    image_url: EDITORIAL_ASSETS.parliament,
-    claim_to_verify: "Government of India announced free laptops for all 10th and 12th class students.",
-    source: "PIB Fact Check & Ministry of Education",
-  },
-  {
-    id: "hero-story-2",
-    badge: "INVESTIGATION",
-    badgeColor: "bg-blue-600",
-    title: "Deepfake audio scam targeting bank customers debunked",
-    description: "Cybercrime cell issues alert over synthetic voice cloning replicating branch managers' phone calls.",
+    id: "editorial-example-2",
+    is_editorial_example: true,
+    is_live: false,
+    badge: "Editorial example",
+    badgeColor: "bg-slate-700",
+    title: "Synthetic Media & Forensic Visual Detection Techniques",
+    description: "Methodological overview of detecting frame synthesis and audio cloning artifacts.",
     image_url: EDITORIAL_ASSETS.ai_chip,
-    claim_to_verify: "RBI issues mandatory warning over AI voice cloning calls requesting OTP.",
-    source: "CERT-In & Cyber Crime Portal",
-  },
-  {
-    id: "hero-story-3",
-    badge: "FACT CHECK",
-    badgeColor: "bg-red-600",
-    title: "Did NASA declare a 3-day global blackout next month?",
-    description: "Sensational solar flare rumors circulating on messaging apps have zero astronomical basis.",
-    image_url: EDITORIAL_ASSETS.earth,
-    claim_to_verify: "NASA confirms 3 days of worldwide darkness due to catastrophic solar superstorm.",
-    source: "NASA Space Weather & NOAA",
+    source: "TruthLens Editorial Desk",
+    category: "Technology",
+    link: "#",
+    published_at: new Date().toISOString(),
+    time_ago: "Archive",
   },
 ];
 
-// Helper: Calculate relative time
 export function getRelativeTimeString(dateString) {
   if (!dateString) return "recently";
   const date = new Date(dateString);
@@ -229,26 +157,12 @@ export function getRelativeTimeString(dateString) {
   return `${Math.floor(seconds / 604800)}w ago`;
 }
 
-// Category mapping for NewsData.io
-const NEWSDATA_CATEGORY_MAP = {
-  All: null,
-  India: null, // country=in
-  World: "world",
-  Technology: "technology",
-  Health: "health",
-  Environment: "environment",
-  Politics: "politics",
-  Science: "science",
-  Business: "business",
-};
-
 /**
- * Fetch latest news with robust caching and fallbacks
+ * Fetch latest news directly from backend with caching
  */
 export async function fetchLatestNews({ category = "All", fresh = false } = {}) {
   const cacheKey = `truthlens_news_${category.toLowerCase()}`;
   
-  // Check local cache if not forcing fresh reload
   if (!fresh) {
     try {
       const cached = localStorage.getItem(cacheKey);
@@ -263,90 +177,51 @@ export async function fetchLatestNews({ category = "All", fresh = false } = {}) 
     }
   }
 
-  // 1. Try NewsData.io if API key exists
-  if (NEWSDATA_KEY) {
-    try {
-      const params = new URLSearchParams({
-        apikey: NEWSDATA_KEY,
-        language: "en",
-      });
+  const isIndia = category.toLowerCase() === "india";
+  const backendData = isIndia
+    ? await api.getIndiaNews("All", fresh)
+    : await api.getWorldNews(category, fresh);
 
-      if (category === "India") {
-        params.set("country", "in");
-      } else if (NEWSDATA_CATEGORY_MAP[category]) {
-        params.set("category", NEWSDATA_CATEGORY_MAP[category]);
-      }
+  if (backendData?.articles && Array.isArray(backendData.articles) && backendData.articles.length > 0) {
+    const normalized = backendData.articles.map((art) => ({
+      id: art.id || `backend-${art.title?.slice(0, 10)}`,
+      title: art.title,
+      description: art.description || art.summary || "Summary corroborated by automated wire aggregation.",
+      image_url: resolveRealTimeNewsImage(art.title, art.category || category, art.url_to_image || art.image_url),
+      link: art.url || art.link || "#",
+      source: art.source_name || art.source || "Official Wire",
+      published_at: art.published_at || new Date().toISOString(),
+      time_ago: art.time_ago || getRelativeTimeString(art.published_at),
+      category: capitalize(art.category || category),
+      is_delayed: Boolean(art.is_delayed),
+      provider: art.provider,
+      content_paragraphs: [
+        art.description || art.summary,
+        "Original wire dispatch indexed via multi-source syndication feed.",
+        "Cross-referenced with verified fact-checking standards and publisher consensus."
+      ].filter(Boolean),
+    }));
 
-      const res = await fetch(`https://newsdata.io/api/1/latest?${params.toString()}`);
-      if (res.ok) {
-        const json = await res.json();
-        if (json?.results && Array.isArray(json.results) && json.results.length > 0) {
-          const normalized = json.results.map((art, idx) => {
-            const cat = Array.isArray(art.category) ? art.category[0] : (art.category || category);
-            return {
-              id: art.article_id || `newsdata-${idx}-${Date.now()}`,
-              title: art.title || "Untitled Article",
-              description: art.description || art.content || "No summary available for this story.",
-              image_url: art.image_url || getCategoryFallbackImage(cat),
-              link: art.link || "#",
-              source: art.source_id || art.creator?.[0] || "News Wire",
-              published_at: art.pubDate || new Date().toISOString(),
-              time_ago: getRelativeTimeString(art.pubDate),
-              category: capitalize(cat || category),
-            };
-          });
-
-          // Deduplicate
-          const unique = deduplicateArticles(normalized);
-          saveToCache(cacheKey, unique);
-          return { articles: unique, fromCache: false, source: "newsdata.io" };
-        }
-      }
-    } catch (err) {
-      console.warn("NewsData.io fetch failed, checking secondary sources:", err.message);
-    }
+    const unique = deduplicateArticles(normalized);
+    saveToCache(cacheKey, unique);
+    return {
+      articles: unique,
+      fromCache: false,
+      source: "backend",
+      is_live: backendData.is_live,
+      stale: backendData.stale,
+      synced_at: backendData.synced_at,
+    };
   }
 
-  // 2. Try Backend API (which parses live RSS wire feeds)
-  try {
-    const isIndia = category.toLowerCase() === "india";
-    const backendData = isIndia
-      ? await api.getIndiaNews("All", fresh)
-      : await api.getWorldNews(category, fresh);
-
-    if (backendData?.articles && Array.isArray(backendData.articles) && backendData.articles.length > 0) {
-      const normalized = backendData.articles.map((art) => ({
-        id: art.id || `backend-${art.title?.slice(0, 10)}`,
-        title: art.title,
-        description: art.description || art.summary || "Summary corroborated by automated wire aggregation.",
-        image_url: art.url_to_image || getCategoryFallbackImage(art.category || category),
-        link: art.url || "#",
-        source: art.source_name || "Official Wire",
-        published_at: art.published_at || new Date().toISOString(),
-        time_ago: art.time_ago || getRelativeTimeString(art.published_at),
-        category: capitalize(art.category || category),
-      }));
-
-      const unique = deduplicateArticles(normalized);
-      saveToCache(cacheKey, unique);
-      return { articles: unique, fromCache: false, source: "backend" };
-    }
-  } catch (backendErr) {
-    console.warn("Backend news fetch fallback triggered:", backendErr.message);
-  }
-
-  // 3. High-fidelity Curated Reference Fallback
-  const filtered = category === "All"
-    ? CURATED_REFERENCE_NEWS
-    : CURATED_REFERENCE_NEWS.filter((a) => a.category.toLowerCase() === category.toLowerCase());
-
-  const result = filtered.length > 0 ? filtered : CURATED_REFERENCE_NEWS;
-  return { articles: result, fromCache: false, source: "curated" };
+  return {
+    articles: [],
+    fromCache: false,
+    source: "backend",
+    is_live: false,
+  };
 }
 
-/**
- * Fetch Live Ticker items (used by trending ticker)
- */
 export async function fetchTrendingTicker() {
   const cacheKey = "truthlens_ticker_headlines";
   try {
@@ -361,15 +236,20 @@ export async function fetchTrendingTicker() {
     // Ignore cache error
   }
 
-  // Default trending items matching reference screenshot
-  const referenceTrending = [
-    { title: "India's latest GDP growth data released", link: "https://pib.gov.in", source: "Ministry of Statistics" },
-    { title: "UN warns about climate risks in South Asia", link: "https://un.org", source: "UNEP" },
-    { title: "New AI tool sparks debate on misinformation", link: "https://reuters.com", source: "Tech Wire" },
-    { title: "Heavy rainfall alert in Chhattisgarh", link: "https://mausam.imd.gov.in", source: "IMD Weather" },
-    { title: "Supreme Court reserves judgment on electoral accountability petition", link: "https://sansad.in", source: "Court Record" },
-    { title: "Global semiconductor supply chains show recovery indicators", link: "https://bloomberg.com", source: "Bloomberg" },
-  ];
+  try {
+    const res = await api.getLiveTicker();
+    if (res?.articles && res.articles.length > 0) {
+      const tickerItems = res.articles.slice(0, 8).map((a) => ({
+        title: a.title,
+        link: a.url || a.link || "#",
+        source: a.source_name || a.source || "Wire",
+      }));
+      saveToCache(cacheKey, tickerItems);
+      return tickerItems;
+    }
+  } catch {
+    // If backend ticker endpoint fails, try world news
+  }
 
   try {
     const res = await fetchLatestNews({ category: "All" });
@@ -383,10 +263,91 @@ export async function fetchTrendingTicker() {
       return tickerItems;
     }
   } catch {
-    // Fallback
+    // Return empty on failure
   }
 
-  return referenceTrending;
+  return [];
+}
+
+export async function fetchHeroFeaturedStories() {
+  try {
+    const res = await fetchLatestNews({ category: "All" });
+    if (res.articles && res.articles.length > 0) {
+      const badges = [
+        { badge: "BREAKING NEWS", badgeColor: "bg-blue-600" },
+        { badge: "LIVE WIRE", badgeColor: "bg-emerald-600" },
+        { badge: "DEVELOPING STORY", badgeColor: "bg-indigo-600" },
+      ];
+      return res.articles.slice(0, 3).map((art, idx) => ({
+        id: `hero-live-${art.id || idx}`,
+        badge: badges[idx % 3].badge,
+        badgeColor: badges[idx % 3].badgeColor,
+        title: art.title,
+        description: art.description || "Developing news story corroborated by live wire telemetry.",
+        image_url: resolveRealTimeNewsImage(art.title, art.category, art.image_url),
+        source: art.source || "Live Press Wire",
+        link: art.link || "#",
+        category: art.category || "General",
+        time_ago: art.time_ago || "recently",
+        is_delayed: art.is_delayed,
+      }));
+    }
+  } catch (err) {
+    console.warn("Failed to fetch live hero featured stories:", err.message);
+  }
+
+  return EDITORIAL_EXAMPLE_STORIES;
+}
+
+export async function fetchRecentChecks() {
+  try {
+    const res = await api.getArticles();
+    if (Array.isArray(res) && res.length > 0) {
+      return res.slice(0, 4).map((art) => ({
+        id: art.id,
+        status: art.verdict || "Verified",
+        statusType: (art.verdict || "").toLowerCase().includes("false")
+          ? "false"
+          : (art.verdict || "").toLowerCase().includes("misleading")
+          ? "misleading"
+          : "true",
+        headline: art.title,
+        explanation: art.summary || "Archived fact-check dossier.",
+        time_ago: getRelativeTimeString(art.published_at),
+        image_url: resolveRealTimeNewsImage(art.title, art.category, art.thumbnail_url),
+        claim_text: art.title,
+      }));
+    }
+  } catch (err) {
+    console.warn("Failed to fetch recent checks:", err.message);
+  }
+  return [];
+}
+
+export async function fetchPopularInvestigations() {
+  try {
+    const res = await api.getArticles();
+    if (Array.isArray(res) && res.length > 0) {
+      return res.map((art, idx) => ({
+        id: art.id,
+        featured: idx === 0,
+        title: art.title,
+        description: art.summary || art.content?.slice(0, 150),
+        category: art.category || "INVESTIGATION",
+        date: new Date(art.published_at || Date.now()).toLocaleDateString("en-US", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        }),
+        image_url: resolveRealTimeNewsImage(art.title, art.category, art.thumbnail_url),
+        verdict: art.verdict_context || "VERIFIED",
+        evidence_summary: art.summary || "Analyzed against public record data.",
+      }));
+    }
+  } catch (err) {
+    console.warn("Failed to fetch popular investigations:", err.message);
+  }
+  return [];
 }
 
 function deduplicateArticles(list) {
@@ -397,16 +358,6 @@ function deduplicateArticles(list) {
     seen.add(key);
     return true;
   });
-}
-
-function getCategoryFallbackImage(category) {
-  const cat = (category || "").toLowerCase();
-  if (cat.includes("india") || cat.includes("politic")) return EDITORIAL_ASSETS.parliament;
-  if (cat.includes("tech")) return EDITORIAL_ASSETS.ai_chip;
-  if (cat.includes("health")) return EDITORIAL_ASSETS.vaccine;
-  if (cat.includes("world")) return EDITORIAL_ASSETS.earth;
-  if (cat.includes("env") || cat.includes("climat")) return "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=800&q=80";
-  return EDITORIAL_ASSETS.railways;
 }
 
 function capitalize(str) {

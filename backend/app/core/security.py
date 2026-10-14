@@ -1,27 +1,37 @@
 import secrets
 from datetime import datetime, timedelta, timezone
 from typing import Optional, Union, Any
+import bcrypt
 from jose import jwt, JWTError
-from passlib.context import CryptContext
 from fastapi import HTTPException, status, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.core.config import settings
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 security_bearer = HTTPBearer(auto_error=False)
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Verifies a password against a bcrypt hash."""
+    """Verifies a password against a bcrypt hash directly without passlib."""
     if not plain_password or not hashed_password:
         return False
     try:
-        return pwd_context.verify(plain_password, hashed_password)
+        password_bytes = plain_password.encode("utf-8")
+        # Bcrypt passwords can be at most 72 bytes
+        if len(password_bytes) > 72:
+            return False
+        hash_bytes = hashed_password.encode("utf-8")
+        return bcrypt.checkpw(password_bytes, hash_bytes)
     except Exception:
         return False
 
 def get_password_hash(password: str) -> str:
-    """Generates a bcrypt hash for a given password."""
-    return pwd_context.hash(password)
+    """Generates a bcrypt hash for a given password directly without passlib."""
+    if not password:
+        raise ValueError("Password cannot be empty")
+    password_bytes = password.encode("utf-8")
+    if len(password_bytes) > 72:
+        raise ValueError("Password exceeds 72-byte limit for bcrypt")
+    salt = bcrypt.gensalt(rounds=12)
+    return bcrypt.hashpw(password_bytes, salt).decode("utf-8")
 
 def verify_admin_credentials(email: str, password: str) -> bool:
     """

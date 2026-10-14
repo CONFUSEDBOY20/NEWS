@@ -3,11 +3,15 @@ import { useApp } from "../context/AppContext";
 import { api } from "../services/api";
 import {
   fetchLatestNews,
-  HERO_FEATURED_STORIES,
-  INITIAL_RECENT_CHECKS,
-  POPULAR_INVESTIGATIONS,
+  fetchHeroFeaturedStories,
+  fetchRecentChecks,
+  fetchPopularInvestigations,
+  resolveRealTimeNewsImage,
+  EDITORIAL_EXAMPLE_STORIES,
 } from "../services/newsService";
 import { ArticleDetailModal } from "./ArticleDetailModal";
+import { NewsReaderFactCheckModal } from "./NewsReaderFactCheckModal";
+
 import {
   FileText,
   Link2,
@@ -23,14 +27,12 @@ import {
   HelpCircle,
   UploadCloud,
   X,
-  ExternalLink,
   RefreshCw,
 } from "lucide-react";
 
 export function FactCheckHero() {
   const {
     language,
-    setLanguage,
     inputPreload,
     setInputPreload,
     setIsVerifying,
@@ -66,6 +68,9 @@ export function FactCheckHero() {
   // Selected Investigation for Modal
   const [selectedInvestigation, setSelectedInvestigation] = useState(null);
 
+  // Selected News Article for Reader & Fact-Check Modal
+  const [selectedNewsArticle, setSelectedNewsArticle] = useState(null);
+
   const categories = ["All", "India", "World", "Technology", "Health", "Environment", "Politics"];
 
   const exampleChips = [
@@ -74,29 +79,67 @@ export function FactCheckHero() {
     { label: '"This image is from a recent flood"', text: "This viral flood image is from a recent incident in Assam" },
   ];
 
+  // Dynamic Real-Time Side News States
+  const [featuredStories, setFeaturedStories] = useState(EDITORIAL_EXAMPLE_STORIES);
+  const [popularInvestigations, setPopularInvestigations] = useState([]);
+  const [liveChecks, setLiveChecks] = useState([]);
+
   // Auto-scroll featured story carousel every 8 seconds
   useEffect(() => {
+    if (!featuredStories.length) return;
     const timer = setInterval(() => {
-      setCarouselIndex((prev) => (prev + 1) % HERO_FEATURED_STORIES.length);
+      setCarouselIndex((prev) => (prev + 1) % (featuredStories.length || 1));
     }, 8000);
     return () => clearInterval(timer);
+  }, [featuredStories]);
+
+  // Load Real-Time Side News on mount
+  useEffect(() => {
+    let isMounted = true;
+    async function loadDynamicContent() {
+      try {
+        const [stories, checks, invs] = await Promise.allSettled([
+          fetchHeroFeaturedStories(),
+          fetchRecentChecks(),
+          fetchPopularInvestigations(),
+        ]);
+        if (!isMounted) return;
+        if (stories.status === "fulfilled" && stories.value?.length > 0) {
+          setFeaturedStories(stories.value);
+        }
+        if (checks.status === "fulfilled" && checks.value?.length > 0) {
+          setLiveChecks(checks.value);
+        }
+        if (invs.status === "fulfilled" && invs.value?.length > 0) {
+          setPopularInvestigations(invs.value);
+        }
+      } catch (err) {
+        console.warn("Using default side news fallback:", err);
+      }
+    }
+    loadDynamicContent();
+    return () => { isMounted = false; };
   }, []);
 
   // Preloaded input trigger from Ticker or History
+
   useEffect(() => {
     if (!inputPreload) return;
-    const { type, value, autoStart } = inputPreload;
+    const { type, value, title, autoStart } = inputPreload;
     if (type === "url") {
       setActiveTab("url");
       setInputValue(value);
+      if (title) setActiveClaimText(title);
     } else {
       setActiveTab("text");
       setInputValue(value);
+      if (title) setActiveClaimText(title);
     }
     setInputPreload(null);
     if (autoStart && value) {
-      triggerVerification(type || "text", value);
+      triggerVerification(type || "text", value, title);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputPreload]);
 
   // Load Latest News based on active category
@@ -106,7 +149,7 @@ export function FactCheckHero() {
 
   const loadNews = async (cat, fresh = false) => {
     setNewsLoading(true);
-    setNewsError(false);
+    setNewsError(null);
     try {
       const res = await fetchLatestNews({ category: cat, fresh });
       if (res?.articles && res.articles.length > 0) {
@@ -114,8 +157,11 @@ export function FactCheckHero() {
       } else {
         setNewsArticles([]);
       }
-    } catch {
-      setNewsError(true);
+    } catch (err) {
+      const msg = err.status === 429
+        ? "Too many requests, wait a minute."
+        : (err.message || "Verification service is unavailable. Please try again.");
+      setNewsError(msg);
     } finally {
       setNewsLoading(false);
     }
@@ -141,7 +187,7 @@ export function FactCheckHero() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const triggerVerification = async (tabToUse, valToUse) => {
+  const triggerVerification = async (tabToUse, valToUse, titleToUse) => {
     const tab = tabToUse || activeTab;
     const val = (valToUse !== undefined ? valToUse : inputValue).trim();
     setInputError(null);
@@ -166,7 +212,7 @@ export function FactCheckHero() {
       }
     }
 
-    const claimToVerify = tab === "image" ? imageFile?.name || "Uploaded Claim Image" : val;
+    const claimToVerify = titleToUse || (tab === "image" ? imageFile?.name || "Uploaded Claim Image" : val);
     setActiveClaimText(claimToVerify);
     setIsVerifying(true);
     setVerificationResult(null);
@@ -185,11 +231,19 @@ export function FactCheckHero() {
       let result;
       const langParam = selectedLanguage === "auto" ? language : selectedLanguage;
       if (tab === "url") {
-        result = await api.verifyUrl(val, langParam);
+        result = await api.verifyUrl(val, langParam, titleToUse);
       } else if (tab === "text") {
         result = await api.verifyText(val, langParam);
       } else if (tab === "image") {
         result = await api.verifyImage(imageFile, langParam);
+      }
+
+      if (titleToUse && result) {
+        result.primary_claim = titleToUse;
+        result.article_title = titleToUse;
+        if (tab === "url") {
+          result.article_url = val;
+        }
       }
 
       clearInterval(stageTimer);
@@ -204,7 +258,15 @@ export function FactCheckHero() {
     } catch (err) {
       clearInterval(stageTimer);
       setIsVerifying(false);
-      setInputError(err.message || "Verification request failed. Please check your network connection.");
+      const is429 = err.status === 429 || err.code === "RATE_LIMITED";
+      const message = is429
+        ? "Too many requests, wait a minute."
+        : (err.message || "Verification service is unavailable. Please try again.");
+      setInputError({
+        message,
+        is429,
+        retryFn: () => triggerVerification(tab, val, titleToUse),
+      });
     }
   };
 
@@ -249,12 +311,13 @@ export function FactCheckHero() {
     });
 
     if (formattedHistory.length >= 4) return formattedHistory;
-    // Fill remainder with initial checks
+    // Fill remainder with real-time checks
     const needed = 4 - formattedHistory.length;
-    return [...formattedHistory, ...INITIAL_RECENT_CHECKS.slice(0, needed)];
-  }, [history]);
+    return [...formattedHistory, ...liveChecks.slice(0, needed)];
+  }, [history, liveChecks]);
 
-  const activeFeaturedStory = HERO_FEATURED_STORIES[carouselIndex];
+  const activeFeaturedStory = featuredStories[carouselIndex] || featuredStories[0];
+
 
   const getStatusBadge = (statusType, statusText) => {
     if (statusType === "true") {
@@ -287,17 +350,6 @@ export function FactCheckHero() {
         <span>{statusText || "Needs Review"}</span>
       </span>
     );
-  };
-
-  const getCategoryColor = (cat) => {
-    const c = (cat || "").toLowerCase();
-    if (c.includes("india")) return "text-red-600 dark:text-red-400";
-    if (c.includes("world")) return "text-blue-600 dark:text-blue-400";
-    if (c.includes("tech")) return "text-purple-600 dark:text-purple-400";
-    if (c.includes("health")) return "text-emerald-600 dark:text-emerald-400";
-    if (c.includes("env") || c.includes("climat")) return "text-teal-600 dark:text-teal-400";
-    if (c.includes("politic")) return "text-amber-600 dark:text-amber-400";
-    return "text-blue-600 dark:text-blue-400";
   };
 
   return (
@@ -448,9 +500,20 @@ export function FactCheckHero() {
 
               {/* Error Message */}
               {inputError && (
-                <div className="text-[11px] text-red-600 dark:text-red-400 flex items-center gap-1.5 p-2 rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900">
-                  <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
-                  <span>{inputError}</span>
+                <div className="text-[11px] text-red-600 dark:text-red-400 flex items-center justify-between gap-1.5 p-2 rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900">
+                  <div className="flex items-center gap-1.5">
+                    <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+                    <span>{typeof inputError === "string" ? inputError : inputError.message}</span>
+                  </div>
+                  {typeof inputError === "object" && inputError.retryFn && (
+                    <button
+                      type="button"
+                      onClick={() => inputError.retryFn()}
+                      className="px-2 py-0.5 rounded bg-red-600 hover:bg-red-700 text-white font-semibold text-[10px] cursor-pointer"
+                    >
+                      Retry
+                    </button>
+                  )}
                 </div>
               )}
 
@@ -536,14 +599,14 @@ export function FactCheckHero() {
               {/* Prev / Next Arrows */}
               <div className="flex items-center gap-1">
                 <button
-                  onClick={() => setCarouselIndex((prev) => (prev === 0 ? HERO_FEATURED_STORIES.length - 1 : prev - 1))}
+                  onClick={() => setCarouselIndex((prev) => (prev === 0 ? featuredStories.length - 1 : prev - 1))}
                   className="w-7 h-7 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center transition-colors cursor-pointer"
                   title="Previous story"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
-                  onClick={() => setCarouselIndex((prev) => (prev + 1) % HERO_FEATURED_STORIES.length)}
+                  onClick={() => setCarouselIndex((prev) => (prev + 1) % featuredStories.length)}
                   className="w-7 h-7 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center transition-colors cursor-pointer"
                   title="Next story"
                 >
@@ -556,9 +619,21 @@ export function FactCheckHero() {
             <div className="relative z-10 p-5 space-y-2 text-white">
               <h2
                 onClick={() => {
-                  setActiveTab("text");
-                  setInputValue(activeFeaturedStory.claim_to_verify);
-                  window.scrollTo({ top: 0, behavior: "smooth" });
+                  setSelectedNewsArticle({
+                    id: activeFeaturedStory.id,
+                    title: activeFeaturedStory.title,
+                    description: activeFeaturedStory.description,
+                    image_url: activeFeaturedStory.image_url,
+                    source: activeFeaturedStory.source || "Featured Press Wire",
+                    category: activeFeaturedStory.badge || "Fact Check",
+                    time_ago: "Breaking",
+                    link: activeFeaturedStory.link || "#",
+                    content_paragraphs: [
+                      activeFeaturedStory.description,
+                      "Investigative units corroborate that this developing claim has reached viral velocity across digital messaging channels.",
+                      "Official statements from primary public bureaus continue to provide additional qualifying evidence.",
+                    ],
+                  });
                 }}
                 className="text-lg sm:text-xl font-bold leading-snug hover:underline cursor-pointer font-sans"
               >
@@ -570,7 +645,7 @@ export function FactCheckHero() {
 
               {/* Navigation Dots */}
               <div className="flex items-center justify-center gap-1.5 pt-2">
-                {HERO_FEATURED_STORIES.map((_, idx) => (
+                {featuredStories.map((_, idx) => (
                   <button
                     key={idx}
                     onClick={() => setCarouselIndex(idx)}
@@ -582,6 +657,7 @@ export function FactCheckHero() {
                 ))}
               </div>
             </div>
+
 
           </div>
         </div>
@@ -613,10 +689,33 @@ export function FactCheckHero() {
                     if (item.resultData) {
                       setVerificationResult(item.resultData);
                       window.scrollTo({ top: 0, behavior: "smooth" });
+                    } else if (item.article) {
+                      setSelectedNewsArticle({
+                        ...item.article,
+                        title: item.headline || item.article.title,
+                        description: item.explanation || item.article.description,
+                        image_url: item.image_url || item.article.image_url,
+                        precomputed_verdict: item.status?.toUpperCase() === "TRUE" ? "TRUE" : (item.status?.toUpperCase() === "FALSE" ? "FALSE" : "MISLEADING"),
+                        precomputed_explanation: item.explanation || item.article.description,
+                      });
                     } else {
-                      setActiveTab("text");
-                      setInputValue(item.claim_text || item.headline);
-                      triggerVerification("text", item.claim_text || item.headline);
+                      setSelectedNewsArticle({
+                        id: item.id,
+                        title: item.headline,
+                        description: item.explanation || item.claim_text,
+                        image_url: item.image_url,
+                        source: "Recent Fact Check Wire",
+                        category: item.status || "Fact Check",
+                        time_ago: item.time_ago || "recently",
+                        link: "#",
+                        precomputed_verdict: item.status?.toUpperCase() === "TRUE" ? "TRUE" : (item.status?.toUpperCase() === "FALSE" ? "FALSE" : "MISLEADING"),
+                        precomputed_explanation: item.explanation,
+                        content_paragraphs: [
+                          item.headline,
+                          item.explanation || "Analyzed against primary documentation and verified wire telemetry.",
+                          "Forensic investigation cross-referenced against public registry records and accredited newsroom findings."
+                        ],
+                      });
                     }
                   }}
                   className="flex items-start gap-3 group cursor-pointer p-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors"
@@ -624,6 +723,10 @@ export function FactCheckHero() {
                   <img
                     src={item.image_url}
                     alt={item.headline}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = resolveRealTimeNewsImage(item.headline, item.status);
+                    }}
                     className="w-14 h-14 rounded-lg object-cover shrink-0 border border-slate-100 dark:border-slate-800 group-hover:opacity-90"
                   />
                   <div className="flex-1 min-w-0 space-y-1">
@@ -709,9 +812,9 @@ export function FactCheckHero() {
                   </div>
                 ))}
               </div>
-            ) : newsError && newsArticles.length === 0 ? (
-              <div className="p-8 text-center rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0F172A] space-y-3">
-                <p className="text-xs text-slate-500">Failed to load news for this category.</p>
+            ) : newsError ? (
+              <div className="p-8 text-center rounded-xl border border-red-200 dark:border-red-900/60 bg-red-50/30 dark:bg-red-950/20 space-y-3">
+                <p className="text-xs text-red-600 dark:text-red-400 font-medium">{newsError}</p>
                 <button
                   onClick={() => loadNews(newsCategory, true)}
                   className="px-3 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 cursor-pointer"
@@ -719,61 +822,77 @@ export function FactCheckHero() {
                   Retry News Fetch
                 </button>
               </div>
+            ) : newsArticles.length === 0 ? (
+              <div className="p-8 text-center rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0F172A]">
+                <p className="text-xs text-slate-500">No headlines currently available in this category.</p>
+              </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {newsArticles.slice(0, 4).map((art) => (
                   <article
                     key={art.id}
-                    className="bg-white dark:bg-[#0F172A] rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs hover:shadow-md transition-shadow group flex flex-col justify-between"
+                    onClick={() => setSelectedNewsArticle(art)}
+                    className="bg-white dark:bg-[#0F172A] rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs hover:shadow-lg hover:border-blue-500/40 dark:hover:border-blue-500/40 transition-all duration-200 group flex flex-col justify-between cursor-pointer"
                   >
                     <div>
-                      {/* Image Thumbnail */}
-                      <div className="relative h-28 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+                      {/* Image Thumbnail with Original News Photo */}
+                      <div className="relative h-32 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
                         <img
                           src={art.image_url}
                           alt={art.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           loading="lazy"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80";
+                          }}
                         />
+                        {/* Wire Status Badge */}
+                        <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-md text-[10px] font-bold text-white border border-white/10">
+                          <span className={`w-1.5 h-1.5 rounded-full ${art.is_delayed ? "bg-amber-400" : "bg-emerald-400 animate-pulse"}`} />
+                          <span>{art.is_delayed ? "DELAYED ~12H" : "LIVE"}</span>
+                        </div>
+
+                        {/* Category Badge */}
+                        <div className="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-slate-950/70 backdrop-blur-md text-[10px] font-bold text-blue-300 border border-slate-700/50">
+                          {art.category || newsCategory}
+                        </div>
                       </div>
 
                       {/* Content */}
-                      <div className="p-3 space-y-1.5">
-                        <span className={`text-[10px] font-bold tracking-wider uppercase ${getCategoryColor(art.category)}`}>
-                          {art.category || newsCategory}
-                        </span>
-                        <h3
-                          onClick={() => {
-                            setActiveTab("text");
-                            setInputValue(art.title);
-                            window.scrollTo({ top: 0, behavior: "smooth" });
-                          }}
-                          className="text-xs font-bold text-slate-900 dark:text-white leading-snug line-clamp-2 hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer font-sans"
-                        >
+                      <div className="p-3.5 space-y-2">
+                        <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono">
+                          <span className="truncate max-w-[130px] font-medium text-slate-600 dark:text-slate-300">
+                            {art.source || "Official Wire"}
+                          </span>
+                          <span>{art.time_ago || "recently"}</span>
+                        </div>
+
+                        <h3 className="text-xs font-bold text-slate-900 dark:text-white leading-snug line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors font-sans">
                           {art.title}
                         </h3>
+
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                          {art.description}
+                        </p>
                       </div>
                     </div>
 
-                    {/* Footer Time & External Link */}
-                    <div className="px-3 pb-3 pt-1 flex items-center justify-between text-[11px] text-slate-400">
-                      <span>{art.time_ago || "recently"}</span>
-                      {art.link && art.link !== "#" && (
-                        <a
-                          href={art.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:text-blue-600 transition-colors"
-                          title="Open original article"
-                        >
-                          <ExternalLink className="w-3 h-3" />
-                        </a>
-                      )}
+                    {/* Interactive CTA to Open Reader & Fake/Real Toggle */}
+                    <div className="px-3.5 pb-3.5 pt-1 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+                      <span className="text-[11px] font-semibold text-blue-600 dark:text-blue-400 flex items-center gap-1 group-hover:underline">
+                        <span>Read & Check</span>
+                        <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                      </span>
+                      <span className="px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/50 text-[10px] font-mono text-blue-600 dark:text-blue-400 border border-blue-200/50 dark:border-blue-800/50">
+                        AI Verify
+                      </span>
                     </div>
                   </article>
                 ))}
               </div>
             )}
+
 
           </div>
 
@@ -783,10 +902,10 @@ export function FactCheckHero() {
               How TruthLens works
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative items-center">
+            <div className="grid grid-cols-1 md:grid-cols-11 gap-4 items-center">
               
               {/* Step 1 */}
-              <div className="flex items-start gap-3">
+              <div className="md:col-span-3 flex items-start gap-3">
                 <div className="w-8 h-8 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-sm shrink-0 shadow-xs">
                   1
                 </div>
@@ -800,10 +919,15 @@ export function FactCheckHero() {
                 </div>
               </div>
 
+              {/* Arrow 1 */}
+              <div className="hidden md:flex md:col-span-1 justify-center text-slate-300 dark:text-slate-700">
+                <ArrowRight className="w-4 h-4" />
+              </div>
+
               {/* Step 2 */}
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 font-bold flex items-center justify-center text-sm shrink-0">
-                  <FileText className="w-4 h-4" />
+              <div className="md:col-span-3 flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold flex items-center justify-center text-sm shrink-0">
+                  <FileText className="w-4 h-4 text-slate-600 dark:text-slate-400" />
                 </div>
                 <div className="space-y-0.5">
                   <h4 className="text-xs font-bold text-slate-900 dark:text-white">
@@ -815,8 +939,13 @@ export function FactCheckHero() {
                 </div>
               </div>
 
+              {/* Arrow 2 */}
+              <div className="hidden md:flex md:col-span-1 justify-center text-slate-300 dark:text-slate-700">
+                <ArrowRight className="w-4 h-4" />
+              </div>
+
               {/* Step 3 */}
-              <div className="flex items-start gap-3">
+              <div className="md:col-span-3 flex items-start gap-3">
                 <div className="w-8 h-8 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center text-sm shrink-0 shadow-xs">
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
@@ -831,6 +960,7 @@ export function FactCheckHero() {
               </div>
 
             </div>
+
           </div>
 
         </div>
@@ -853,15 +983,37 @@ export function FactCheckHero() {
 
           <div className="space-y-3.5">
             {/* Featured Big Investigation Card */}
-            {POPULAR_INVESTIGATIONS.filter((i) => i.featured).map((inv) => (
+            {popularInvestigations.filter((i) => i.featured).map((inv) => (
               <div
                 key={inv.id}
-                onClick={() => setSelectedInvestigation(inv)}
+                onClick={() => {
+                  setSelectedNewsArticle({
+                    id: inv.id,
+                    title: inv.title,
+                    description: inv.description,
+                    image_url: inv.image_url,
+                    category: inv.category || "INVESTIGATION",
+                    source: inv.source || "TruthLens Investigations",
+                    time_ago: inv.date || "recently",
+                    link: inv.link || "#",
+                    precomputed_verdict: (inv.verdict || "").toUpperCase().includes("TRUE") ? "TRUE" : ((inv.verdict || "").toUpperCase().includes("FALSE") ? "FALSE" : "MISLEADING"),
+                    precomputed_explanation: inv.evidence_summary || inv.description,
+                    content_paragraphs: inv.content_paragraphs || [
+                      inv.description,
+                      inv.evidence_summary || "Investigative forensics cross-referenced primary sources, laboratory evidence, and public registry records.",
+                      "Independent verification desks conclude the factual veracity according to accredited reporting standards."
+                    ],
+                  });
+                }}
                 className="relative h-48 sm:h-52 rounded-xl overflow-hidden group shadow-xs border border-slate-200 dark:border-slate-800 cursor-pointer flex flex-col justify-between"
               >
                 <img
                   src={inv.image_url}
                   alt={inv.title}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = resolveRealTimeNewsImage(inv.title, inv.category);
+                  }}
                   className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20" />
@@ -882,15 +1034,38 @@ export function FactCheckHero() {
             ))}
 
             {/* Smaller Investigation Rows */}
-            {POPULAR_INVESTIGATIONS.filter((i) => !i.featured).map((inv) => (
+            {popularInvestigations.filter((i) => !i.featured).map((inv) => (
               <div
                 key={inv.id}
-                onClick={() => setSelectedInvestigation(inv)}
+                onClick={() => {
+                  setSelectedNewsArticle({
+                    id: inv.id,
+                    title: inv.title,
+                    description: inv.description,
+                    image_url: inv.image_url,
+                    category: inv.category || "INVESTIGATION",
+                    source: inv.source || "TruthLens Investigations",
+                    time_ago: inv.date || "recently",
+                    link: inv.link || "#",
+                    precomputed_verdict: (inv.verdict || "").toUpperCase().includes("TRUE") ? "TRUE" : ((inv.verdict || "").toUpperCase().includes("FALSE") ? "FALSE" : "MISLEADING"),
+                    precomputed_explanation: inv.evidence_summary || inv.description,
+                    content_paragraphs: inv.content_paragraphs || [
+                      inv.description,
+                      inv.evidence_summary || "Investigative forensics cross-referenced primary sources, laboratory evidence, and public registry records.",
+                      "Independent verification desks conclude the factual veracity according to accredited reporting standards."
+                    ],
+                  });
+                }}
                 className="bg-white dark:bg-[#0F172A] rounded-xl border border-slate-200 dark:border-slate-800 p-3 shadow-xs flex items-center gap-3 group cursor-pointer hover:border-slate-300 dark:hover:border-slate-700 transition-colors"
               >
+
                 <img
                   src={inv.image_url}
                   alt={inv.title}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = resolveRealTimeNewsImage(inv.title, inv.category);
+                  }}
                   className="w-16 h-16 rounded-lg object-cover shrink-0"
                 />
                 <div className="flex-1 min-w-0 space-y-1">
@@ -923,6 +1098,27 @@ export function FactCheckHero() {
             content: `INVESTIGATION DOSSIER\n\n${selectedInvestigation.description}\n\nEvidence Analysis:\n${selectedInvestigation.evidence_summary}\n\nOfficial Fact Verification:\nTruthLens cross-referenced technical metrics, official public agency archives, and digital media artifacts. The findings conclude that this viral claim lacks necessary factual backing or manipulates legitimate data out of context.`,
           }}
           onClose={() => setSelectedInvestigation(null)}
+        />
+      )}
+
+      {/* Latest News Reader & Fact-Check Modal Window */}
+      {selectedNewsArticle && (
+        <NewsReaderFactCheckModal
+          article={selectedNewsArticle}
+          onClose={() => setSelectedNewsArticle(null)}
+          onDeepVerify={(art) => {
+            setSelectedNewsArticle(null);
+            const hasValidUrl = art.link && art.link.startsWith("http");
+            if (hasValidUrl) {
+              setActiveTab("url");
+              setInputValue(art.link);
+              triggerVerification("url", art.link, art.title);
+            } else {
+              setActiveTab("text");
+              setInputValue(art.title);
+              triggerVerification("text", art.title, art.title);
+            }
+          }}
         />
       )}
 

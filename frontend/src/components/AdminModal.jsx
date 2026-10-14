@@ -26,14 +26,16 @@ export function AdminModal() {
     setError(null);
 
     try {
-      const data = await api.adminLogin(email.trim(), password);
-      localStorage.setItem("truthlens_admin_token", data.access_token);
+      await api.adminLogin(email.trim(), password);
       setIsAdminLoggedIn(true);
       setShowAdminModal(false);
       setActiveView("admin");
       showToast("Authenticated as Administrator.");
     } catch (err) {
-      setError(err.message || "Invalid administrative credentials.");
+      const msg = err.status === 429
+        ? "Too many requests, wait a minute."
+        : (err.message || "Invalid administrative credentials.");
+      setError(msg);
     } finally {
       setLoading(false);
     }

@@ -6,12 +6,14 @@ import { FactCheckHero } from "./components/FactCheckHero";
 import { FactCheckProgress } from "./components/FactCheckProgress";
 import { FactCheckResult } from "./components/FactCheckResult";
 import { HistorySidebar } from "./components/HistorySidebar";
+import { LiveNewsView } from "./components/LiveNewsView";
 import { WorldNewsView } from "./components/WorldNewsView";
 import { IndiaNewsView } from "./components/IndiaNewsView";
 import { FactArticlesView } from "./components/FactArticlesView";
 import { LiveDetectionView } from "./components/LiveDetectionView";
 import { AdminModal } from "./components/AdminModal";
 import { AdminDashboard } from "./components/AdminDashboard";
+import { API_BASE } from "./services/api";
 import { ShieldCheck, CheckCircle2, ArrowUpRight } from "lucide-react";
 
 function MainContent() {
@@ -48,6 +50,8 @@ function MainContent() {
               {!isVerifying && verificationResult && <FactCheckResult />}
             </>
           )}
+
+          {activeView === "live-news" && <LiveNewsView />}
 
           {activeView === "world-news" && <WorldNewsView />}
 
@@ -136,6 +140,11 @@ function MainContent() {
               </h4>
               <ul className="space-y-2">
                 <li>
+                  <button onClick={() => setActiveView("live-news")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                    Live News Aggregator
+                  </button>
+                </li>
+                <li>
                   <button onClick={() => setActiveView("world-news")} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                     World Wire Headlines
                   </button>
@@ -151,7 +160,7 @@ function MainContent() {
                   </button>
                 </li>
                 <li>
-                  <a href="http://127.0.0.1:8000/api/docs" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                  <a href={`${API_BASE}/docs`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                     <span>REST API Documentation</span>
                     <ArrowUpRight className="w-3 h-3" />
                   </a>

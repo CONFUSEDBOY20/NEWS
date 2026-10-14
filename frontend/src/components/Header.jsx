@@ -63,6 +63,7 @@ export function Header() {
 
   const navLinks = [
     { id: "fact-check", label: "Fact Check" },
+    { id: "live-news", label: "Live News" },
     { id: "world-news", label: "World News" },
     { id: "india-news", label: "India News" },
     { id: "articles", label: "Investigations" },

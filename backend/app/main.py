@@ -17,14 +17,8 @@ from app.core.handlers import (
 )
 from app.core.logging import setup_logger
 
-# Import versioned routers
+# Import single versioned API router
 from app.api.v1 import v1_router
-
-# Import legacy routers for backward compatibility
-from app.api.routes_fact_check import router as legacy_fact_check_router
-from app.api.routes_news import router as legacy_news_router
-from app.api.routes_articles import router as legacy_articles_router
-from app.api.routes_admin import router as legacy_admin_router
 
 logger = setup_logger("truthlens.main")
 
@@ -58,16 +52,27 @@ app.add_exception_handler(RequestValidationError, validation_exception_handler)
 app.add_exception_handler(Exception, generic_exception_handler)
 
 # CORS Configuration
+# Supports explicit origins list and regex pattern for Vercel preview environments
 cors_origins = [origin.strip() for origin in settings.CORS_ORIGINS.split(",") if origin.strip()]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=cors_origins or ["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:3000"],
+    allow_origins=cors_origins or [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "https://truthlens-frontend-five.vercel.app",
+        "https://truthlens.vercel.app"
+    ],
+    allow_origin_regex=settings.CORS_ORIGIN_REGEX if settings.CORS_ORIGIN_REGEX else None,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
 # In-Memory Rate Limiting Registry
+# NOTE: In a multi-worker or distributed production deployment (e.g. multiple Gunicorn/Uvicorn
+# workers or containers), this in-memory rate limiter is per-process. A distributed store
+# like Redis (e.g. via redis-py or fast-api-limiter) is required for cluster-wide enforcement.
 RATE_LIMIT_REGISTRY = {}
 
 @app.middleware("http")
@@ -77,11 +82,22 @@ async def request_lifecycle_and_rate_limit_middleware(request: Request, call_nex
     request.state.request_id = request_id
     
     start_time = time.time()
-    client_ip = request.client.host if request.client else "127.0.0.1"
     
-    # Rate Limiting for verification endpoints
-    if "/fact-check" in request.url.path:
+    # Read client IP from X-Forwarded-For only when TRUST_PROXY is explicitly enabled
+    if settings.TRUST_PROXY and request.headers.get("x-forwarded-for"):
+        client_ip = request.headers.get("x-forwarded-for").split(",")[0].strip()
+    else:
+        client_ip = request.client.host if request.client else "127.0.0.1"
+    
+    # Rate Limiting for verification endpoints matched by prefix
+    path = request.url.path
+    if (
+        path.startswith("/api/fact-check")
+        or path.startswith("/api/v1/fact-check")
+        or path.startswith("/fact-check")
+    ):
         window = RATE_LIMIT_REGISTRY.get(client_ip, [])
+        # Evict entries older than 60 seconds
         window = [t for t in window if start_time - t < 60]
         if len(window) >= settings.RATE_LIMIT_PER_MINUTE:
             return JSONResponse(
@@ -97,6 +113,12 @@ async def request_lifecycle_and_rate_limit_middleware(request: Request, call_nex
             )
         window.append(start_time)
         RATE_LIMIT_REGISTRY[client_ip] = window
+
+        # Evict completely stale IP keys to prevent unbounded memory growth
+        if len(RATE_LIMIT_REGISTRY) > 200:
+            stale_keys = [k for k, v in RATE_LIMIT_REGISTRY.items() if not v or (start_time - v[-1] > 120)]
+            for k in stale_keys:
+                RATE_LIMIT_REGISTRY.pop(k, None)
 
     # Execute request
     response = await call_next(request)
@@ -135,11 +157,6 @@ async def root_health_check():
     }
 
 
-# Mount Versioned API (v1)
+# Mount Single Versioned API at /api (for frontend) and /api/v1 (as versioned alias)
+app.include_router(v1_router, prefix="/api")
 app.include_router(v1_router, prefix="/api/v1")
-
-# Mount Legacy Routes for Backward Compatibility
-app.include_router(legacy_fact_check_router, prefix="/api")
-app.include_router(legacy_news_router, prefix="/api")
-app.include_router(legacy_articles_router, prefix="/api")
-app.include_router(legacy_admin_router, prefix="/api")

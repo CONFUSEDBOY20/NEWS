@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { translations } from "../utils/translations";
+import { api } from "../services/api";
 
 const AppContext = createContext();
 
@@ -22,10 +23,29 @@ export function AppProvider({ children }) {
   const [activeClaimText, setActiveClaimText] = useState("");
   const [inputPreload, setInputPreload] = useState(null);
 
-  // Admin State
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(() => !!localStorage.getItem("truthlens_admin_token"));
+  // Admin State (never trusted merely from localStorage existence)
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [showHistoryDrawer, setShowHistoryDrawer] = useState(false);
+
+  // Validate admin token against backend on mount
+  useEffect(() => {
+    const token = localStorage.getItem("truthlens_admin_token");
+    if (!token) {
+      setIsAdminLoggedIn(false);
+      return;
+    }
+    api.getAdminDashboard()
+      .then(() => {
+        setIsAdminLoggedIn(true);
+      })
+      .catch((err) => {
+        if (err.status === 401 || err.status === 403) {
+          localStorage.removeItem("truthlens_admin_token");
+          setIsAdminLoggedIn(false);
+        }
+      });
+  }, []);
 
   // Toast / Notification
   const [toastMessage, setToastMessage] = useState(null);
@@ -112,6 +132,7 @@ export function AppProvider({ children }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useApp() {
   return useContext(AppContext);
 }

@@ -299,12 +299,11 @@ export function FactCheckHero() {
         headline: h.input || "Claim Verification",
         explanation: h.resultData?.summary || "Analyzed against verified registries.",
         time_ago: "Recently",
-        image_url:
-          statusType === "true"
-            ? INITIAL_RECENT_CHECKS[1].image_url
-            : statusType === "false"
-            ? INITIAL_RECENT_CHECKS[2].image_url
-            : INITIAL_RECENT_CHECKS[0].image_url,
+        image_url: resolveRealTimeNewsImage(
+          h.input || "Claim Verification",
+          statusType,
+          h.image_url || h.resultData?.image_url
+        ),
         claim_text: h.input,
         resultData: h.resultData,
       };
@@ -313,7 +312,7 @@ export function FactCheckHero() {
     if (formattedHistory.length >= 4) return formattedHistory;
     // Fill remainder with real-time checks
     const needed = 4 - formattedHistory.length;
-    return [...formattedHistory, ...liveChecks.slice(0, needed)];
+    return [...formattedHistory, ...(liveChecks || []).slice(0, needed)];
   }, [history, liveChecks]);
 
   const activeFeaturedStory = featuredStories[carouselIndex] || featuredStories[0];

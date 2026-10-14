@@ -1,31 +1,68 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
-class NewsArticle(BaseModel):
-    id: str
+class NormalizedArticle(BaseModel):
+    id: str                               # Hash of canonical url
     title: str
     description: Optional[str] = None
-    content: Optional[str] = None
     url: str
-    url_to_image: Optional[str] = None
+    image_url: Optional[str] = None
+    url_to_image: Optional[str] = None    # Alias for frontend compatibility
     source_name: str
-    source_id: Optional[str] = None
-    author: Optional[str] = None
-    published_at: str
+    source_reliability: float = 85.0
     category: str = "General"
-    region: str = "World"  # World, India, etc.
-    credibility_rating: str = "Verified Source"  # Verified Source, Trusted News, Independent
-    summary: Optional[str] = None
+    region: str = "World"                 # World, India, Global
+    language: str = "en"
+    published_at: str                     # UTC ISO
+    provider: str                         # rss, gdelt, guardian, currents, newsdata, gnews, newsapi
+    is_delayed: bool = False              # True if from Tier 3 delayed backup (12-24h)
+    
+    # Extra fields for backward compatibility with frontend UI
+    credibility_rating: Optional[str] = "Verified Source"
     is_live: bool = True
+    author: Optional[str] = None
+    summary: Optional[str] = None
+    content: Optional[str] = None
+
+# Backward compatibility alias
+NewsArticle = NormalizedArticle
+
+class ProviderStatus(BaseModel):
+    name: str
+    status: str                           # ok | failed | skipped | quota
+    count: int = 0
+    delayed: bool = False
+    circuit_open: bool = False
+    quota_used: Optional[int] = None
+    quota_limit: Optional[int] = None
 
 class NewsFeedResponse(BaseModel):
-    total_results: int
-    articles: List[NewsArticle]
-    category: str
-    region: str
+    articles: List[NormalizedArticle]
+    count: int
+    total_results: int                    # For legacy compatibility
     synced_at: str
-    is_live: bool = True
+    is_live: bool                         # True only if at least one Tier 1/2 provider answered
+    stale: bool = False                   # True if served from stale cache because all providers failed
     feed_mode: str = "realtime"
+    category: str = "General"
+    region: str = "World"
+    providers: List[ProviderStatus] = []
+
+class NewsProviderHealth(BaseModel):
+    name: str
+    tier: int                             # 1, 2, or 3
+    status: str                           # "healthy", "circuit_open", "quota_exhausted", "not_configured"
+    consecutive_failures: int = 0
+    circuit_open_until: Optional[str] = None
+    quota_used_today: int = 0
+    quota_limit: Optional[int] = None
+
+class NewsSystemStatusResponse(BaseModel):
+    status: str
+    timestamp: str
+    active_providers_count: int
+    providers: List[NewsProviderHealth]
+    cache_entries: int
 
 class ArticleReadRequest(BaseModel):
     url: Optional[str] = None

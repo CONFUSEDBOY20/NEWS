@@ -118,62 +118,38 @@ export function LiveNewsView({ region = "world" }) {
 
   const categories = ["Top", "World", "India", "Tech", "Business", "Health"];
 
-  const loadNews = useCallback(async (showSpinner, fresh) => {
+  const loadNews = useCallback(async (showSpinner, fresh = false) => {
     if (showSpinner) setLoading(true);
     else setRefreshing(true);
     setError(null);
 
-    // 1. Query Vercel Multi-Source Aggregator /api/news
-    try {
-      const catParam = category === "Top" ? "" : category.toLowerCase();
-      const params = new URLSearchParams();
-      if (catParam) params.set("category", catParam);
-      if (searchQuery.trim()) params.set("q", searchQuery.trim());
-
-      const res = await fetch(`/api/news?${params.toString()}`);
-      if (res.ok) {
-        const json = await res.json();
-        if (json?.articles && Array.isArray(json.articles) && json.articles.length > 0) {
-          const normalized = json.articles.map((a, idx) => ({
-            id: a.id || `live-${idx}-${Date.now()}`,
-            title: a.title,
-            description: a.description,
-            url_to_image: a.image,
-            url: a.url,
-            source_name: a.source,
-            published_at: a.publishedAt,
-            category: category === "Top" ? "Top" : category,
-            credibility_score: a.credibility_score,
-            credibility_level: a.credibility_level,
-          }));
-          setArticles(normalized);
-          setSyncedAt(json.cached_at || new Date().toISOString());
-          if (Array.isArray(json.sources_queried) && json.sources_queried.length > 0) {
-            setSourcesQueried(json.sources_queried);
-          }
-          setIsLive(true);
-          setLoading(false);
-          setRefreshing(false);
-          return;
-        }
-      }
-    } catch {
-      // Fall through to backend / fallback provider
-    }
-
-    // 2. Fallback to API service
     try {
       const apiCat = category === "Top" ? "All" : category;
-      const data = isWorld
-        ? await api.getWorldNews(apiCat, fresh)
-        : await api.getIndiaNews(apiCat, fresh);
+      let data;
+      if (searchQuery.trim()) {
+        data = await api.searchNews(searchQuery.trim(), 1, 20, fresh);
+      } else if (isWorld) {
+        data = await api.getWorldNews(apiCat, fresh);
+      } else {
+        data = await api.getIndiaNews(apiCat, fresh);
+      }
+
       setArticles(data.articles || []);
       setSyncedAt(data.synced_at || new Date().toISOString());
-      setIsLive(data.is_live !== false);
+      setIsLive(data.is_live === true);
+
+      if (Array.isArray(data.providers) && data.providers.length > 0) {
+        const activeNames = data.providers
+          .filter((p) => p.status === "ok")
+          .map((p) => p.name.toUpperCase());
+        if (activeNames.length > 0) {
+          setSourcesQueried(activeNames);
+        }
+      }
     } catch (err) {
       const msg = err.status === 429
         ? "Too many requests, wait a minute."
-        : (err.message || "Verification service is unavailable. Please try again.");
+        : (err.message || "News service is temporarily unavailable. Please try again.");
       setError(msg);
       setIsLive(false);
     } finally {
@@ -242,14 +218,14 @@ export function LiveNewsView({ region = "world" }) {
           <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-1 flex-wrap">
             <span>
               {syncedAt
-                ? `Updated ${relativeTime(syncedAt)} • auto-refreshes every 60s`
+                ? `Last updated ${relativeTime(syncedAt)}`
                 : "Connecting to syndicated wires..."}
             </span>
             <span className="hidden sm:inline">•</span>
-            <div className="hidden sm:flex items-center gap-1 text-[11px] text-slate-400 dark:text-slate-500">
-              <span>Feeds:</span>
-              <span className="text-slate-600 dark:text-slate-300 font-mono">
-                {sourcesQueried.slice(0, 4).join(" · ")}
+            <div className="flex items-center gap-1.5 text-[11px]">
+              <span className="text-slate-500 font-medium">Sources:</span>
+              <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+                {sourcesQueried.slice(0, 4).join(" · ") || "RSS Live Wires"}
               </span>
             </div>
           </div>
@@ -381,14 +357,13 @@ export function LiveNewsView({ region = "world" }) {
                     category: cat,
                     published_at: art.published_at || art.publishedAt,
                     time_ago: relativeTime(art.published_at || art.publishedAt),
-                    precomputed_verdict: "TRUE",
-                    precomputed_confidence: 96.2,
-                    precomputed_explanation:
-                      "Directly corroborated across official news agency wires and verified publisher reporting.",
+                    is_delayed: Boolean(art.is_delayed),
+                    precomputed_verdict: null,
+                    precomputed_confidence: null,
+                    precomputed_explanation: null,
                     content_paragraphs: [
                       art.description || art.summary,
-                      "Syndicated reporting confirms real-time coverage by regional accredited correspondents.",
-                      "Independent fact-checking cross-referenced against authoritative registry data.",
+                      "Full wire report syndicated from regional accredited news bureaus.",
                     ],
                   });
                 }}
@@ -417,6 +392,18 @@ export function LiveNewsView({ region = "world" }) {
                         <span>{badgeCfg.label}</span>
                       </span>
                     </div>
+
+                    {/* Delayed ~12h Badge if from Tier 3 backup */}
+                    {art.is_delayed && (
+                      <div className="absolute bottom-3 left-3">
+                        <span
+                          className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/90 text-white shadow-sm backdrop-blur-md"
+                          title="Backup feed delayed approximately 12-24 hours"
+                        >
+                          Delayed ~12h
+                        </span>
+                      </div>
+                    )}
 
                     {/* Time Badge */}
                     <div className="absolute top-3 right-3">

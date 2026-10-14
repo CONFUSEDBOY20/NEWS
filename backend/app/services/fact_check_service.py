@@ -74,6 +74,8 @@ MEDIUM_CREDIBILITY_SOURCES = {
     "bloomberg",
 }
 
+from app.providers.factcheck_tools_provider import GoogleFactCheckToolsProvider
+
 class FactCheckService:
     def __init__(self):
         self.fact_db = FactDatabaseProvider()
@@ -81,6 +83,7 @@ class FactCheckService:
         self.ai_provider = AIProvider()
         self.image_provider = ImageVerificationProvider()
         self.news_provider = NewsProvider()
+        self.factcheck_tools = GoogleFactCheckToolsProvider()
 
     async def verify_url(self, url: str, language: str = "en") -> FactCheckResponse:
         start_time = time.time()
@@ -153,15 +156,19 @@ class FactCheckService:
         page_size = max(1, min(limit, 12))
 
         if normalized_region == "world":
-            articles = await self.news_provider.get_world_news(category=category, page_size=page_size, fresh=True)
+            feed = await self.news_provider.get_world_news(category=category, page_size=page_size, fresh=True)
+            articles = feed.articles if hasattr(feed, "articles") else (feed or [])
         elif normalized_region == "india":
-            articles = await self.news_provider.get_india_news(category=category, page_size=page_size, fresh=True)
+            feed = await self.news_provider.get_india_news(category=category, page_size=page_size, fresh=True)
+            articles = feed.articles if hasattr(feed, "articles") else (feed or [])
         else:
-            world, india = await asyncio.gather(
+            world_feed, india_feed = await asyncio.gather(
                 self.news_provider.get_world_news(category=category, page_size=max(1, page_size // 2), fresh=True),
                 self.news_provider.get_india_news(category=category, page_size=page_size, fresh=True),
             )
-            articles = (world + india)[:page_size]
+            world_arts = world_feed.articles if hasattr(world_feed, "articles") else (world_feed or [])
+            india_arts = india_feed.articles if hasattr(india_feed, "articles") else (india_feed or [])
+            articles = (world_arts + india_arts)[:page_size]
 
         checks = await asyncio.gather(
             *[self._detect_article(article, language) for article in articles],
@@ -331,10 +338,11 @@ class FactCheckService:
         category = claim_info["category"]
         location = claim_info["location"]
 
-        # Step 2 & 3: Concurrently search internal FactDB and external trusted sources
+        # Step 2 & 3: Concurrently search internal FactDB, Google Fact Check Tools API, and external trusted sources
         db_task = self.fact_db.search_fact_database(primary_claim)
         web_task = self.search_provider.search_trusted_sources(primary_claim, limit=6)
-        gathered = await asyncio.gather(db_task, web_task, return_exceptions=True)
+        google_fc_task = self.factcheck_tools.search_claims(primary_claim, language=language, limit=4)
+        gathered = await asyncio.gather(db_task, web_task, google_fc_task, return_exceptions=True)
 
         # Step 4: Combine & Deduplicate evidence items
         all_evidence: List[EvidenceItem] = []

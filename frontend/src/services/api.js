@@ -185,22 +185,32 @@ export const api = {
     return await request(`/news/india${query}`);
   },
 
-  searchNews: async (query) => {
-    return await request(`/news/search?q=${encodeURIComponent(query)}`);
+  searchNews: async (query, page = 1, pageSize = 20, fresh = false) => {
+    const params = new URLSearchParams();
+    params.set("q", query);
+    params.set("page", String(page));
+    params.set("page_size", String(pageSize));
+    if (fresh) params.set("fresh", "true");
+    return await request(`/news/search?${params.toString()}`);
   },
 
   getLiveTicker: async () => {
     return await request("/news/ticker");
   },
 
-  getLiveNews: async ({ category = "", q = "", country = "" } = {}) => {
+  getNewsStatus: async () => {
+    return await request("/news/status");
+  },
+
+  getLiveNews: async ({ category = "", q = "", country = "", fresh = false } = {}) => {
     const params = new URLSearchParams();
     if (category && category !== "Top" && category !== "All") {
       params.set("category", category);
     }
     if (q) params.set("q", q);
     if (country) params.set("country", country);
-    return await request(`/news/search?${params.toString()}`);
+    if (fresh) params.set("fresh", "true");
+    return await request(`/news?${params.toString()}`);
   },
 
   // Fact Articles

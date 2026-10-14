@@ -250,7 +250,10 @@ def run_migration(dry_run: bool = False, live_firestore: bool = False):
         if live_firestore:
             print("[INFO] Uploading to live Google Cloud Firestore...")
             try:
-                from app.core.config import settings
+                try:
+                    from app.core.config import settings  # type: ignore
+                except ImportError:
+                    from backend.app.core.config import settings
                 import firebase_admin
                 from firebase_admin import credentials, firestore
                 if settings.FIREBASE_PROJECT_ID and settings.FIREBASE_CLIENT_EMAIL and settings.FIREBASE_PRIVATE_KEY:

@@ -6,6 +6,10 @@ class NewsService:
     def __init__(self):
         self.news_provider = NewsProvider()
 
+    @property
+    def provider(self) -> NewsProvider:
+        return self.news_provider
+
     async def get_world_news(
         self, category: Optional[str] = None, page: int = 1, page_size: int = 20, fresh: bool = False
     ) -> NewsFeedResponse:

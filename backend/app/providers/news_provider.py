@@ -562,19 +562,31 @@ class NewsProvider:
 
             parsed = feedparser.parse(resp.content)
             items: List[NormalizedArticle] = []
+            is_google_news = "news.google.com" in feed.url
 
             for entry in parsed.entries[:25]:
                 raw_title = clean_text(entry.get("title"))
                 if not raw_title:
                     continue
 
-                # Strip source suffix from title if present (e.g. "Headline - BBC News")
-                title = re.sub(rf"\s*[-–|]\s*{re.escape(feed.name)}.*$", "", raw_title, flags=re.IGNORECASE).strip()
+                if is_google_news:
+                    # Google News embeds the outlet name as a suffix: "Headline - Outlet Name"
+                    # Extract it as the real source name, then strip it from the title.
+                    source_name, title = self._split_google_news_title(raw_title)
+                    # Resolve the real article URL (Google wraps links in a redirect)
+                    link = self._unwrap_google_news_url(entry)
+                else:
+                    # Strip source suffix from title if present (e.g. "Headline - BBC News")
+                    title = re.sub(rf"\s*[-–|]\s*{re.escape(feed.name)}.*$", "", raw_title, flags=re.IGNORECASE).strip()
+                    source_name = feed.name
+                    link = entry.get("link") or ""
+
+                if not title:
+                    title = raw_title
 
                 raw_desc = entry.get("summary") or entry.get("description") or ""
                 desc = clean_text(raw_desc)
 
-                link = entry.get("link") or ""
                 canon_url = canonicalize_url(link)
                 if not canon_url:
                     continue
@@ -586,11 +598,11 @@ class NewsProvider:
                     NormalizedArticle(
                         id=hash_canonical_url(canon_url, title),
                         title=title,
-                        description=desc or f"Live dispatch from {feed.name}.",
+                        description=desc or f"Live dispatch from {source_name}.",
                         url=canon_url,
                         image_url=img_url,
                         url_to_image=img_url,
-                        source_name=feed.name,
+                        source_name=source_name,
                         source_reliability=feed.reliability_score,
                         category=feed.category,
                         region=feed.region,
@@ -606,6 +618,47 @@ class NewsProvider:
         except Exception as e:
             logger.debug(f"Failed to fetch RSS feed {feed.name}: {e}")
             return []
+
+    @staticmethod
+    def _split_google_news_title(raw_title: str):
+        """
+        Google News titles look like: "Headline text - Outlet Name"
+        Returns (outlet_name, clean_headline). Falls back to ("Google News", raw_title).
+        """
+        # Match last " - Source" or " | Source" suffix
+        m = re.match(r"^(.+?)\s+[-–|]\s+([^-–|]+)$", raw_title.strip())
+        if m:
+            headline = m.group(1).strip()
+            outlet = m.group(2).strip()
+            if outlet and len(outlet) < 80:
+                return outlet, headline
+        return "Google News", raw_title.strip()
+
+    @staticmethod
+    def _unwrap_google_news_url(entry) -> str:
+        """
+        Google News RSS wraps article links in a google.com redirect.
+        The real URL is available in the <source> tag's URL attribute or
+        can be extracted from the redirect link's `url` query param.
+        Falls back to the raw entry link.
+        """
+        # feedparser exposes <source> as entry.source
+        src = entry.get("source") or {}
+        if isinstance(src, dict):
+            src_href = src.get("href") or src.get("url") or ""
+            if src_href and not src_href.startswith("https://news.google.com"):
+                return src_href
+
+        raw_link = entry.get("link") or ""
+        # Try to extract ?url= or &url= param from the redirect
+        try:
+            parsed = urlparse(raw_link)
+            qs = parse_qs(parsed.query)
+            if "url" in qs:
+                return qs["url"][0]
+        except Exception:
+            pass
+        return raw_link
 
     # -----------------------------------------------------------------------
     # Tier 1: GDELT DOC 2.0 API (Free, No Key, ~15 min freshness)

@@ -195,4 +195,95 @@ VETTED_RSS_FEEDS: List[NewsSourceFeed] = [
         language="en",
         reliability_score=90.0,
     ),
+
+    # -----------------------------------------------------------------------
+    # Google News RSS Feeds (news.google.com — aggregates thousands of outlets)
+    # No API key required. ~15-minute freshness. Tier 1 live feeds.
+    # -----------------------------------------------------------------------
+
+    # World / Top Headlines
+    NewsSourceFeed(
+        name="Google News Top Stories",
+        url="https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en",
+        region="World",
+        category="World",
+        language="en",
+        reliability_score=85.0,
+    ),
+    NewsSourceFeed(
+        name="Google News World",
+        url="https://news.google.com/rss/headlines/section/topic/WORLD?hl=en-US&gl=US&ceid=US:en",
+        region="World",
+        category="World",
+        language="en",
+        reliability_score=85.0,
+    ),
+
+    # India
+    NewsSourceFeed(
+        name="Google News India",
+        url="https://news.google.com/rss/headlines/section/geo/India?hl=en-IN&gl=IN&ceid=IN:en",
+        region="India",
+        category="India",
+        language="en",
+        reliability_score=85.0,
+    ),
+    NewsSourceFeed(
+        name="Google News India Top Stories",
+        url="https://news.google.com/rss?hl=en-IN&gl=IN&ceid=IN:en",
+        region="India",
+        category="India",
+        language="en",
+        reliability_score=85.0,
+    ),
+
+    # Technology
+    NewsSourceFeed(
+        name="Google News Technology",
+        url="https://news.google.com/rss/headlines/section/topic/TECHNOLOGY?hl=en-US&gl=US&ceid=US:en",
+        region="Global",
+        category="Technology",
+        language="en",
+        reliability_score=85.0,
+    ),
+
+    # Science
+    NewsSourceFeed(
+        name="Google News Science",
+        url="https://news.google.com/rss/headlines/section/topic/SCIENCE?hl=en-US&gl=US&ceid=US:en",
+        region="Global",
+        category="Science",
+        language="en",
+        reliability_score=85.0,
+    ),
+
+    # Health
+    NewsSourceFeed(
+        name="Google News Health",
+        url="https://news.google.com/rss/headlines/section/topic/HEALTH?hl=en-US&gl=US&ceid=US:en",
+        region="Global",
+        category="Health",
+        language="en",
+        reliability_score=85.0,
+    ),
+
+    # Business
+    NewsSourceFeed(
+        name="Google News Business",
+        url="https://news.google.com/rss/headlines/section/topic/BUSINESS?hl=en-US&gl=US&ceid=US:en",
+        region="Global",
+        category="Business",
+        language="en",
+        reliability_score=85.0,
+    ),
+
+    # Politics / Nation (US context for world politics coverage)
+    NewsSourceFeed(
+        name="Google News Politics",
+        url="https://news.google.com/rss/headlines/section/topic/NATION?hl=en-US&gl=US&ceid=US:en",
+        region="Global",
+        category="Politics",
+        language="en",
+        reliability_score=85.0,
+    ),
 ]

@@ -319,6 +319,10 @@ export const api = {
     return await request("/news/status");
   },
 
+  getNewsMeta: async () => {
+    return await request("/news/meta");
+  },
+
   getLiveNews: async ({ category = "", q = "", country = "", fresh = false } = {}) => {
     const params = new URLSearchParams();
     if (category && category !== "Top" && category !== "All") {

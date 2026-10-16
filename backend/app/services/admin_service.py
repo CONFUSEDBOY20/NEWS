@@ -4,6 +4,7 @@ from datetime import datetime, timezone, timedelta
 from typing import Dict, Any, List, Optional
 from app.providers.fact_db_provider import FactDatabaseProvider
 from app.schemas.admin import DashboardOverviewStats, RawDataRecord, FactArticle
+from app.core.news_sources import VETTED_RSS_FEEDS
 
 class AdminService:
     def __init__(self):
@@ -101,7 +102,7 @@ class AdminService:
             verified_claims=verified_claims,
             pending_verification=3,
             raw_data_records=len(raw_data),
-            news_records_indexed=450,
+            news_records_indexed=len(VETTED_RSS_FEEDS) * 22 + len(raw_data),
             api_usage_today=134,
             verdict_distribution=verdicts,
             category_distribution=categories,

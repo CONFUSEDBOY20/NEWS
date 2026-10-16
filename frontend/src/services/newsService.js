@@ -427,3 +427,29 @@ function saveToCache(key, data) {
     // Quota exceeded
   }
 }
+
+/**
+ * Fetch real-time live meta statistics computed directly from the active backend news engine.
+ * Real numbers from active providers, Google News RSS, and vetted wire registries.
+ */
+export async function fetchNewsMeta() {
+  try {
+    const meta = await api.getNewsMeta();
+    if (meta && typeof meta === "object") {
+      saveToCache("truthlens_news_meta", meta);
+      return meta;
+    }
+  } catch (err) {
+    console.warn("Failed to fetch live news meta:", err.message);
+  }
+
+  try {
+    const cached = localStorage.getItem("truthlens_news_meta");
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (parsed?.data) return parsed.data;
+    }
+  } catch {}
+
+  return null;
+}

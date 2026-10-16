@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useApp } from "../context/AppContext";
+import { TruthLensLogo } from "./TruthLensLogo";
 import {
-  Search,
   Moon,
   Sun,
   History,
@@ -22,8 +22,6 @@ export function Header() {
     setShowAdminModal,
     setShowHistoryDrawer,
     history,
-    setInputPreload,
-    setVerificationResult,
     showToast,
     isLiveConnected,
     lastUpdated,
@@ -31,13 +29,10 @@ export function Header() {
   } = useApp();
 
   const [topicsOpen, setTopicsOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [aboutOpen, setAboutOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const topicsRef = useRef(null);
-  const searchInputRef = useRef(null);
 
   // Close topics dropdown on outside click
   useEffect(() => {
@@ -49,13 +44,6 @@ export function Header() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  // Focus search input when modal opens
-  useEffect(() => {
-    if (searchOpen && searchInputRef.current) {
-      setTimeout(() => searchInputRef.current?.focus(), 50);
-    }
-  }, [searchOpen]);
 
   const toggleTheme = () => {
     const nextTheme = theme === "dark" ? "light" : "dark";
@@ -82,16 +70,6 @@ export function Header() {
     { label: "Viral Social Media", cat: "Social" },
   ];
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
-    setInputPreload({ type: "text", value: searchQuery.trim(), autoStart: true });
-    setVerificationResult(null);
-    setActiveView("fact-check");
-    setSearchOpen(false);
-    setSearchQuery("");
-  };
-
   const handleTopicSelect = (_cat) => {
     setTopicsOpen(false);
     setActiveView("world-news");
@@ -105,29 +83,23 @@ export function Header() {
           {/* Left: Brand + Navigation Items */}
           <div className="flex items-center gap-8 lg:gap-10">
             
-            {/* TruthLens Logo with Magnifier / Blue Ring Lens */}
+            {/* TruthLens brand mark */}
             <div
-              className="flex items-center gap-2.5 cursor-pointer select-none group"
+              className="cursor-pointer select-none transition-transform duration-150 hover:scale-[1.03]"
               onClick={() => setActiveView("fact-check")}
             >
-              <div className="relative flex items-center justify-center w-8 h-8 rounded-full border-2 border-blue-600 dark:border-blue-500 bg-white dark:bg-[#0B1120] shadow-xs group-hover:scale-105 transition-transform duration-150">
-                <Search className="w-4 h-4 text-blue-600 dark:text-blue-500 stroke-[2.5]" />
-                <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-blue-600" />
-              </div>
-              <span className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white font-sans">
-                Truth<span className="text-blue-600 dark:text-blue-500">Lens</span>
-              </span>
+              <TruthLensLogo imageClassName="w-[78px] sm:w-[88px]" />
             </div>
 
             {/* Desktop Navigation Links (with exact blue indicator bar) */}
-            <nav className="hidden md:flex items-center space-x-1 lg:space-x-2 h-16">
+            <nav className="hidden xl:flex items-center space-x-1 lg:space-x-2 h-16">
               {navLinks.map((tab) => {
                 const isActive = activeView === tab.id;
                 return (
                   <button
                     key={tab.id}
                     onClick={() => setActiveView(tab.id)}
-                    className={`relative h-full flex items-center px-3.5 text-sm font-semibold transition-colors duration-150 cursor-pointer ${
+                    className={`relative h-full flex items-center px-3.5 text-sm font-semibold tab-transition cursor-pointer ${
                       isActive
                         ? "text-blue-600 dark:text-blue-400"
                         : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
@@ -135,7 +107,7 @@ export function Header() {
                   >
                     <span>{tab.label}</span>
                     {isActive && (
-                      <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-blue-600 dark:bg-blue-500 rounded-t-sm" />
+                      <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-blue-600 dark:bg-blue-500 rounded-t-sm animate-nav-indicator" />
                     )}
                   </button>
                 );
@@ -187,7 +159,7 @@ export function Header() {
           </div>
 
           {/* Right: Search, Dark Mode, History */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1 sm:gap-3">
             
             {/* Live Connection & Sync Button */}
             <button
@@ -205,22 +177,11 @@ export function Header() {
               <RefreshCw className="w-3 h-3 hover:rotate-180 transition-transform" />
             </button>
 
-            {/* Search Trigger */}
-            <button
-              type="button"
-              onClick={() => setSearchOpen(true)}
-              className="p-2 rounded-lg text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-              title="Search claims or articles"
-              aria-label="Search"
-            >
-              <Search className="w-4 h-4 stroke-[2]" />
-            </button>
-
             {/* Dark Mode Toggle */}
             <button
               type="button"
               onClick={toggleTheme}
-              className="p-2 rounded-lg text-slate-700 dark:text-slate-300 hover:text-amber-500 dark:hover:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              className="p-1.5 sm:p-2 rounded-lg text-slate-700 dark:text-slate-300 hover:text-amber-500 dark:hover:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
               title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
               aria-label="Toggle dark mode"
             >
@@ -235,7 +196,7 @@ export function Header() {
             <button
               type="button"
               onClick={() => setShowHistoryDrawer(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-1.5 sm:px-3 py-1.5 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer"
               title="View verification history"
             >
               <History className="w-4 h-4 stroke-[2]" />
@@ -251,7 +212,7 @@ export function Header() {
             <button
               type="button"
               onClick={() => setShowAdminModal(true)}
-              className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+              className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
               title="Editorial Admin Suite"
               aria-label="Admin settings"
             >
@@ -262,7 +223,7 @@ export function Header() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+              className="xl:hidden p-1.5 sm:p-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
               aria-label="Open mobile navigation"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -274,7 +235,7 @@ export function Header() {
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0B1120] px-4 py-3 space-y-1 animate-fadeIn">
+          <div className="xl:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0B1120] px-4 py-3 space-y-1 animate-fadeIn">
             {navLinks.map((tab) => (
               <button
                 key={tab.id}
@@ -292,6 +253,31 @@ export function Header() {
               </button>
             ))}
             <button
+              type="button"
+              onClick={() => setTopicsOpen((open) => !open)}
+              className="w-full flex items-center justify-between text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+              aria-expanded={topicsOpen}
+            >
+              Topics <ChevronDown className={`w-4 h-4 transition-transform ${topicsOpen ? "rotate-180" : ""}`} />
+            </button>
+            {topicsOpen && (
+              <div className="ml-3 pl-3 border-l border-slate-200 dark:border-slate-700">
+                {topicOptions.map((topic) => (
+                  <button
+                    key={topic.cat}
+                    type="button"
+                    onClick={() => {
+                      handleTopicSelect(topic.cat);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="block w-full text-left px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  >
+                    {topic.label}
+                  </button>
+                ))}
+              </div>
+            )}
+            <button
               onClick={() => {
                 setAboutOpen(true);
                 setMobileMenuOpen(false);
@@ -303,49 +289,6 @@ export function Header() {
           </div>
         )}
       </header>
-
-      {/* Quick Search Modal */}
-      {searchOpen && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-black/50 backdrop-blur-xs animate-fadeIn">
-          <div className="bg-white dark:bg-[#0F172A] w-full max-w-lg rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl p-5 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-              <div className="flex items-center gap-2 text-sm font-bold text-slate-900 dark:text-white">
-                <Search className="w-4 h-4 text-blue-600" />
-                <span>Search Claim or Fact-Check</span>
-              </div>
-              <button
-                onClick={() => setSearchOpen(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSearchSubmit} className="space-y-3">
-              <div className="relative">
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Enter claim keyword or viral headline to search..."
-                  className="w-full pl-3.5 pr-20 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
-                />
-                <button
-                  type="submit"
-                  className="absolute right-1.5 top-1.5 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer"
-                >
-                  Verify
-                </button>
-              </div>
-              <div className="text-[11px] text-slate-400 flex items-center justify-between">
-                <span>Quick search triggers multi-source verification instantly</span>
-                <span>ESC to close</span>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
 
       {/* About TruthLens Modal */}
       {aboutOpen && (

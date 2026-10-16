@@ -23,7 +23,7 @@ export function getApiBase() {
     return envUrl.replace(/\/+$/, "");
   }
 
-  return isVercelOrRemote ? "/api" : "http://localhost:8000/api";
+  return "/api";
 }
 
 export const API_BASE = getApiBase();
@@ -291,7 +291,7 @@ export const api = {
     if (category && category !== "All") params.set("category", category);
     if (fresh) params.set("fresh", "true");
     const query = params.toString() ? `?${params.toString()}` : "";
-    return await request(`/news/world${query}`);
+    return await request(`/news/world${query}`, { timeoutMs: 55_000 });
   },
 
   getIndiaNews: async (category = "All", fresh = false) => {
@@ -299,7 +299,7 @@ export const api = {
     if (category && category !== "All") params.set("category", category);
     if (fresh) params.set("fresh", "true");
     const query = params.toString() ? `?${params.toString()}` : "";
-    return await request(`/news/india${query}`);
+    return await request(`/news/india${query}`, { timeoutMs: 55_000 });
   },
 
   searchNews: async (query, page = 1, pageSize = 20, fresh = false) => {
@@ -308,11 +308,11 @@ export const api = {
     params.set("page", String(page));
     params.set("page_size", String(pageSize));
     if (fresh) params.set("fresh", "true");
-    return await request(`/news/search?${params.toString()}`);
+    return await request(`/news/search?${params.toString()}`, { timeoutMs: 55_000 });
   },
 
   getLiveTicker: async () => {
-    return await request("/news/ticker");
+    return await request("/news/ticker", { timeoutMs: 55_000 });
   },
 
   getNewsStatus: async () => {
@@ -391,6 +391,10 @@ export const api = {
 
   getAdminSettings: async () => {
     return await request("/admin/settings");
+  },
+
+  getAdminProviderStatus: async () => {
+    return await request("/admin/provider-status");
   },
 
   updateAdminSettings: async (settings) => {

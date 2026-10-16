@@ -1,0 +1,460 @@
+- generic [ref=f2e3]:
+  - generic [ref=f2e17]:
+    - banner [ref=f2e18]:
+      - generic [ref=f2e19]:
+        - generic [ref=f2e20]: TruthLens
+        - generic [ref=f2e28]:
+          - button "Live Connected" [ref=f2e29] [cursor=pointer]
+          - button "Search" [ref=f2e37] [cursor=pointer]
+          - button "Toggle dark mode" [ref=f2e41] [cursor=pointer]
+          - button "History" [ref=f2e44] [cursor=pointer]
+          - button "Admin settings" [ref=f2e50]
+          - button "Open mobile navigation" [ref=f2e52]
+    - generic [ref=f2e55]:
+      - generic [ref=f2e56]:
+        - generic [ref=f2e57]: LIVE
+        - generic [ref=f2e60]: "Trending Now :"
+      - generic [ref=f2e430]:
+        - button "EU’s von der Leyen pledges to ‘not lift any sanctions unless Russia stops the war’ as leaders discuss Ukraine – Europe live" [ref=f2e433] [cursor=pointer]
+        - button "How prepared is Kenya for an Ebola outbreak?" [ref=f2e436] [cursor=pointer]
+        - 'button "India vs West India: Fifth T20 International – teams, start, lineups, Hope" [ref=f2e439] [cursor=pointer]'
+        - button "Zelensky rallies EU support as Trump says Ukraine leader 'more difficult to deal with than Putin'" [ref=f2e442] [cursor=pointer]
+        - button "Italy cuts air traffic in half amid data transmission issue" [ref=f2e445] [cursor=pointer]
+        - button "Children aged 5, 8 and 11 killed in US school shooting before suspect shot by bystander" [ref=f2e448] [cursor=pointer]
+        - button "प्रधानमंत्री श्री नरेन्द्र मोदी ने एशियाई खेल 2026 में भाग लेने वाले भारतीय एथलीट दल से बातचीत की" [ref=f2e451] [cursor=pointer]
+        - button "भारतीय तटरक्षक बल और कोरियाई तटरक्षक बल के बीच 14वीं उच्च-स्तरीय बैठक इंचियोन में आयोजित हुई" [ref=f2e454] [cursor=pointer]
+        - button "EU’s von der Leyen pledges to ‘not lift any sanctions unless Russia stops the war’ as leaders discuss Ukraine – Europe live" [ref=f2e457] [cursor=pointer]
+        - button "How prepared is Kenya for an Ebola outbreak?" [ref=f2e460] [cursor=pointer]
+        - 'button "India vs West India: Fifth T20 International – teams, start, lineups, Hope" [ref=f2e463] [cursor=pointer]'
+        - button "Zelensky rallies EU support as Trump says Ukraine leader 'more difficult to deal with than Putin'" [ref=f2e466] [cursor=pointer]
+        - button "Italy cuts air traffic in half amid data transmission issue" [ref=f2e469] [cursor=pointer]
+        - button "Children aged 5, 8 and 11 killed in US school shooting before suspect shot by bystander" [ref=f2e472] [cursor=pointer]
+        - button "प्रधानमंत्री श्री नरेन्द्र मोदी ने एशियाई खेल 2026 में भाग लेने वाले भारतीय एथलीट दल से बातचीत की" [ref=f2e475] [cursor=pointer]
+        - button "भारतीय तटरक्षक बल और कोरियाई तटरक्षक बल के बीच 14वीं उच्च-स्तरीय बैठक इंचियोन में आयोजित हुई" [ref=f2e478] [cursor=pointer]
+      - generic [ref=f2e65]:
+        - button "Previous headline" [ref=f2e66] [cursor=pointer]
+        - button "Next headline" [ref=f2e69] [cursor=pointer]
+    - main [ref=f2e540]:
+      - generic [ref=f2e541]:
+        - generic [ref=f2e542]:
+          - generic [ref=f2e543]:
+            - generic [ref=f2e544]:
+              - generic [ref=f2e551]: Live Multi-Source Wire
+              - generic [ref=f2e552]: LIVE WIRE
+            - heading "Live News Aggregator" [level=2] [ref=f2e554]
+            - generic [ref=f2e555]:
+              - generic [ref=f2e556]: Last updated 2m ago
+              - generic [ref=f2e557]: •
+              - generic [ref=f2e558]:
+                - generic [ref=f2e559]: "Sources:"
+                - generic [ref=f2e560]: RSS · GDELT
+          - generic [ref=f2e561]:
+            - textbox "Search live headlines or claims..." [ref=f2e563]
+            - button "Refresh live feeds" [ref=f2e567] [cursor=pointer]
+        - generic [ref=f2e573]:
+          - button "Top" [ref=f2e574] [cursor=pointer]
+          - button "World" [ref=f2e575] [cursor=pointer]
+          - button "India" [active] [ref=f2e576] [cursor=pointer]
+          - button "Tech" [ref=f2e577] [cursor=pointer]
+          - button "Business" [ref=f2e578] [cursor=pointer]
+          - button "Health" [ref=f2e579] [cursor=pointer]
+        - generic [ref=f2e1310]:
+          - article [ref=f2e1311] [cursor=pointer]:
+            - generic [ref=f2e1312]:
+              - generic [ref=f2e1313]:
+                - img "Can States change ward boundaries during Census freeze? SC to hear plea" [ref=f2e1314]
+                - generic [ref=f2e1315]: India
+                - generic [ref=f2e1321]: 9m ago
+              - generic [ref=f2e1323]:
+                - generic [ref=f2e1324]:
+                  - generic [ref=f2e1325]:
+                    - generic [ref=f2e1326]: The Hindu
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f2e1327]: Accredited Wire
+                  - generic [ref=f2e1332]: 9m ago
+                - heading "Can States change ward boundaries during Census freeze? SC to hear plea" [level=3] [ref=f2e1333]
+                - paragraph [ref=f2e1334]: Rule 8(iv) of the Census Rules 1990 requires State governments to “freeze the administrative boundaries of districts, tehsils, towns, etc.” from the date intimated by the Census Commissioner
+            - generic [ref=f2e1335]:
+              - link "Read source" [ref=f2e1336]:
+                - /url: https://thehindu.com/news/national/can-states-change-ward-boundaries-during-census-freeze-sc-to-hear-plea/article71548314.ece
+              - button "Verify with TruthLens" [ref=f2e1340]
+          - article [ref=f2e1345] [cursor=pointer]:
+            - generic [ref=f2e1346]:
+              - generic [ref=f2e1347]:
+                - img "Bombay High Court declines to stay deletion of names from voters’ list in Maharashtra" [ref=f2e1348]
+                - generic [ref=f2e1349]: India
+                - generic [ref=f2e1355]: 9m ago
+              - generic [ref=f2e1357]:
+                - generic [ref=f2e1358]:
+                  - generic [ref=f2e1359]:
+                    - generic [ref=f2e1360]: The Hindu
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f2e1361]: Accredited Wire
+                  - generic [ref=f2e1366]: 9m ago
+                - heading "Bombay High Court declines to stay deletion of names from voters’ list in Maharashtra" [level=3] [ref=f2e1367]
+                - paragraph [ref=f2e1368]: The court was hearing a petition that sought safeguards against the exclusion of eligible voters and transparency in the methodology used for the SIR
+            - generic [ref=f2e1369]:
+              - link "Read source" [ref=f2e1370]:
+                - /url: https://thehindu.com/news/national/maharashtra/bombay-high-court-declines-to-stay-deletion-of-names-from-voters-list-in-maharashtra/article71548031.ece
+              - button "Verify with TruthLens" [ref=f2e1374]
+          - article [ref=f2e1379] [cursor=pointer]:
+            - generic [ref=f2e1380]:
+              - generic [ref=f2e1381]:
+                - img "SEBI to partly reverse derivative settlement rules after pushback, sources say" [ref=f2e1382]
+                - generic [ref=f2e1383]: India
+                - generic [ref=f2e1389]: 9m ago
+              - generic [ref=f2e1391]:
+                - generic [ref=f2e1392]:
+                  - generic [ref=f2e1393]:
+                    - generic [ref=f2e1394]: The Hindu
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f2e1395]: Accredited Wire
+                  - generic [ref=f2e1400]: 9m ago
+                - heading "SEBI to partly reverse derivative settlement rules after pushback, sources say" [level=3] [ref=f2e1401]
+                - paragraph [ref=f2e1402]: SEBI told it had received 20,000 suggestions to tweak the rules in response to a consultation paper issued last month
+            - generic [ref=f2e1403]:
+              - link "Read source" [ref=f2e1404]:
+                - /url: https://thehindu.com/business/sebi-to-partly-reverse-derivative-settlement-rules-after-pushback-sources-say/article71548742.ece
+              - button "Verify with TruthLens" [ref=f2e1408]
+          - article [ref=f2e1413] [cursor=pointer]:
+            - generic [ref=f2e1414]:
+              - generic [ref=f2e1415]:
+                - img "ED searches 16 places linked to smuggling of foreign-origin betel nut via the Indo-Myanmar border" [ref=f2e1416]
+                - generic [ref=f2e1417]: India
+                - generic [ref=f2e1423]: 11m ago
+              - generic [ref=f2e1425]:
+                - generic [ref=f2e1426]:
+                  - generic [ref=f2e1427]:
+                    - generic [ref=f2e1428]: The Hindu
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f2e1429]: Accredited Wire
+                  - generic [ref=f2e1434]: 11m ago
+                - heading "ED searches 16 places linked to smuggling of foreign-origin betel nut via the Indo-Myanmar border" [level=3] [ref=f2e1435]
+                - paragraph [ref=f2e1436]: Dried areca nut consignments were brought overland to the Indo-Myanmar border opposite Champhai in Mizoram, and ferried across the Tiau river at Zokhawthar in small lots, bypassing the Land Customs Station, in a well-organised racket, the ED alleges
+            - generic [ref=f2e1437]:
+              - link "Read source" [ref=f2e1438]:
+                - /url: https://thehindu.com/news/national/ed-searches-16-places-linked-to-smuggling-of-foreign-origin-betel-nut-via-the-indo-myanmar-border/article71548436.ece
+              - button "Verify with TruthLens" [ref=f2e1442]
+          - article [ref=f2e1447] [cursor=pointer]:
+            - generic [ref=f2e1448]:
+              - generic [ref=f2e1449]:
+                - 'img "Projects exclusively for SC/ST development formed just 0.18% of KIIFB’s total outlay: expert committee" [ref=f2e1450]'
+                - generic [ref=f2e1451]: India
+                - generic [ref=f2e1457]: 11m ago
+              - generic [ref=f2e1459]:
+                - generic [ref=f2e1460]:
+                  - generic [ref=f2e1461]:
+                    - generic [ref=f2e1462]: The Hindu
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f2e1463]: Accredited Wire
+                  - generic [ref=f2e1468]: 11m ago
+                - 'heading "Projects exclusively for SC/ST development formed just 0.18% of KIIFB’s total outlay: expert committee" [level=3] [ref=f2e1469]'
+                - paragraph [ref=f2e1470]: A mere 0.18% of KIIFB’s approved outlay and 0.21% of the amount released were allocated to projects exclusively for SC/ST development, says panel.
+            - generic [ref=f2e1471]:
+              - link "Read source" [ref=f2e1472]:
+                - /url: https://thehindu.com/news/national/kerala/projects-exclusively-for-scst-development-formed-just-018-of-kiifbs-total-outlay-expert-committee/article71591947.ece
+              - button "Verify with TruthLens" [ref=f2e1476]
+          - article [ref=f2e1481] [cursor=pointer]:
+            - generic [ref=f2e1482]:
+              - generic [ref=f2e1483]:
+                - img "India-born cheetah gives birth to five cubs in Madhya Pradesh’s Kuno National Park" [ref=f2e1484]
+                - generic [ref=f2e1485]: India
+                - generic [ref=f2e1491]: 11m ago
+              - generic [ref=f2e1493]:
+                - generic [ref=f2e1494]:
+                  - generic [ref=f2e1495]:
+                    - generic [ref=f2e1496]: The Hindu
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f2e1497]: Accredited Wire
+                  - generic [ref=f2e1502]: 11m ago
+                - heading "India-born cheetah gives birth to five cubs in Madhya Pradesh’s Kuno National Park" [level=3] [ref=f2e1503]
+                - paragraph [ref=f2e1504]: The father is a cheetah brought from Botswana and the birth of these cubs marks the beginning of the Botswana lineage in India
+            - generic [ref=f2e1505]:
+              - link "Read source" [ref=f2e1506]:
+                - /url: https://thehindu.com/news/national/india-born-cheetah-gives-birth-to-five-cubs-in-madhya-pradeshs-kuno-national-park/article71548438.ece
+              - button "Verify with TruthLens" [ref=f2e1510]
+          - article [ref=f2e1515] [cursor=pointer]:
+            - generic [ref=f2e1516]:
+              - generic [ref=f2e1517]:
+                - img "DMK MP defends the simultaneous polls panel’s plan to meet CJI" [ref=f2e1518]
+                - generic [ref=f2e1519]: India
+                - generic [ref=f2e1525]: 12m ago
+              - generic [ref=f2e1527]:
+                - generic [ref=f2e1528]:
+                  - generic [ref=f2e1529]:
+                    - generic [ref=f2e1530]: The Hindu
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f2e1531]: Accredited Wire
+                  - generic [ref=f2e1536]: 12m ago
+                - heading "DMK MP defends the simultaneous polls panel’s plan to meet CJI" [level=3] [ref=f2e1537]
+                - paragraph [ref=f2e1538]: Separation of powers does not mean the three organs operate in watertight compartments, says Rajya Sabha P. Wilson
+            - generic [ref=f2e1539]:
+              - link "Read source" [ref=f2e1540]:
+                - /url: https://thehindu.com/news/national/dmk-mp-defends-the-simultaneous-polls-panels-plan-to-meet-cji/article71548610.ece
+              - button "Verify with TruthLens" [ref=f2e1544]
+          - article [ref=f2e1549] [cursor=pointer]:
+            - generic [ref=f2e1550]:
+              - generic [ref=f2e1551]:
+                - img "4.63 lakh fingerlings to be released in Palakkad reservoirs" [ref=f2e1552]
+                - generic [ref=f2e1553]: India
+                - generic [ref=f2e1559]: 12m ago
+              - generic [ref=f2e1561]:
+                - generic [ref=f2e1562]:
+                  - generic [ref=f2e1563]:
+                    - generic [ref=f2e1564]: The Hindu
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f2e1565]: Accredited Wire
+                  - generic [ref=f2e1570]: 12m ago
+                - heading "4.63 lakh fingerlings to be released in Palakkad reservoirs" [level=3] [ref=f2e1571]
+                - paragraph [ref=f2e1572]: "The programme will cover six reservoirs in the district: Walayar, Kanjirapuzha, Mangalam, Pothundi, Chulliyar and Meenkara"
+            - generic [ref=f2e1573]:
+              - link "Read source" [ref=f2e1574]:
+                - /url: https://thehindu.com/news/national/kerala/463-lakh-fish-fingerlings-to-be-released-in-palakkad-reservoirs/article71547165.ece
+              - button "Verify with TruthLens" [ref=f2e1578]
+          - article [ref=f2e1583] [cursor=pointer]:
+            - generic [ref=f2e1584]:
+              - generic [ref=f2e1585]:
+                - 'img "CJP’s Tiranga march: 6,000 police personnel deployed, Central Park closed, Section 163 imposed as Delhi braces for another protest" [ref=f2e1586]'
+                - generic [ref=f2e1587]: India
+                - generic [ref=f2e1593]: 12m ago
+              - generic [ref=f2e1595]:
+                - generic [ref=f2e1596]:
+                  - generic [ref=f2e1597]:
+                    - generic [ref=f2e1598]: The Hindu
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f2e1599]: Accredited Wire
+                  - generic [ref=f2e1604]: 12m ago
+                - 'heading "CJP’s Tiranga march: 6,000 police personnel deployed, Central Park closed, Section 163 imposed as Delhi braces for another protest" [level=3] [ref=f2e1605]'
+                - paragraph [ref=f2e1606]: The call for the protest march was made after CJP co-conveners Saurav Das and Ashutosh Ranka were remanded to five days’ judicial custody on Wednesday (October 14, 2026) allegedly for entering Jantar Mantar.
+            - generic [ref=f2e1607]:
+              - link "Read source" [ref=f2e1608]:
+                - /url: https://thehindu.com/news/national/cjp-tiranga-march-security-traffic-restrictions-delhi-police-advisory/article71591828.ece
+              - button "Verify with TruthLens" [ref=f2e1612]
+          - article [ref=f2e1617] [cursor=pointer]:
+            - generic [ref=f2e1618]:
+              - generic [ref=f2e1619]:
+                - 'img "Opposition is to oppose, expose, depose: Congress Pranab reminder to Rajnath Singh" [ref=f2e1620]'
+                - generic [ref=f2e1621]: India
+                - generic [ref=f2e1627]: 12m ago
+              - generic [ref=f2e1629]:
+                - generic [ref=f2e1630]:
+                  - generic [ref=f2e1631]:
+                    - generic [ref=f2e1632]: The Hindu
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f2e1633]: Accredited Wire
+                  - generic [ref=f2e1638]: 12m ago
+                - 'heading "Opposition is to oppose, expose, depose: Congress Pranab reminder to Rajnath Singh" [level=3] [ref=f2e1639]'
+                - paragraph [ref=f2e1640]: "\"The Defence Minister needs to be reminded of what the former President Pranab Mukherjee, who was awarded the Bharat Ratna in 2019, would often say: the job of the Opposition in a democracy is to oppose, expose and depose,\" says Jairam Ramesh"
+            - generic [ref=f2e1641]:
+              - link "Read source" [ref=f2e1642]:
+                - /url: https://thehindu.com/news/national/opposition-is-to-oppose-expose-depose-congress-pranab-reminder-to-rajnath-singh/article71591779.ece
+              - button "Verify with TruthLens" [ref=f2e1646]
+          - article [ref=f2e1651] [cursor=pointer]:
+            - generic [ref=f2e1652]:
+              - generic [ref=f2e1653]:
+                - img "Village council bans allotment of land to Christians for prayer or burial" [ref=f2e1654]
+                - generic [ref=f2e1655]: India
+                - generic [ref=f2e1661]: 13m ago
+              - generic [ref=f2e1663]:
+                - generic [ref=f2e1664]:
+                  - generic [ref=f2e1665]:
+                    - generic [ref=f2e1666]: The Hindu
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f2e1667]: Accredited Wire
+                  - generic [ref=f2e1672]: 13m ago
+                - heading "Village council bans allotment of land to Christians for prayer or burial" [level=3] [ref=f2e1673]
+                - paragraph [ref=f2e1674]: ‘Not even an inch of gram sabha land’ would be provided to Christians a press release stated
+            - generic [ref=f2e1675]:
+              - link "Read source" [ref=f2e1676]:
+                - /url: https://thehindu.com/news/national/chhattisgarh/village-council-bans-allotment-of-land-to-christians-for-prayer-or-burial/article71548165.ece
+              - button "Verify with TruthLens" [ref=f2e1680]
+          - article [ref=f2e1685] [cursor=pointer]:
+            - generic [ref=f2e1686]:
+              - generic [ref=f2e1687]:
+                - generic "No publisher image available" [ref=f2e1688]
+                - generic [ref=f2e1693]: India
+                - generic [ref=f2e1699]: 3m ago
+              - generic [ref=f2e1701]:
+                - generic [ref=f2e1702]:
+                  - generic [ref=f2e1703]:
+                    - generic [ref=f2e1704]: Press Information Bureau (PIB)
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f2e1705]: Accredited Wire
+                  - generic [ref=f2e1710]: 3m ago
+                - heading "प्रधानमंत्री श्री नरेन्द्र मोदी ने एशियाई खेल 2026 में भाग लेने वाले भारतीय एथलीट दल से बातचीत की" [level=3] [ref=f2e1711]
+                - paragraph [ref=f2e1712]: Live dispatch from Press Information Bureau (PIB).
+            - generic [ref=f2e1713]:
+              - link "Read source" [ref=f2e1714]:
+                - /url: https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2324190
+              - button "Verify with TruthLens" [ref=f2e1718]
+          - article [ref=f2e1723] [cursor=pointer]:
+            - generic [ref=f2e1724]:
+              - generic [ref=f2e1725]:
+                - generic "No publisher image available" [ref=f2e1726]
+                - generic [ref=f2e1731]: India
+                - generic [ref=f2e1737]: 3m ago
+              - generic [ref=f2e1739]:
+                - generic [ref=f2e1740]:
+                  - generic [ref=f2e1741]:
+                    - generic [ref=f2e1742]: Press Information Bureau (PIB)
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f2e1743]: Accredited Wire
+                  - generic [ref=f2e1748]: 3m ago
+                - heading "भारतीय तटरक्षक बल और कोरियाई तटरक्षक बल के बीच 14वीं उच्च-स्तरीय बैठक इंचियोन में आयोजित हुई" [level=3] [ref=f2e1749]
+                - paragraph [ref=f2e1750]: Live dispatch from Press Information Bureau (PIB).
+            - generic [ref=f2e1751]:
+              - link "Read source" [ref=f2e1752]:
+                - /url: https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2324149
+              - button "Verify with TruthLens" [ref=f2e1756]
+          - article [ref=f2e1761] [cursor=pointer]:
+            - generic [ref=f2e1762]:
+              - generic [ref=f2e1763]:
+                - generic "No publisher image available" [ref=f2e1764]
+                - generic [ref=f2e1769]: India
+                - generic [ref=f2e1775]: 3m ago
+              - generic [ref=f2e1777]:
+                - generic [ref=f2e1778]:
+                  - generic [ref=f2e1779]:
+                    - generic [ref=f2e1780]: Press Information Bureau (PIB)
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f2e1781]: Accredited Wire
+                  - generic [ref=f2e1786]: 3m ago
+                - heading "सड़क एवं सड़क परिवहन क्षेत्र पर भारत-जापान संयुक्त कार्य समूह(जेडब्ल्यूजू) का 12वाँ सत्र" [level=3] [ref=f2e1787]
+                - paragraph [ref=f2e1788]: Live dispatch from Press Information Bureau (PIB).
+            - generic [ref=f2e1789]:
+              - link "Read source" [ref=f2e1790]:
+                - /url: https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2324154
+              - button "Verify with TruthLens" [ref=f2e1794]
+          - article [ref=f2e1799] [cursor=pointer]:
+            - generic [ref=f2e1800]:
+              - generic [ref=f2e1801]:
+                - generic "No publisher image available" [ref=f2e1802]
+                - generic [ref=f2e1807]: India
+                - generic [ref=f2e1813]: 3m ago
+              - generic [ref=f2e1815]:
+                - generic [ref=f2e1816]:
+                  - generic [ref=f2e1817]:
+                    - generic [ref=f2e1818]: Press Information Bureau (PIB)
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f2e1819]: Accredited Wire
+                  - generic [ref=f2e1824]: 3m ago
+                - heading "सुखना आर्द्रभूमि (चंडीगढ़) और सौज झील (उत्तर प्रदेश) को सूची में जोड़े जाने के साथ भारत के रामसर स्थलों की संख्या 103 हुई" [level=3] [ref=f2e1825]
+                - paragraph [ref=f2e1826]: Live dispatch from Press Information Bureau (PIB).
+            - generic [ref=f2e1827]:
+              - link "Read source" [ref=f2e1828]:
+                - /url: https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2324153
+              - button "Verify with TruthLens" [ref=f2e1832]
+          - article [ref=f2e1837] [cursor=pointer]:
+            - generic [ref=f2e1838]:
+              - generic [ref=f2e1839]:
+                - generic "No publisher image available" [ref=f2e1840]
+                - generic [ref=f2e1845]: India
+                - generic [ref=f2e1851]: 3m ago
+              - generic [ref=f2e1853]:
+                - generic [ref=f2e1854]:
+                  - generic [ref=f2e1855]:
+                    - generic [ref=f2e1856]: Press Information Bureau (PIB)
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f2e1857]: Accredited Wire
+                  - generic [ref=f2e1862]: 3m ago
+                - heading "12 और 13 अक्टूबर, 2026 को हरियाणा के गुरुग्राम में 'दीनदयाल अंत्योदय योजना-राष्ट्रीय ग्रामीण आजीविका मिशन' के तहत 'डिजिटल डेटा प्रणालियों को सुदृढ़ करने और साक्ष्य-आधारित शिक्षा' पर राष्ट्रीय कार्यशाला का आयोजन किया गया" [level=3] [ref=f2e1863]
+                - paragraph [ref=f2e1864]: Live dispatch from Press Information Bureau (PIB).
+            - generic [ref=f2e1865]:
+              - link "Read source" [ref=f2e1866]:
+                - /url: https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2324194
+              - button "Verify with TruthLens" [ref=f2e1870]
+          - article [ref=f2e1875] [cursor=pointer]:
+            - generic [ref=f2e1876]:
+              - generic [ref=f2e1877]:
+                - generic "No publisher image available" [ref=f2e1878]
+                - generic [ref=f2e1883]: India
+                - generic [ref=f2e1889]: 3m ago
+              - generic [ref=f2e1891]:
+                - generic [ref=f2e1892]:
+                  - generic [ref=f2e1893]:
+                    - generic [ref=f2e1894]: Press Information Bureau (PIB)
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f2e1895]: Accredited Wire
+                  - generic [ref=f2e1900]: 3m ago
+                - heading "केंद्रीय वित्त एवं कॉरपोरेट कार्य मंत्री श्रीमती निर्मला सीतारमण ने आज थाईलैंड के बैंकॉक में विश्व बैंक की विकास समिति के 114वीं पूर्ण बैठक में हिस्सा लिया" [level=3] [ref=f2e1901]
+                - paragraph [ref=f2e1902]: Live dispatch from Press Information Bureau (PIB).
+            - generic [ref=f2e1903]:
+              - link "Read source" [ref=f2e1904]:
+                - /url: https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2324192
+              - button "Verify with TruthLens" [ref=f2e1908]
+          - article [ref=f2e1913] [cursor=pointer]:
+            - generic [ref=f2e1914]:
+              - generic [ref=f2e1915]:
+                - generic "No publisher image available" [ref=f2e1916]
+                - generic [ref=f2e1921]: India
+                - generic [ref=f2e1927]: 3m ago
+              - generic [ref=f2e1929]:
+                - generic [ref=f2e1930]:
+                  - generic [ref=f2e1931]:
+                    - generic [ref=f2e1932]: Press Information Bureau (PIB)
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f2e1933]: Accredited Wire
+                  - generic [ref=f2e1938]: 3m ago
+                - heading "केंद्रीय संस्कृति एवं पर्यटन मंत्री श्री गजेंद्र सिंह शेखावत ने राष्ट्रीय आधुनिक कला संग्रहालय (एनजीएमए) में तक्षणम प्रदर्शनी का उद्घाटन किया, इस प्रदर्शनी में 150 कलाकारों की 250 से भी अधिक कलाकृतियों व मूर्तियों को एक साथ प्रदर्शित किया गया है" [level=3] [ref=f2e1939]
+                - paragraph [ref=f2e1940]: Live dispatch from Press Information Bureau (PIB).
+            - generic [ref=f2e1941]:
+              - link "Read source" [ref=f2e1942]:
+                - /url: https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2324174
+              - button "Verify with TruthLens" [ref=f2e1946]
+          - article [ref=f2e1951] [cursor=pointer]:
+            - generic [ref=f2e1952]:
+              - generic [ref=f2e1953]:
+                - generic "No publisher image available" [ref=f2e1954]
+                - generic [ref=f2e1959]: India
+                - generic [ref=f2e1965]: 3m ago
+              - generic [ref=f2e1967]:
+                - generic [ref=f2e1968]:
+                  - generic [ref=f2e1969]:
+                    - generic [ref=f2e1970]: Press Information Bureau (PIB)
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f2e1971]: Accredited Wire
+                  - generic [ref=f2e1976]: 3m ago
+                - heading "वस्त्र मंत्रालय ने विशेष अभियान 6 के अंतर्गत साइबर सुरक्षा एवं सुरक्षित डिजिटल निपटान और ई-कचरा प्रबंधन जागरूकता पर कार्यशालाओं का आयोजन किया" [level=3] [ref=f2e1977]
+                - paragraph [ref=f2e1978]: Live dispatch from Press Information Bureau (PIB).
+            - generic [ref=f2e1979]:
+              - link "Read source" [ref=f2e1980]:
+                - /url: https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2324262
+              - button "Verify with TruthLens" [ref=f2e1984]
+          - article [ref=f2e1989] [cursor=pointer]:
+            - generic [ref=f2e1990]:
+              - generic [ref=f2e1991]:
+                - generic "No publisher image available" [ref=f2e1992]
+                - generic [ref=f2e1997]: India
+                - generic [ref=f2e2003]: 3m ago
+              - generic [ref=f2e2005]:
+                - generic [ref=f2e2006]:
+                  - generic [ref=f2e2007]:
+                    - generic [ref=f2e2008]: Press Information Bureau (PIB)
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f2e2009]: Accredited Wire
+                  - generic [ref=f2e2014]: 3m ago
+                - heading "एपीडा ने तमिलनाडु से बुल्गारिया को 1.755 मीट्रिक टन जैविक ताड़ के गुड़ के पाउडर के निर्यात में सहायता प्रदान की" [level=3] [ref=f2e2015]
+                - paragraph [ref=f2e2016]: Live dispatch from Press Information Bureau (PIB).
+            - generic [ref=f2e2017]:
+              - link "Read source" [ref=f2e2018]:
+                - /url: https://pib.gov.in/PressReleaseIframePage.aspx?PRID=2324261
+              - button "Verify with TruthLens" [ref=f2e2022]
+  - contentinfo [ref=f2e383]:
+    - generic [ref=f2e384]:
+      - generic [ref=f2e385]:
+        - generic [ref=f2e386]:
+          - generic [ref=f2e387]: TruthLens
+          - paragraph [ref=f2e393]: An open investigative web platform for automated multi-source news verification, media forensics, and claim analysis.
+          - generic [ref=f2e394]: Source-first verification · Real-time wire consensus
+        - generic [ref=f2e395]:
+          - heading "Verification Tools" [level=4] [ref=f2e396]
+          - list [ref=f2e397]:
+            - listitem [ref=f2e398]:
+              - button "Article URL Fact-Check" [ref=f2e399]
+            - listitem [ref=f2e400]:
+              - button "Text Claim Cross-Examination" [ref=f2e401]
+            - listitem [ref=f2e402]:
+              - button "Image ELA & Forensic Audit" [ref=f2e403]
+            - listitem [ref=f2e404]:
+              - button "Live Misinformation Monitor" [ref=f2e405]
+        - generic [ref=f2e406]:
+          - heading "News Coverage" [level=4] [ref=f2e407]
+          - list [ref=f2e408]:
+            - listitem [ref=f2e409]:
+              - button "Live News Aggregator" [ref=f2e410]
+            - listitem [ref=f2e411]:
+              - button "World Wire Headlines" [ref=f2e412]
+            - listitem [ref=f2e413]:
+              - button "India National Wire" [ref=f2e414]
+            - listitem [ref=f2e415]:
+              - button "Fact Investigation Dossiers" [ref=f2e416]
+            - listitem [ref=f2e417]:
+              - link "REST API Documentation" [ref=f2e418] [cursor=pointer]:
+                - /url: http://localhost:8000/api/docs
+        - generic [ref=f2e423]:
+          - heading "Editorial Transparency" [level=4] [ref=f2e424]
+          - paragraph [ref=f2e425]: TruthLens synthesizes evidence from indexed news registries and official wire records. AI-assisted verdicts are probabilistic and should be reviewed alongside cited primary evidence.
+          - generic [ref=f2e426]: Data stored locally · No user tracking
+      - generic [ref=f2e427]:
+        - paragraph [ref=f2e428]: © 2026 TruthLens Media Intelligence. All rights reserved.
+        - paragraph [ref=f2e429]: Built with React 19, FastAPI, and open evidence datasets.

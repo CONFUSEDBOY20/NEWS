@@ -1,0 +1,201 @@
+- generic [ref=e3]:
+  - status "Loading TruthLens" [ref=e4]:
+    - generic [ref=e5]: TruthLens
+    - generic [ref=e9]: News intelligence, made clear
+    - generic [ref=e16]: Loading TruthLens
+  - generic [ref=e17]:
+    - banner [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21] [cursor=pointer]: TruthLens
+          - navigation [ref=e28]:
+            - button "Fact Check" [ref=e29] [cursor=pointer]
+            - button "Live News" [ref=e32] [cursor=pointer]
+            - button "World News" [ref=e34] [cursor=pointer]
+            - button "India News" [ref=e36] [cursor=pointer]
+            - button "Investigations" [ref=e38] [cursor=pointer]
+            - button "Topics" [ref=e41] [cursor=pointer]
+            - button "About" [ref=e45] [cursor=pointer]
+        - generic [ref=e46]:
+          - button "Live Connected" [ref=e47] [cursor=pointer]
+          - button "Search" [ref=e55] [cursor=pointer]
+          - button "Toggle dark mode" [ref=e59] [cursor=pointer]
+          - button "History" [ref=e62] [cursor=pointer]
+          - button "Admin settings" [ref=e68]
+    - generic [ref=e71]:
+      - generic [ref=e72]:
+        - generic [ref=e73]: LIVE
+        - generic [ref=e76]: "Trending Now :"
+      - generic [ref=e77]: Updating live wire intelligence...
+      - generic [ref=e81]:
+        - button "Previous headline" [ref=e82] [cursor=pointer]
+        - button "Next headline" [ref=e85] [cursor=pointer]
+    - main [ref=e88]:
+      - generic [ref=e89]:
+        - generic [ref=e90]:
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - generic [ref=e93]: NEWS CHECK
+              - heading "Check news, claims and media before you believe." [level=1] [ref=e96]
+              - paragraph [ref=e97]: Verify viral headlines, social media claims, images and articles with trusted sources.
+              - generic [ref=e98]:
+                - generic [ref=e99]: 30+ Live Wires
+                - generic [ref=e102]: Google News RSS
+                - generic [ref=e108]: 30+ Outlets
+                - generic [ref=e113]: 382 Monitored
+            - generic [ref=e117]:
+              - generic [ref=e118]:
+                - button "Check text" [ref=e119] [cursor=pointer]:
+                  - generic [ref=e123]: Check Text
+                - button "Check URL" [ref=e124] [cursor=pointer]
+                - button "Check image" [ref=e129] [cursor=pointer]:
+                  - generic [ref=e134]: Check Image
+              - generic [ref=e135]:
+                - generic [ref=e136]:
+                  - textbox "Paste a news headline, social media message, or article excerpt to verify..." [ref=e137]
+                  - generic [ref=e138]: 0/1000
+                - generic [ref=e139]:
+                  - combobox [ref=e141] [cursor=pointer]:
+                    - option "Auto-detect language" [selected]
+                    - option "English"
+                    - option "हिन्दी (Hindi)"
+                    - option "বাংলা (Bengali)"
+                    - option "मराठी (Marathi)"
+                    - option "தமிழ் (Tamil)"
+                    - option "తెలుగు (Telugu)"
+                  - button "Check Claim" [ref=e142] [cursor=pointer]
+              - generic [ref=e147]:
+                - generic [ref=e148]: "Try an example:"
+                - button "\"5G causes health problems\"" [ref=e149] [cursor=pointer]
+                - button "\"Government gives free laptops\"" [ref=e150] [cursor=pointer]
+                - button "\"This image is from a recent flood\"" [ref=e151] [cursor=pointer]
+          - generic [ref=e153]:
+            - img "Understanding Disinformation Patterns in Public Health" [ref=e154]
+            - generic [ref=e156]:
+              - generic [ref=e157]: Editorial example
+              - generic [ref=e158]:
+                - button "Previous story" [ref=e159] [cursor=pointer]
+                - button "Next story" [ref=e162] [cursor=pointer]
+            - generic [ref=e165]:
+              - heading "Understanding Disinformation Patterns in Public Health" [level=2] [ref=e166] [cursor=pointer]
+              - paragraph [ref=e167]: Educational analysis of how unsubstantiated health claims spread across messaging channels.
+              - generic [ref=e168]:
+                - button "Go to slide 1" [ref=e169] [cursor=pointer]
+                - button "Go to slide 2" [ref=e170] [cursor=pointer]
+          - generic [ref=e173]:
+            - heading "Recent Checks" [level=3] [ref=e174]
+            - button "View all" [ref=e175] [cursor=pointer]
+        - generic [ref=e180]:
+          - generic [ref=e181]:
+            - generic [ref=e182]:
+              - generic [ref=e183]:
+                - heading "Latest News" [level=2] [ref=e184]
+                - button "View all" [ref=e185] [cursor=pointer]
+              - generic [ref=e189]:
+                - button "All" [ref=e190] [cursor=pointer]
+                - button "India" [ref=e191] [cursor=pointer]
+                - button "World" [ref=e192] [cursor=pointer]
+                - button "Technology" [ref=e193] [cursor=pointer]
+                - button "Health" [ref=e194] [cursor=pointer]
+                - button "Environment" [ref=e195] [cursor=pointer]
+                - button "Politics" [ref=e196] [cursor=pointer]
+            - generic [ref=e218]:
+              - heading "How TruthLens works" [level=3] [ref=e219]
+              - generic [ref=e220]:
+                - generic [ref=e221]:
+                  - generic [ref=e222]: "1"
+                  - generic [ref=e223]:
+                    - heading "Submit a claim" [level=4] [ref=e224]
+                    - paragraph [ref=e225]: Paste text, URL or upload an image.
+                - generic [ref=e234]:
+                  - heading "We analyse it" [level=4] [ref=e235]
+                  - paragraph [ref=e236]: Our system checks multiple trusted sources and verifies the content.
+                - generic [ref=e245]:
+                  - heading "Get a clear result" [level=4] [ref=e246]
+                  - paragraph [ref=e247]: See whether it's true, false, misleading or needs more context.
+          - generic [ref=e249]:
+            - heading "Popular Investigations" [level=2] [ref=e250]
+            - button "View all" [ref=e251] [cursor=pointer]
+        - generic [ref=e255]:
+          - generic [ref=e256]:
+            - generic [ref=e265]:
+              - generic [ref=e266]:
+                - heading "Real-Time News Wire Telemetry" [level=3] [ref=e267]
+                - generic [ref=e268]: LIVE BACKEND DATA
+              - paragraph [ref=e270]: Aggregated live from official syndication wires, Google News RSS, and vetted global newsrooms.
+            - generic [ref=e271]:
+              - generic [ref=e272]: "Sync: 15m intervals"
+              - button "Refresh live telemetry" [ref=e273] [cursor=pointer]
+          - generic [ref=e279]:
+            - generic [ref=e280]:
+              - generic [ref=e281]: RSS Wire Feeds
+              - generic [ref=e287]: "30"
+              - paragraph [ref=e288]: +9 Google News Feeds
+            - generic [ref=e289]:
+              - generic [ref=e290]: Live Outlets
+              - generic [ref=e295]: "30"
+              - paragraph [ref=e296]: BBC, Reuters, Hindu, AP, DW
+            - generic [ref=e297]:
+              - generic [ref=e298]: Wire Depth
+              - generic [ref=e302]: "382"
+              - paragraph [ref=e303]: Active verified wire pool
+            - generic [ref=e304]:
+              - generic [ref=e305]: Provider Mesh
+              - generic [ref=e309]: 7/7
+              - paragraph [ref=e310]: Circuit breakers 100% OK
+          - generic [ref=e311]:
+            - generic [ref=e312]:
+              - generic [ref=e313]: "Live Coverage:"
+              - generic [ref=e314]: World
+              - generic [ref=e315]: ·
+              - generic [ref=e316]: India
+              - generic [ref=e317]: ·
+              - generic [ref=e318]: Technology
+              - generic [ref=e319]: ·
+              - generic [ref=e320]: Science
+              - generic [ref=e321]: ·
+              - generic [ref=e322]: Health
+              - generic [ref=e323]: ·
+              - generic [ref=e324]: Business
+              - generic [ref=e325]: ·
+              - generic [ref=e326]: Politics
+            - generic [ref=e327]: Zero Mock Records · 100% Real-Time Aggregation
+  - contentinfo [ref=e332]:
+    - generic [ref=e333]:
+      - generic [ref=e334]:
+        - generic [ref=e335]:
+          - generic [ref=e336]: TruthLens
+          - paragraph [ref=e342]: An open investigative web platform for automated multi-source news verification, media forensics, and claim analysis.
+          - generic [ref=e343]: Source-first verification · Real-time wire consensus
+        - generic [ref=e344]:
+          - heading "Verification Tools" [level=4] [ref=e345]
+          - list [ref=e346]:
+            - listitem [ref=e347]:
+              - button "Article URL Fact-Check" [ref=e348]
+            - listitem [ref=e349]:
+              - button "Text Claim Cross-Examination" [ref=e350]
+            - listitem [ref=e351]:
+              - button "Image ELA & Forensic Audit" [ref=e352]
+            - listitem [ref=e353]:
+              - button "Live Misinformation Monitor" [ref=e354]
+        - generic [ref=e355]:
+          - heading "News Coverage" [level=4] [ref=e356]
+          - list [ref=e357]:
+            - listitem [ref=e358]:
+              - button "Live News Aggregator" [ref=e359]
+            - listitem [ref=e360]:
+              - button "World Wire Headlines" [ref=e361]
+            - listitem [ref=e362]:
+              - button "India National Wire" [ref=e363]
+            - listitem [ref=e364]:
+              - button "Fact Investigation Dossiers" [ref=e365]
+            - listitem [ref=e366]:
+              - link "REST API Documentation" [ref=e367] [cursor=pointer]:
+                - /url: http://localhost:8000/api/docs
+        - generic [ref=e372]:
+          - heading "Editorial Transparency" [level=4] [ref=e373]
+          - paragraph [ref=e374]: TruthLens synthesizes evidence from indexed news registries and official wire records. AI-assisted verdicts are probabilistic and should be reviewed alongside cited primary evidence.
+          - generic [ref=e375]: Data stored locally · No user tracking
+      - generic [ref=e376]:
+        - paragraph [ref=e377]: © 2026 TruthLens Media Intelligence. All rights reserved.
+        - paragraph [ref=e378]: Built with React 19, FastAPI, and open evidence datasets.

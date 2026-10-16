@@ -9,6 +9,7 @@
 import { api } from "./api";
 
 const CACHE_TTL_MS = 60 * 1000; // 60 seconds live cache
+const newsRefreshes = new Map();
 
 const newsSubscribers = new Set();
 
@@ -205,18 +206,23 @@ export async function fetchLatestNews({ category = "All", fresh = false } = {}) 
 
   const isIndia = category.toLowerCase() === "india";
 
-  const fetchAndProcessFresh = async () => {
+  const fetchAndProcessFresh = () => {
+    const current = newsRefreshes.get(cacheKey);
+    if (current) return current;
+
+    const refresh = (async () => {
     try {
       const backendData = isIndia
-        ? await api.getIndiaNews("All", true)
-        : await api.getWorldNews(category, true);
+        ? await api.getIndiaNews("All", fresh)
+        : await api.getWorldNews(category, fresh);
 
       if (backendData?.articles && Array.isArray(backendData.articles) && backendData.articles.length > 0) {
         const normalized = backendData.articles.map((art) => ({
           id: art.id || `backend-${art.title?.slice(0, 10)}`,
           title: art.title,
           description: art.description || art.summary || "Summary corroborated by automated wire aggregation.",
-          image_url: resolveRealTimeNewsImage(art.title, art.category || category, art.url_to_image || art.image_url),
+          source_image_url: art.url_to_image || art.image_url || art.image || art.thumbnail_url || null,
+          image_url: art.url_to_image || art.image_url || art.image || art.thumbnail_url || null,
           link: art.url || art.link || "#",
           source: art.source_name || art.source || "Official Wire",
           published_at: art.published_at || new Date().toISOString(),
@@ -249,6 +255,12 @@ export async function fetchLatestNews({ category = "All", fresh = false } = {}) 
       console.warn("Live news fetch/revalidation error:", err);
     }
     return null;
+    })();
+    newsRefreshes.set(cacheKey, refresh);
+    refresh.finally(() => {
+      if (newsRefreshes.get(cacheKey) === refresh) newsRefreshes.delete(cacheKey);
+    });
+    return refresh;
   };
 
   // If we have stale cache, trigger background revalidation without blocking UI
@@ -333,6 +345,7 @@ export async function fetchHeroFeaturedStories() {
         badgeColor: badges[idx % 3].badgeColor,
         title: art.title,
         description: art.description || "Developing news story corroborated by live wire telemetry.",
+        source_image_url: art.source_image_url || art.url_to_image || art.image_url || null,
         image_url: resolveRealTimeNewsImage(art.title, art.category, art.image_url),
         source: art.source || "Live Press Wire",
         link: art.link || "#",
@@ -363,7 +376,8 @@ export async function fetchRecentChecks() {
         headline: art.title,
         explanation: art.summary || "Archived fact-check dossier.",
         time_ago: getRelativeTimeString(art.published_at),
-        image_url: resolveRealTimeNewsImage(art.title, art.category, art.thumbnail_url),
+        source_image_url: art.thumbnail_url || art.image_url || art.url_to_image || art.image || null,
+        image_url: art.thumbnail_url || art.image_url || art.url_to_image || art.image || null,
         claim_text: art.title,
       }));
     }

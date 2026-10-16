@@ -27,7 +27,7 @@ export const translations = {
     btnCheckImage: "Run Image Forensics",
     
     imageUploadTitle: "Upload image for forensic integrity audit",
-    imageUploadSubtitle: "PNG, JPG, WEBP up to 15MB • Analyzes EXIF metadata, ELA compression & AI generative cues",
+    imageUploadSubtitle: "PNG, JPG, WEBP up to 4MB • AI-origin scores are probabilistic",
     imageDropText: "Drop image here or click to browse",
     
     // Disclaimer
@@ -139,7 +139,7 @@ export const translations = {
     btnCheckImage: "छवि फोरेंसिक चलाएं",
     
     imageUploadTitle: "फोरेंसिक जांच के लिए छवि अपलोड करें",
-    imageUploadSubtitle: "PNG, JPG, WEBP (अधिकतम 15MB) • EXIF मेटाडेटा एवं एआई संकेतों का विश्लेषण करता है",
+    imageUploadSubtitle: "PNG, JPG, WEBP (अधिकतम 4MB) • एआई-स्रोत स्कोर संभाव्य हैं",
     imageDropText: "छवि यहाँ खींचें या ब्राउज़ करने के लिए क्लिक करें",
     
     // Disclaimer

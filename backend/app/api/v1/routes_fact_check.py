@@ -1,4 +1,5 @@
 import io
+import os
 from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Query
 from fastapi.responses import StreamingResponse
 from typing import Optional
@@ -16,7 +17,8 @@ from app.utils.url_safety import UnsafeURLError
 router = APIRouter(prefix="/fact-check", tags=["Fact Check"])
 service = FactCheckService()
 
-MAX_IMAGE_BYTES = 10 * 1024 * 1024  # 10 MB limit
+# Leave room for multipart overhead under Vercel's 4.5 MB request-body cap.
+MAX_IMAGE_BYTES = 4 * 1024 * 1024 if os.getenv("VERCEL") else 10 * 1024 * 1024
 
 @router.post("/stream")
 async def stream_check_claim(payload: FactCheckTextRequest):
@@ -64,7 +66,8 @@ async def check_image(
             break
         total_bytes += len(chunk)
         if total_bytes > MAX_IMAGE_BYTES:
-            raise HTTPException(status_code=400, detail="Image size exceeds 10MB limit")
+            limit_mb = MAX_IMAGE_BYTES // (1024 * 1024)
+            raise HTTPException(status_code=400, detail=f"Image size exceeds {limit_mb}MB limit")
         chunks.append(chunk)
 
     if total_bytes == 0:

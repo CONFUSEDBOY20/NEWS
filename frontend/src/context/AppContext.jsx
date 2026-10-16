@@ -20,11 +20,13 @@ export function AppProvider({ children }) {
   
   // Verification State
   const [verificationResult, setVerificationResult] = useState(null);
+  const [verificationError, setVerificationError] = useState(null);
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationStage, setVerificationStage] = useState(0);
   const [activeClaimText, setActiveClaimText] = useState("");
   const [streamingAnalysisText, setStreamingAnalysisText] = useState("");
   const [inputPreload, setInputPreload] = useState(null);
+  const [pendingNewsSearch, setPendingNewsSearch] = useState("");
 
   // Live Connection & Telemetry State
   const [isLiveConnected, setIsLiveConnected] = useState(true);
@@ -86,7 +88,7 @@ export function AppProvider({ children }) {
     }
     try {
       const [newsRes, articlesRes] = await Promise.allSettled([
-        fetchLatestNews({ category: "All", fresh: true }),
+        fetchLatestNews({ category: "All", fresh: isManual }),
         api.getArticles()
       ]);
       const anySuccess = newsRes.status === "fulfilled" || articlesRes.status === "fulfilled";
@@ -202,6 +204,8 @@ export function AppProvider({ children }) {
         clearHistory,
         verificationResult,
         setVerificationResult,
+        verificationError,
+        setVerificationError,
         isVerifying,
         setIsVerifying,
         verificationStage,
@@ -217,6 +221,8 @@ export function AppProvider({ children }) {
         communityArticles,
         inputPreload,
         setInputPreload,
+        pendingNewsSearch,
+        setPendingNewsSearch,
         isAdminLoggedIn,
         setIsAdminLoggedIn,
         showAdminModal,

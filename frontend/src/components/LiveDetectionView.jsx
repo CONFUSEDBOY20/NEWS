@@ -314,7 +314,7 @@ export function LiveDetectionView() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs transition-colors ${
+              className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs tab-transition ${
                 active ? "bg-white/[0.12] text-white" : "text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]"
               }`}
             >

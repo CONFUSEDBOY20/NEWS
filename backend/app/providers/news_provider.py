@@ -480,6 +480,23 @@ class NewsProvider:
             self.cache[cache_key] = (time.time(), feed_resp)
             return feed_resp
 
+        # A successful search with no matches is an empty result, not an
+        # aggregation outage. Keep 503 for cases where every provider failed.
+        if query and any(provider.status == "ok" for provider in provider_statuses):
+            now_iso = datetime.now(timezone.utc).isoformat()
+            return NewsFeedResponse(
+                articles=[],
+                count=0,
+                total_results=0,
+                synced_at=now_iso,
+                fetched_at=now_iso,
+                is_live=tier1_or_tier2_success,
+                stale=False,
+                category=category or "All",
+                region=region,
+                providers=provider_statuses,
+            )
+
         # If all providers failed on this run: serve stale-while-revalidate from cache if available
         stale_hit = self._get_stale_cached(cache_key)
         if stale_hit is not None:
@@ -511,7 +528,11 @@ class NewsProvider:
         selected_feeds: List[NewsSourceFeed] = []
         for feed in VETTED_RSS_FEEDS:
             # Match by region
-            if reg_lower in ("world", "global") and feed.region in ("World", "Global"):
+            if query and reg_lower == "global":
+                # News search spans the full vetted registry, including India
+                # and topic feeds, instead of silently excluding them.
+                selected_feeds.append(feed)
+            elif reg_lower in ("world", "global") and feed.region in ("World", "Global"):
                 selected_feeds.append(feed)
             elif reg_lower == "india" and feed.region in ("India", "Global"):
                 selected_feeds.append(feed)
@@ -546,10 +567,23 @@ class NewsProvider:
 
         # Filter by search query if in search mode
         if query:
-            q_lower = query.lower()
+            stop_words = {
+                "a", "an", "and", "about", "are", "find", "for", "headline",
+                "headlines", "in", "is", "latest", "news", "of", "on", "or",
+                "search", "story", "stories", "the", "to", "verify",
+            }
+            query_terms = [
+                term for term in re.findall(r"[\w]+", query.lower())
+                if len(term) > 1 and term not in stop_words
+            ]
+            if not query_terms:
+                query_terms = [query.lower()]
             articles = [
                 a for a in articles
-                if q_lower in a.title.lower() or (a.description and q_lower in a.description.lower())
+                if all(
+                    term in f"{a.title} {a.description or ''}".lower()
+                    for term in query_terms
+                )
             ]
 
         return articles

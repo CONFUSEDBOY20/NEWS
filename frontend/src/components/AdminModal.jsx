@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useApp } from "../context/AppContext";
 import { api } from "../services/api";
-import { Lock, X, AlertCircle, KeyRound } from "lucide-react";
+import { TruthLensLogo } from "./TruthLensLogo";
+import { X, AlertCircle, KeyRound } from "lucide-react";
 
 export function AdminModal() {
   const {
@@ -55,9 +56,7 @@ export function AdminModal() {
 
         {/* Icon & Title */}
         <div className="text-center space-y-1.5 pt-2">
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 flex items-center justify-center mx-auto">
-            <Lock className="w-5 h-5" />
-          </div>
+          <TruthLensLogo className="justify-center mb-4" imageClassName="w-[150px]" />
           <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight font-sans">
             {t.adminLoginTitle || "Admin Authentication"}
           </h3>

@@ -1,0 +1,327 @@
+- generic [ref=e3]:
+  - generic [ref=e17]:
+    - banner [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21] [cursor=pointer]: TruthLens
+          - navigation [ref=e28]:
+            - button "Fact Check" [ref=e29] [cursor=pointer]
+            - button "Live News" [ref=e32] [cursor=pointer]
+            - button "World News" [ref=e34] [cursor=pointer]
+            - button "India News" [ref=e36] [cursor=pointer]
+            - button "Investigations" [ref=e38] [cursor=pointer]
+            - button "Topics" [ref=e41] [cursor=pointer]
+            - button "About" [ref=e45] [cursor=pointer]
+        - generic [ref=e46]:
+          - button "Live Connected" [ref=e47] [cursor=pointer]
+          - button "Search" [ref=e55] [cursor=pointer]
+          - button "Toggle dark mode" [ref=e59] [cursor=pointer]
+          - button "History 1" [ref=e565] [cursor=pointer]:
+            - generic [ref=e67]: History
+            - generic [ref=e566]: "1"
+          - button "Admin settings" [ref=e68]
+    - generic [ref=e71]:
+      - generic [ref=e72]:
+        - generic [ref=e73]: LIVE
+        - generic [ref=e76]: "Trending Now :"
+      - generic [ref=e379]:
+        - button "Dad fined after son, 2, died in Cyprus hotel fall" [ref=e382] [cursor=pointer]
+        - button "Banks expect to be hit with higher taxes in Budget" [ref=e385] [cursor=pointer]
+        - button "Children aged 5, 8 and 11 killed in US school shooting before suspect shot by bystander" [ref=e388] [cursor=pointer]
+        - button "What is behind the success of dark skies festival?" [ref=e391] [cursor=pointer]
+        - button "Flash floods destroy villages in central Nepal" [ref=e394] [cursor=pointer]
+        - button "Museum releases historical photos of island where Amelia Earhart may have crashed" [ref=e397] [cursor=pointer]
+        - button "प्रधानमंत्री श्री नरेन्द्र मोदी ने एशियाई खेल 2026 में भाग लेने वाले भारतीय एथलीट दल से बातचीत की" [ref=e400] [cursor=pointer]
+        - button "भारतीय तटरक्षक बल और कोरियाई तटरक्षक बल के बीच 14वीं उच्च-स्तरीय बैठक इंचियोन में आयोजित हुई" [ref=e403] [cursor=pointer]
+        - button "Dad fined after son, 2, died in Cyprus hotel fall" [ref=e406] [cursor=pointer]
+        - button "Banks expect to be hit with higher taxes in Budget" [ref=e409] [cursor=pointer]
+        - button "Children aged 5, 8 and 11 killed in US school shooting before suspect shot by bystander" [ref=e412] [cursor=pointer]
+        - button "What is behind the success of dark skies festival?" [ref=e415] [cursor=pointer]
+        - button "Flash floods destroy villages in central Nepal" [ref=e418] [cursor=pointer]
+        - button "Museum releases historical photos of island where Amelia Earhart may have crashed" [ref=e421] [cursor=pointer]
+        - button "प्रधानमंत्री श्री नरेन्द्र मोदी ने एशियाई खेल 2026 में भाग लेने वाले भारतीय एथलीट दल से बातचीत की" [ref=e424] [cursor=pointer]
+        - button "भारतीय तटरक्षक बल और कोरियाई तटरक्षक बल के बीच 14वीं उच्च-स्तरीय बैठक इंचियोन में आयोजित हुई" [ref=e427] [cursor=pointer]
+      - generic [ref=e81]:
+        - button "Previous headline" [ref=e82] [cursor=pointer]
+        - button "Next headline" [ref=e85] [cursor=pointer]
+    - main [ref=e1890]:
+      - generic [ref=e1891]:
+        - generic [ref=e1892]:
+          - generic [ref=e1893]:
+            - generic [ref=e1894]:
+              - generic [ref=e1895]: NEWS CHECK
+              - heading "Check news, claims and media before you believe." [level=1] [ref=e1898]
+              - paragraph [ref=e1899]: Verify viral headlines, social media claims, images and articles with trusted sources.
+              - generic [ref=e1900]:
+                - generic [ref=e1901]: 30 Wire Feeds
+                - generic [ref=e1904]: Google News RSS
+                - generic [ref=e1910]: 30 Outlets
+                - generic [ref=e1915]: 1887 Monitored
+            - generic [ref=e1919]:
+              - generic [ref=e1920]:
+                - button "Check Text" [ref=e1921] [cursor=pointer]
+                - button "Check URL" [ref=e1926] [cursor=pointer]
+                - button "Check Image" [ref=e1931] [cursor=pointer]
+              - generic [ref=e1937]:
+                - generic [ref=e1938]:
+                  - textbox "Paste a news headline, social media message, or article excerpt to verify..." [ref=e1939]
+                  - generic [ref=e1940]: 0/1000
+                - generic [ref=e1941]:
+                  - combobox [ref=e1943] [cursor=pointer]:
+                    - option "Auto-detect language" [selected]
+                    - option "English"
+                    - option "हिन्दी (Hindi)"
+                    - option "বাংলা (Bengali)"
+                    - option "मराठी (Marathi)"
+                    - option "தமிழ் (Tamil)"
+                    - option "తెలుగు (Telugu)"
+                  - button "Check Claim" [ref=e1944] [cursor=pointer]
+              - generic [ref=e1949]:
+                - generic [ref=e1950]: "Try an example:"
+                - button "\"5G causes health problems\"" [ref=e1951] [cursor=pointer]
+                - button "\"Government gives free laptops\"" [ref=e1952] [cursor=pointer]
+                - button "\"This image is from a recent flood\"" [ref=e1953] [cursor=pointer]
+          - generic [ref=e1955]:
+            - img "Dad fined after son, 2, died in Cyprus hotel fall" [ref=e1956]
+            - generic [ref=e1958]:
+              - generic [ref=e1959]: BREAKING NEWS
+              - generic [ref=e1960]:
+                - button "Previous story" [ref=e1961] [cursor=pointer]
+                - button "Next story" [ref=e1964] [cursor=pointer]
+            - generic [ref=e1967]:
+              - heading "Dad fined after son, 2, died in Cyprus hotel fall" [level=2] [ref=e1968] [cursor=pointer]
+              - paragraph [ref=e1969]: Joshua Foster "lost control" of his son while showing him the view of a water park from a window.
+              - generic [ref=e1970]:
+                - button "Go to slide 1" [ref=e1971] [cursor=pointer]
+                - button "Go to slide 2" [ref=e1972] [cursor=pointer]
+                - button "Go to slide 3" [ref=e1973] [cursor=pointer]
+          - generic [ref=e1975]:
+            - generic [ref=e1976]:
+              - heading "Recent Checks" [level=3] [ref=e1977]
+              - button "View all" [ref=e1978] [cursor=pointer]
+            - generic [ref=e1982]:
+              - generic [ref=e1983] [cursor=pointer]:
+                - img "Did the Apollo 11 mission land on the Moon in 1969?" [ref=e1984]
+                - generic [ref=e1985]:
+                  - generic [ref=e1986]:
+                    - generic [ref=e1987]: Needs Review
+                    - generic [ref=e1992]: Recently
+                  - heading "Did the Apollo 11 mission land on the Moon in 1969?" [level=4] [ref=e1993]
+                  - paragraph [ref=e1994]: Analyzed against verified registries.
+              - generic [ref=e1995] [cursor=pointer]:
+                - 'img "Anatomy of a Viral Deepfake: How Synthetic Media Manipulates Elections" [ref=e1996]'
+                - generic [ref=e1997]:
+                  - generic [ref=e1998]:
+                    - generic [ref=e1999]: Verified
+                    - generic [ref=e2004]: 11w ago
+                  - 'heading "Anatomy of a Viral Deepfake: How Synthetic Media Manipulates Elections" [level=4] [ref=e2005]'
+                  - paragraph [ref=e2006]: An in-depth investigation into modern generative video pipelines, voice cloning tactics, and how journalists detect forensic artifacts.
+              - generic [ref=e2007] [cursor=pointer]:
+                - img "Medical Misinformation in the Age of Social Algorithms" [ref=e2008]
+                - generic [ref=e2009]:
+                  - generic [ref=e2010]:
+                    - generic [ref=e2011]: Verified
+                    - generic [ref=e2016]: 10w ago
+                  - heading "Medical Misinformation in the Age of Social Algorithms" [level=4] [ref=e2017]
+                  - paragraph [ref=e2018]: Why health hoaxes spread 6x faster than peer-reviewed medical guidance and the psychological levers exploited by pseudo-scientific influencers.
+              - generic [ref=e2019] [cursor=pointer]:
+                - 'img "Financial Fraud & AI Voice Impersonation: Protecting Your Assets" [ref=e2020]'
+                - generic [ref=e2021]:
+                  - generic [ref=e2022]:
+                    - generic [ref=e2023]: Verified
+                    - generic [ref=e2028]: 9w ago
+                  - 'heading "Financial Fraud & AI Voice Impersonation: Protecting Your Assets" [level=4] [ref=e2029]'
+                  - paragraph [ref=e2030]: Emergency response guide on how cybercriminals use 3-second voice samples to impersonate executives and family members.
+        - generic [ref=e2031]:
+          - generic [ref=e2032]:
+            - generic [ref=e2041]:
+              - generic [ref=e2042]:
+                - heading "Real-Time News Wire Telemetry" [level=3] [ref=e2043]
+                - generic [ref=e2044]: LIVE BACKEND DATA
+              - paragraph [ref=e2046]: Aggregated live from official syndication wires, Google News RSS, and vetted global newsrooms.
+            - generic [ref=e2047]:
+              - generic [ref=e2048]: Synced 03:54 PM
+              - button "Refresh live telemetry" [ref=e2049] [cursor=pointer]
+          - generic [ref=e2055]:
+            - generic [ref=e2056]:
+              - generic [ref=e2057]: RSS Wire Feeds
+              - generic [ref=e2063]: "30"
+              - paragraph [ref=e2064]: +9 Google News Feeds
+            - generic [ref=e2065]:
+              - generic [ref=e2066]: Live Outlets
+              - generic [ref=e2071]: "30"
+              - paragraph [ref=e2072]: BBC, Reuters, Hindu, AP, DW
+            - generic [ref=e2073]:
+              - generic [ref=e2074]: Wire Depth
+              - generic [ref=e2078]: "1887"
+              - paragraph [ref=e2079]: Active verified wire pool
+            - generic [ref=e2080]:
+              - generic [ref=e2081]: Provider Mesh
+              - generic [ref=e2085]: 7/7
+              - paragraph [ref=e2086]: Circuit breakers 100% OK
+          - generic [ref=e2087]:
+            - generic [ref=e2088]:
+              - generic [ref=e2089]: "Live Coverage:"
+              - generic [ref=e2090]: World
+              - generic [ref=e2091]: ·
+              - generic [ref=e2092]: India
+              - generic [ref=e2093]: ·
+              - generic [ref=e2094]: Technology
+              - generic [ref=e2095]: ·
+              - generic [ref=e2096]: Science
+              - generic [ref=e2097]: ·
+              - generic [ref=e2098]: Health
+              - generic [ref=e2099]: ·
+              - generic [ref=e2100]: Business
+              - generic [ref=e2101]: ·
+              - generic [ref=e2102]: Politics
+            - generic [ref=e2103]: Zero Mock Records · 100% Real-Time Aggregation
+        - generic [ref=e2108]:
+          - generic [ref=e2109]:
+            - generic [ref=e2110]:
+              - generic [ref=e2111]:
+                - heading "Latest News" [level=2] [ref=e2112]
+                - button "View all" [ref=e2113] [cursor=pointer]
+              - generic [ref=e2117]:
+                - button "All" [ref=e2118] [cursor=pointer]
+                - button "India" [ref=e2119] [cursor=pointer]
+                - button "World" [ref=e2120] [cursor=pointer]
+                - button "Technology" [ref=e2121] [cursor=pointer]
+                - button "Health" [ref=e2122] [cursor=pointer]
+                - button "Environment" [ref=e2123] [cursor=pointer]
+                - button "Politics" [ref=e2124] [cursor=pointer]
+              - generic [ref=e2125]:
+                - article [ref=e2126] [cursor=pointer]:
+                  - generic [ref=e2127]:
+                    - generic [ref=e2128]:
+                      - img "Dad fined after son, 2, died in Cyprus hotel fall" [ref=e2129]
+                      - generic [ref=e2130]: LIVE
+                      - generic [ref=e2133]: World
+                    - generic [ref=e2134]:
+                      - generic [ref=e2135]:
+                        - generic [ref=e2136]: BBC World
+                        - generic [ref=e2137]: 4m ago
+                      - heading "Dad fined after son, 2, died in Cyprus hotel fall" [level=3] [ref=e2138]
+                      - paragraph [ref=e2139]: Joshua Foster "lost control" of his son while showing him the view of a water park from a window.
+                  - generic [ref=e2140]:
+                    - generic [ref=e2141]: Read & Check
+                    - generic [ref=e2145]: AI Verify
+                - article [ref=e2146] [cursor=pointer]:
+                  - generic [ref=e2147]:
+                    - generic [ref=e2148]:
+                      - img "Banks expect to be hit with higher taxes in Budget" [ref=e2149]
+                      - generic [ref=e2150]: LIVE
+                      - generic [ref=e2153]: Business
+                    - generic [ref=e2154]:
+                      - generic [ref=e2155]:
+                        - generic [ref=e2156]: BBC Business
+                        - generic [ref=e2157]: 6m ago
+                      - heading "Banks expect to be hit with higher taxes in Budget" [level=3] [ref=e2158]
+                      - paragraph [ref=e2159]: Senior banking executives have told the BBC they expect to be "on the menu" in the chancellor's Budget tax later this month.
+                  - generic [ref=e2160]:
+                    - generic [ref=e2161]: Read & Check
+                    - generic [ref=e2165]: AI Verify
+                - article [ref=e2166] [cursor=pointer]:
+                  - generic [ref=e2167]:
+                    - generic [ref=e2168]:
+                      - img "Children aged 5, 8 and 11 killed in US school shooting before suspect shot by bystander" [ref=e2169]
+                      - generic [ref=e2170]: LIVE
+                      - generic [ref=e2173]: World
+                    - generic [ref=e2174]:
+                      - generic [ref=e2175]:
+                        - generic [ref=e2176]: BBC World
+                        - generic [ref=e2177]: 8m ago
+                      - heading "Children aged 5, 8 and 11 killed in US school shooting before suspect shot by bystander" [level=3] [ref=e2178]
+                      - paragraph [ref=e2179]: A teacher was also killed in the attack at the Silver Rail Elementary School in the city of Bend, Oregon, police say.
+                  - generic [ref=e2180]:
+                    - generic [ref=e2181]: Read & Check
+                    - generic [ref=e2185]: AI Verify
+                - article [ref=e2186] [cursor=pointer]:
+                  - generic [ref=e2187]:
+                    - generic [ref=e2188]:
+                      - img "What is behind the success of dark skies festival?" [ref=e2189]
+                      - generic [ref=e2190]: LIVE
+                      - generic [ref=e2193]: Science
+                    - generic [ref=e2194]:
+                      - generic [ref=e2195]:
+                        - generic [ref=e2196]: BBC Science
+                        - generic [ref=e2197]: 10m ago
+                      - heading "What is behind the success of dark skies festival?" [level=3] [ref=e2198]
+                      - paragraph [ref=e2199]: Stargazers are preparing to enjoy an annual festival that celebrates the beauty of the night sky.
+                  - generic [ref=e2200]:
+                    - generic [ref=e2201]: Read & Check
+                    - generic [ref=e2205]: AI Verify
+            - generic [ref=e2206]:
+              - heading "How TruthLens works" [level=3] [ref=e2207]
+              - generic [ref=e2208]:
+                - generic [ref=e2209]:
+                  - generic [ref=e2210]: "1"
+                  - generic [ref=e2211]:
+                    - heading "Submit a claim" [level=4] [ref=e2212]
+                    - paragraph [ref=e2213]: Paste text, URL or upload an image.
+                - generic [ref=e2222]:
+                  - heading "We analyse it" [level=4] [ref=e2223]
+                  - paragraph [ref=e2224]: Our system checks multiple trusted sources and verifies the content.
+                - generic [ref=e2233]:
+                  - heading "Get a clear result" [level=4] [ref=e2234]
+                  - paragraph [ref=e2235]: See whether it's true, false, misleading or needs more context.
+          - generic [ref=e2236]:
+            - generic [ref=e2237]:
+              - heading "Popular Investigations" [level=2] [ref=e2238]
+              - button "View all" [ref=e2239] [cursor=pointer]
+            - generic [ref=e2243]:
+              - generic [ref=e2244] [cursor=pointer]:
+                - 'img "Anatomy of a Viral Deepfake: How Synthetic Media Manipulates Elections" [ref=e2245]'
+                - generic [ref=e2247]: Technology
+                - generic [ref=e2248]:
+                  - 'heading "Anatomy of a Viral Deepfake: How Synthetic Media Manipulates Elections" [level=3] [ref=e2249]'
+                  - paragraph [ref=e2250]: Jul 28, 2026
+              - generic [ref=e2251] [cursor=pointer]:
+                - img "Medical Misinformation in the Age of Social Algorithms" [ref=e2252]
+                - generic [ref=e2253]:
+                  - heading "Medical Misinformation in the Age of Social Algorithms" [level=4] [ref=e2254]
+                  - paragraph [ref=e2255]: Aug 2, 2026
+              - generic [ref=e2256] [cursor=pointer]:
+                - 'img "Financial Fraud & AI Voice Impersonation: Protecting Your Assets" [ref=e2257]'
+                - generic [ref=e2258]:
+                  - 'heading "Financial Fraud & AI Voice Impersonation: Protecting Your Assets" [level=4] [ref=e2259]'
+                  - paragraph [ref=e2260]: Aug 10, 2026
+  - contentinfo [ref=e332]:
+    - generic [ref=e333]:
+      - generic [ref=e334]:
+        - generic [ref=e335]:
+          - generic [ref=e336]: TruthLens
+          - paragraph [ref=e342]: An open investigative web platform for automated multi-source news verification, media forensics, and claim analysis.
+          - generic [ref=e343]: Source-first verification · Real-time wire consensus
+        - generic [ref=e344]:
+          - heading "Verification Tools" [level=4] [ref=e345]
+          - list [ref=e346]:
+            - listitem [ref=e347]:
+              - button "Article URL Fact-Check" [ref=e348]
+            - listitem [ref=e349]:
+              - button "Text Claim Cross-Examination" [ref=e350]
+            - listitem [ref=e351]:
+              - button "Image ELA & Forensic Audit" [ref=e352]
+            - listitem [ref=e353]:
+              - button "Live Misinformation Monitor" [ref=e354]
+        - generic [ref=e355]:
+          - heading "News Coverage" [level=4] [ref=e356]
+          - list [ref=e357]:
+            - listitem [ref=e358]:
+              - button "Live News Aggregator" [ref=e359]
+            - listitem [ref=e360]:
+              - button "World Wire Headlines" [ref=e361]
+            - listitem [ref=e362]:
+              - button "India National Wire" [ref=e363]
+            - listitem [ref=e364]:
+              - button "Fact Investigation Dossiers" [ref=e365]
+            - listitem [ref=e366]:
+              - link "REST API Documentation" [ref=e367] [cursor=pointer]:
+                - /url: http://localhost:8000/api/docs
+        - generic [ref=e372]:
+          - heading "Editorial Transparency" [level=4] [ref=e373]
+          - paragraph [ref=e374]: TruthLens synthesizes evidence from indexed news registries and official wire records. AI-assisted verdicts are probabilistic and should be reviewed alongside cited primary evidence.
+          - generic [ref=e375]: Data stored locally · No user tracking
+      - generic [ref=e376]:
+        - paragraph [ref=e377]: © 2026 TruthLens Media Intelligence. All rights reserved.
+        - paragraph [ref=e378]: Built with React 19, FastAPI, and open evidence datasets.

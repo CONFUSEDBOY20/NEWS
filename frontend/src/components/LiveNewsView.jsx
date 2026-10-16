@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { api } from "../services/api";
 import { useApp } from "../context/AppContext";
-import { resolveRealTimeNewsImage } from "../services/newsService";
 import { NewsReaderFactCheckModal } from "./NewsReaderFactCheckModal";
 import {
-  Search,
   RefreshCw,
   Radio,
   Globe,
@@ -18,6 +16,8 @@ import {
   ArrowRight,
   ShieldCheck,
   CheckCircle2,
+  Image,
+  MapPin,
 } from "lucide-react";
 
 function relativeTime(iso) {
@@ -33,6 +33,7 @@ function relativeTime(iso) {
 
 const categoryBadgeConfig = {
   World: { label: "World", bg: "bg-blue-600", icon: Globe },
+  India: { label: "India", bg: "bg-orange-600", icon: MapPin },
   Politics: { label: "Politics", bg: "bg-blue-600", icon: Globe },
   Technology: { label: "Technology", bg: "bg-purple-600", icon: Terminal },
   Science: { label: "Science", bg: "bg-teal-600", icon: FlaskConical },
@@ -98,12 +99,12 @@ function CredibilityBadge({ level, score, source }) {
 
 export function LiveNewsView({ region = "world" }) {
   const isWorld = region === "world";
-  const { setInputPreload, setActiveView, setVerificationResult, t } = useApp();
+  const { setInputPreload, setActiveView, setVerificationResult, setVerificationError, pendingNewsSearch, setPendingNewsSearch } = useApp();
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [category, setCategory] = useState("Top");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(() => pendingNewsSearch || "");
   const [syncedAt, setSyncedAt] = useState(null);
   const [isLive, setIsLive] = useState(true);
   const [selectedArticle, setSelectedArticle] = useState(null);
@@ -115,6 +116,13 @@ export function LiveNewsView({ region = "world" }) {
     "NewsData.io",
   ]);
   const searchActive = useRef(false);
+
+  useEffect(() => {
+    if (!pendingNewsSearch) return;
+    searchActive.current = true;
+    setSearchQuery(pendingNewsSearch);
+    setPendingNewsSearch("");
+  }, [pendingNewsSearch, setPendingNewsSearch]);
 
   const categories = ["Top", "World", "India", "Tech", "Business", "Health"];
 
@@ -128,13 +136,23 @@ export function LiveNewsView({ region = "world" }) {
       let data;
       if (searchQuery.trim()) {
         data = await api.searchNews(searchQuery.trim(), 1, 20, fresh);
+      } else if (category === "India") {
+        // The India chip is available from both news sections. Route it to the
+        // India feed rather than asking the world feed to filter for a category.
+        data = await api.getIndiaNews("All", fresh);
       } else if (isWorld) {
         data = await api.getWorldNews(apiCat, fresh);
       } else {
         data = await api.getIndiaNews(apiCat, fresh);
       }
 
-      setArticles(data.articles || []);
+      const fetchedArticles = data.articles || [];
+      // India feeds include official releases without editorial photos. Keep
+      // those stories, but lead with articles that provide their own image.
+      const orderedArticles = category === "India"
+        ? [...fetchedArticles].sort((a, b) => Number(Boolean(b.url_to_image || b.image_url || b.image || b.thumbnail_url)) - Number(Boolean(a.url_to_image || a.image_url || a.image || a.thumbnail_url)))
+        : fetchedArticles;
+      setArticles(orderedArticles);
       setSyncedAt(data.synced_at || new Date().toISOString());
       setIsLive(data.is_live === true);
 
@@ -168,26 +186,15 @@ export function LiveNewsView({ region = "world" }) {
     return () => clearInterval(timer);
   }, [loadNews]);
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) {
-      searchActive.current = false;
-      loadNews(true, false);
-      return;
-    }
-    searchActive.current = true;
-    loadNews(true, false);
-  };
-
   const handleVerifyArticle = (art) => {
-    const hasValidUrl = art.url && art.url.startsWith("http");
     setInputPreload({
-      type: hasValidUrl ? "url" : "text",
-      value: hasValidUrl ? art.url : art.title,
+      type: "text",
+      value: art.title,
       title: art.title,
-      autoStart: true,
+      autoStart: false,
     });
     setVerificationResult(null);
+    setVerificationError(null);
     setActiveView("fact-check");
   };
 
@@ -232,17 +239,6 @@ export function LiveNewsView({ region = "world" }) {
         </div>
 
         <div className="flex items-center gap-2 w-full md:w-auto">
-          <form onSubmit={handleSearch} className="relative w-full md:w-72">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t.newsSearchPlaceholder || "Search headlines or topics..."}
-              className="w-full bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/[0.08] rounded-xl py-2 pl-9 pr-4 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-sans transition-all"
-            />
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
-          </form>
-
           <button
             type="button"
             onClick={() => {
@@ -335,7 +331,9 @@ export function LiveNewsView({ region = "world" }) {
             const cat = art.category || (isWorld ? "World" : "India");
             const badgeCfg = categoryBadgeConfig[cat] || categoryBadgeConfig.Default;
             const CategoryIcon = badgeCfg.icon;
-            const imageUrl = resolveRealTimeNewsImage(art.title, cat, art.url_to_image || art.image);
+            // Only show the publisher/provider image. Topic-based editorial
+            // substitutes can misrepresent the article as its original photo.
+            const imageUrl = art.url_to_image || art.image_url || art.image || art.thumbnail_url || null;
 
             return (
               <article
@@ -372,16 +370,19 @@ export function LiveNewsView({ region = "world" }) {
                 <div>
                   {/* Thumbnail Image with Badges */}
                   <div className="relative h-48 w-full overflow-hidden bg-slate-900">
-                    <img
-                      src={imageUrl}
-                      alt={art.title}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = resolveRealTimeNewsImage(art.title, cat);
-                      }}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      loading="lazy"
-                    />
+                    {imageUrl ? (
+                      <img
+                        src={imageUrl}
+                        alt={art.title}
+                        onError={(e) => { e.currentTarget.style.display = "none"; }}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-slate-500" aria-label="No publisher image available">
+                        <Image className="w-8 h-8" aria-hidden="true" />
+                      </div>
+                    )}
 
                     {/* Category Badge */}
                     <div className="absolute top-3 left-3">
@@ -433,9 +434,9 @@ export function LiveNewsView({ region = "world" }) {
                     </div>
 
                     {/* Article Headline */}
-                    <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-[1.4] sm:leading-[1.5] line-clamp-2 font-sans">
+                    <button type="button" onClick={(e) => { e.stopPropagation(); handleVerifyArticle(art); }} className="block w-full text-left text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-[1.4] sm:leading-[1.5] line-clamp-2 font-sans" title="Add this headline to the text checker">
                       {art.title}
-                    </h3>
+                    </button>
 
                     {/* Article Summary */}
                     <p className="text-[15px] sm:text-base text-slate-600 dark:text-slate-300 leading-[1.6] line-clamp-2">
@@ -466,10 +467,10 @@ export function LiveNewsView({ region = "world" }) {
                       handleVerifyArticle(art);
                     }}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-bold shadow-xs hover:shadow-md transition-all duration-150 cursor-pointer"
-                    title="Send article URL and headline into TruthLens fact-check flow"
+                    title="Add this headline to the text checker"
                   >
                     <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
-                    <span>Verify with TruthLens</span>
+                    <span>Check headline</span>
                   </button>
                 </div>
               </article>
@@ -483,10 +484,11 @@ export function LiveNewsView({ region = "world" }) {
         <NewsReaderFactCheckModal
           article={selectedArticle}
           onClose={() => setSelectedArticle(null)}
-          onVerifyExternal={(claim) => {
+          onDeepVerify={(articleToCheck) => {
             setSelectedArticle(null);
-            setInputPreload({ type: "text", value: claim, autoStart: true });
+            setInputPreload({ type: "text", value: articleToCheck.title, title: articleToCheck.title, autoStart: false });
             setVerificationResult(null);
+            setVerificationError(null);
             setActiveView("fact-check");
           }}
         />

@@ -111,20 +111,20 @@ d:\news\
 
 ### 2. Backend Setup
 ```bash
-cd backend
-pip install -r requirements.txt
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+pip install -r backend/requirements.txt
 ```
-- API Documentation: `http://localhost:8000/api/docs`
-- Health Check: `http://localhost:8000/api/health`
 
-### 3. Frontend Setup
+### 3. Start the Full App
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-- The frontend will launch at: `http://localhost:5173`
+- One command starts both FastAPI and Vite. The frontend proxies `/api` to FastAPI, matching the same-origin API path used on Vercel.
+- Frontend: `http://localhost:5173`
+- API docs: `http://localhost:5173/api/docs`
+- Health check: `http://localhost:5173/api/health`
+- Use `npm run dev:frontend` only when you already have a backend running.
 
 ---
 
@@ -134,6 +134,12 @@ Click the subtle lock icon (`🔒`) in the top right navigation bar to log into 
 
 - **Admin Credentials**: Configured securely via your `.env` file (`ADMIN_EMAIL` and `ADMIN_PASSWORD`).
 - **Default Setup**: Copy `.env.example` to `.env` and set your preferred administrative email and secure password before launching.
+
+## 🖼️ AI-Generated Image Check
+
+Image uploads always receive basic metadata and compression observations. Those signals alone cannot determine whether an image was AI-generated. For a pixel-based probability estimate, configure `SIGHTENGINE_API_USER` and `SIGHTENGINE_API_SECRET` as server-side environment variables in Vercel (or in the backend `.env`). Leave them unset to disable the external detector; the result will say **Inconclusive** instead of inventing an AI probability.
+
+The optional detector sends the uploaded image to Sightengine. Review its current pricing and data terms before enabling it. Its score is an estimate, not proof, and it does not verify the truth of a depicted event or claim. Vercel image uploads are limited to 4 MB to fit the Functions request-body limit; local/backend deployments retain the 10 MB limit.
 
 ---
 

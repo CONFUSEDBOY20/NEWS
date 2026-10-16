@@ -38,6 +38,7 @@ export function AdminDashboard() {
   // Logs & Settings State
   const [logs, setLogs] = useState([]);
   const [settingsData, setSettingsData] = useState(null);
+  const [runtimeProviders, setRuntimeProviders] = useState(null);
 
   // Articles State
   const [articles, setArticles] = useState([]);
@@ -56,11 +57,12 @@ export function AdminDashboard() {
     setLoading(true);
     setDashboardError(null);
     try {
-      const [statsRes, rawRes, logsRes, setsRes, artsRes] = await Promise.allSettled([
+      const [statsRes, rawRes, logsRes, setsRes, providersRes, artsRes] = await Promise.allSettled([
         api.getAdminDashboard(),
         api.getRawData(),
         api.getAdminLogs(),
         api.getAdminSettings(),
+        api.getAdminProviderStatus(),
         api.getArticles()
       ]);
 
@@ -82,6 +84,7 @@ export function AdminDashboard() {
       if (rawRes.status === "fulfilled") setRawData(rawRes.value || []);
       if (logsRes.status === "fulfilled") setLogs(logsRes.value || []);
       if (setsRes.status === "fulfilled") setSettingsData(setsRes.value || {});
+      if (providersRes.status === "fulfilled") setRuntimeProviders(providersRes.value || null);
       if (artsRes.status === "fulfilled") setArticles(artsRes.value || []);
     } catch {
       showToast("Error loading admin records.");
@@ -193,7 +196,7 @@ export function AdminDashboard() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap tab-transition ${
                 isActive
                   ? "bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20"
                   : "text-slate-400 hover:text-white hover:bg-slate-800/60"
@@ -582,6 +585,35 @@ export function AdminDashboard() {
               <h3 className="text-base font-bold text-white font-mono tracking-wide">
                 System Verification Thresholds & Provider Matrix
               </h3>
+
+              <section className="rounded-2xl border border-slate-700 bg-slate-950/50 p-4 sm:p-5 space-y-4">
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <div>
+                    <h4 className="text-sm font-bold text-white">Runtime API connections</h4>
+                    <p className="text-[11px] text-slate-400 mt-1">
+                      API base: <code className="text-emerald-300">{runtimeProviders?.api_base || "/api"}</code>. Status comes from the backend environment; secret values are never sent to this page.
+                    </p>
+                  </div>
+                  <span className="text-[10px] text-slate-500">Configure credentials in backend environment settings</span>
+                </div>
+                {runtimeProviders?.providers ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {runtimeProviders.providers.map((provider) => (
+                      <div key={provider.id} className="rounded-xl border border-slate-800 bg-slate-900/70 p-3 flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-xs font-semibold text-slate-200">{provider.name}</p>
+                          <p className="text-[10px] text-slate-500 mt-1 break-words">{provider.note || provider.env?.join(", ")}</p>
+                        </div>
+                        <span className={`shrink-0 rounded-full px-2 py-1 text-[9px] font-bold uppercase tracking-wide ${provider.configured ? "bg-emerald-500/10 text-emerald-300" : "bg-slate-700/60 text-slate-400"}`}>
+                          {provider.configured ? "Configured" : "Not configured"}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-slate-500">Provider status could not be loaded. Refresh the admin page to retry.</p>
+                )}
+              </section>
 
               <div className="space-y-4 text-xs font-mono">
                 <div className="space-y-1.5">

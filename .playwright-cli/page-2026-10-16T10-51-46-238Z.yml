@@ -1,0 +1,460 @@
+- generic [ref=f1e3]:
+  - generic [ref=f1e17]:
+    - banner [ref=f1e18]:
+      - generic [ref=f1e19]:
+        - generic [ref=f1e20]: TruthLens
+        - generic [ref=f1e28]:
+          - button "Live Connected" [ref=f1e29] [cursor=pointer]
+          - button "Search" [ref=f1e37] [cursor=pointer]
+          - button "Toggle dark mode" [ref=f1e41] [cursor=pointer]
+          - button "History" [ref=f1e44] [cursor=pointer]
+          - button "Admin settings" [ref=f1e50]
+          - button "Open mobile navigation" [ref=f1e52]
+    - generic [ref=f1e55]:
+      - generic [ref=f1e56]:
+        - generic [ref=f1e57]: LIVE
+        - generic [ref=f1e60]: "Trending Now :"
+      - generic [ref=f1e430]:
+        - button "EU’s von der Leyen pledges to ‘not lift any sanctions unless Russia stops the war’ as leaders discuss Ukraine – Europe live" [ref=f1e433] [cursor=pointer]
+        - button "How prepared is Kenya for an Ebola outbreak?" [ref=f1e436] [cursor=pointer]
+        - 'button "India vs West India: Fifth T20 International – teams, start, lineups, Hope" [ref=f1e439] [cursor=pointer]'
+        - button "Zelensky rallies EU support as Trump says Ukraine leader 'more difficult to deal with than Putin'" [ref=f1e442] [cursor=pointer]
+        - button "Italy cuts air traffic in half amid data transmission issue" [ref=f1e445] [cursor=pointer]
+        - button "Children aged 5, 8 and 11 killed in US school shooting before suspect shot by bystander" [ref=f1e448] [cursor=pointer]
+        - button "प्रधानमंत्री श्री नरेन्द्र मोदी ने एशियाई खेल 2026 में भाग लेने वाले भारतीय एथलीट दल से बातचीत की" [ref=f1e451] [cursor=pointer]
+        - button "भारतीय तटरक्षक बल और कोरियाई तटरक्षक बल के बीच 14वीं उच्च-स्तरीय बैठक इंचियोन में आयोजित हुई" [ref=f1e454] [cursor=pointer]
+        - button "EU’s von der Leyen pledges to ‘not lift any sanctions unless Russia stops the war’ as leaders discuss Ukraine – Europe live" [ref=f1e457] [cursor=pointer]
+        - button "How prepared is Kenya for an Ebola outbreak?" [ref=f1e460] [cursor=pointer]
+        - 'button "India vs West India: Fifth T20 International – teams, start, lineups, Hope" [ref=f1e463] [cursor=pointer]'
+        - button "Zelensky rallies EU support as Trump says Ukraine leader 'more difficult to deal with than Putin'" [ref=f1e466] [cursor=pointer]
+        - button "Italy cuts air traffic in half amid data transmission issue" [ref=f1e469] [cursor=pointer]
+        - button "Children aged 5, 8 and 11 killed in US school shooting before suspect shot by bystander" [ref=f1e472] [cursor=pointer]
+        - button "प्रधानमंत्री श्री नरेन्द्र मोदी ने एशियाई खेल 2026 में भाग लेने वाले भारतीय एथलीट दल से बातचीत की" [ref=f1e475] [cursor=pointer]
+        - button "भारतीय तटरक्षक बल और कोरियाई तटरक्षक बल के बीच 14वीं उच्च-स्तरीय बैठक इंचियोन में आयोजित हुई" [ref=f1e478] [cursor=pointer]
+      - generic [ref=f1e65]:
+        - button "Previous headline" [ref=f1e66] [cursor=pointer]
+        - button "Next headline" [ref=f1e69] [cursor=pointer]
+    - main [ref=f1e542]:
+      - generic [ref=f1e543]:
+        - generic [ref=f1e544]:
+          - generic [ref=f1e545]:
+            - generic [ref=f1e546]:
+              - generic [ref=f1e553]: Live Multi-Source Wire
+              - generic [ref=f1e554]: LIVE WIRE
+            - heading "Live News Aggregator" [level=2] [ref=f1e556]
+            - generic [ref=f1e557]:
+              - generic [ref=f1e558]: Last updated 3m ago
+              - generic [ref=f1e559]: •
+              - generic [ref=f1e560]:
+                - generic [ref=f1e561]: "Sources:"
+                - generic [ref=f1e562]: RSS · GDELT
+          - generic [ref=f1e563]:
+            - textbox "Search live headlines or claims..." [ref=f1e565]
+            - button "Refresh live feeds" [ref=f1e569] [cursor=pointer]
+        - generic [ref=f1e575]:
+          - button "Top" [ref=f1e576] [cursor=pointer]
+          - button "World" [ref=f1e577] [cursor=pointer]
+          - button "India" [ref=f1e578] [cursor=pointer]
+          - button "Tech" [ref=f1e579] [cursor=pointer]
+          - button "Business" [ref=f1e580] [cursor=pointer]
+          - button "Health" [ref=f1e581] [cursor=pointer]
+        - generic [ref=f1e582]:
+          - article [ref=f1e583] [cursor=pointer]:
+            - generic [ref=f1e584]:
+              - generic [ref=f1e585]:
+                - generic "No publisher image available" [ref=f1e586]
+                - generic [ref=f1e591]: World
+                - generic [ref=f1e597]: 10m ago
+              - generic [ref=f1e599]:
+                - generic [ref=f1e600]:
+                  - generic [ref=f1e601]:
+                    - generic [ref=f1e602]: Deutsche Welle
+                    - generic "Syndicated regional or digital news publisher" [ref=f1e603]: Syndicated Media
+                  - generic [ref=f1e611]: 10m ago
+                - heading "How prepared is Kenya for an Ebola outbreak?" [level=3] [ref=f1e612]
+                - paragraph [ref=f1e613]: The first confirmed Ebola cases in Kenya have raised urgent questions about the country's public health preparedness and border controls. But the health ministry says there is no need for panic.
+            - generic [ref=f1e614]:
+              - link "Read source" [ref=f1e615]:
+                - /url: https://dw.com/en/how-prepared-is-kenya-for-an-ebola-outbreak/a-79668144?maca=en-rss-en-all-1573-xml-mrss
+              - button "Verify with TruthLens" [ref=f1e619]
+          - article [ref=f1e624] [cursor=pointer]:
+            - generic [ref=f1e625]:
+              - generic [ref=f1e626]:
+                - img "Zelensky rallies EU support as Trump says Ukraine leader 'more difficult to deal with than Putin'" [ref=f1e627]
+                - generic [ref=f1e628]: World
+                - generic [ref=f1e634]: 13m ago
+              - generic [ref=f1e636]:
+                - generic [ref=f1e637]:
+                  - generic [ref=f1e638]:
+                    - generic [ref=f1e639]: BBC World
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f1e640]: Accredited Wire
+                  - generic [ref=f1e645]: 13m ago
+                - heading "Zelensky rallies EU support as Trump says Ukraine leader 'more difficult to deal with than Putin'" [level=3] [ref=f1e646]
+                - paragraph [ref=f1e647]: The US president launches a new wave of blistering criticism at Volodymyr Zelensky ahead of a meeting of EU leaders in Brussels.
+            - generic [ref=f1e648]:
+              - link "Read source" [ref=f1e649]:
+                - /url: https://bbc.co.uk/news/articles/c58jz174w89ro
+              - button "Verify with TruthLens" [ref=f1e653]
+          - article [ref=f1e658] [cursor=pointer]:
+            - generic [ref=f1e659]:
+              - generic [ref=f1e660]:
+                - generic "No publisher image available" [ref=f1e661]
+                - generic [ref=f1e666]: World
+                - generic [ref=f1e672]: 14m ago
+              - generic [ref=f1e674]:
+                - generic [ref=f1e675]:
+                  - generic [ref=f1e676]:
+                    - generic [ref=f1e677]: Deutsche Welle
+                    - generic "Syndicated regional or digital news publisher" [ref=f1e678]: Syndicated Media
+                  - generic [ref=f1e686]: 14m ago
+                - heading "Italy cuts air traffic in half amid data transmission issue" [level=3] [ref=f1e687]
+                - paragraph [ref=f1e688]: Citing problems with the data transmission network, Italian authorities have drastically reduced the volume of flights in their airspace. The ENAV authority ruled out malicious activity and said flights remained safe.
+            - generic [ref=f1e689]:
+              - link "Read source" [ref=f1e690]:
+                - /url: https://dw.com/en/italy-cuts-air-traffic-in-half-amid-data-transmission-issue/a-79678133?maca=en-rss-en-all-1573-xml-mrss
+              - button "Verify with TruthLens" [ref=f1e694]
+          - article [ref=f1e699] [cursor=pointer]:
+            - generic [ref=f1e700]:
+              - generic [ref=f1e701]:
+                - img "EU’s von der Leyen pledges to ‘not lift any sanctions unless Russia stops the war’ as leaders discuss Ukraine – Europe live" [ref=f1e702]
+                - generic [ref=f1e703]: World
+                - generic [ref=f1e709]: 14m ago
+              - generic [ref=f1e711]:
+                - generic [ref=f1e712]:
+                  - generic [ref=f1e713]:
+                    - generic [ref=f1e714]: The Guardian World
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f1e715]: Accredited Wire
+                  - generic [ref=f1e720]: 14m ago
+                - heading "EU’s von der Leyen pledges to ‘not lift any sanctions unless Russia stops the war’ as leaders discuss Ukraine – Europe live" [level=3] [ref=f1e721]
+                - paragraph [ref=f1e722]: European leaders are meeting in Brussels amid worsening relations between Washington and Kyiv Several leaders offered Zelenskyy very friendly welcome or, in some cases, simply a big hug as he walked into the room before the formal part of the meeting got under way. Speaking to Newsmax last night, Donald Trump repeated his views of the two leaders involved in the conflict. Continue reading...
+            - generic [ref=f1e723]:
+              - link "Read source" [ref=f1e724]:
+                - /url: https://theguardian.com/world/live/2026/oct/16/eu-von-der-leyen-russia-sanctions-diesel-fuel-zelenskyy-donald-trump-membership-migration-latest-news-updates
+              - button "Verify with TruthLens" [ref=f1e728]
+          - article [ref=f1e733] [cursor=pointer]:
+            - generic [ref=f1e734]:
+              - generic [ref=f1e735]:
+                - img "Children aged 5, 8 and 11 killed in US school shooting before suspect shot by bystander" [ref=f1e736]
+                - generic [ref=f1e737]: World
+                - generic [ref=f1e743]: 14m ago
+              - generic [ref=f1e745]:
+                - generic [ref=f1e746]:
+                  - generic [ref=f1e747]:
+                    - generic [ref=f1e748]: BBC World
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f1e749]: Accredited Wire
+                  - generic [ref=f1e754]: 14m ago
+                - heading "Children aged 5, 8 and 11 killed in US school shooting before suspect shot by bystander" [level=3] [ref=f1e755]
+                - paragraph [ref=f1e756]: A teacher was also killed in the attack at the Silver Rail Elementary School in the city of Bend, Oregon, police say.
+            - generic [ref=f1e757]:
+              - link "Read source" [ref=f1e758]:
+                - /url: https://bbc.co.uk/news/articles/cm89zp48k4kzo
+              - button "Verify with TruthLens" [ref=f1e762]
+          - article [ref=f1e767] [cursor=pointer]:
+            - generic [ref=f1e768]:
+              - generic [ref=f1e769]:
+                - generic "No publisher image available" [ref=f1e770]
+                - generic [ref=f1e775]: World
+                - generic [ref=f1e781]: 19m ago
+              - generic [ref=f1e783]:
+                - generic [ref=f1e784]:
+                  - generic [ref=f1e785]:
+                    - generic [ref=f1e786]: Deutsche Welle
+                    - generic "Syndicated regional or digital news publisher" [ref=f1e787]: Syndicated Media
+                  - generic [ref=f1e795]: 19m ago
+                - heading "Germany, France agree deal to support European car industry" [level=3] [ref=f1e796]
+                - paragraph [ref=f1e797]: The two countries said the agreement aimed to safeguard Europe's automative industry, encouraging development and research. Car makers in Europe have so far struggled to compete with Chinese electric car companies.
+            - generic [ref=f1e798]:
+              - link "Read source" [ref=f1e799]:
+                - /url: https://dw.com/en/germany-france-agree-deal-to-support-european-car-industry/a-79678595?maca=en-rss-en-all-1573-xml-mrss
+              - button "Verify with TruthLens" [ref=f1e803]
+          - article [ref=f1e808] [cursor=pointer]:
+            - generic [ref=f1e809]:
+              - generic [ref=f1e810]:
+                - img "Dad fined after son, 2, died in Cyprus hotel fall" [ref=f1e811]
+                - generic [ref=f1e812]: World
+                - generic [ref=f1e818]: 22m ago
+              - generic [ref=f1e820]:
+                - generic [ref=f1e821]:
+                  - generic [ref=f1e822]:
+                    - generic [ref=f1e823]: BBC World
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f1e824]: Accredited Wire
+                  - generic [ref=f1e829]: 22m ago
+                - heading "Dad fined after son, 2, died in Cyprus hotel fall" [level=3] [ref=f1e830]
+                - paragraph [ref=f1e831]: Joshua Foster "lost control" of his son while showing him the view of a water park from a window.
+            - generic [ref=f1e832]:
+              - link "Read source" [ref=f1e833]:
+                - /url: https://bbc.co.uk/news/articles/cvj6j1klez88o
+              - button "Verify with TruthLens" [ref=f1e837]
+          - article [ref=f1e842] [cursor=pointer]:
+            - generic [ref=f1e843]:
+              - generic [ref=f1e844]:
+                - generic "No publisher image available" [ref=f1e845]
+                - generic [ref=f1e850]: World
+                - generic [ref=f1e856]: 24m ago
+              - generic [ref=f1e858]:
+                - generic [ref=f1e859]:
+                  - generic [ref=f1e860]:
+                    - generic [ref=f1e861]: Al Jazeera
+                    - generic "Syndicated regional or digital news publisher" [ref=f1e862]: Syndicated Media
+                  - generic [ref=f1e870]: 24m ago
+                - heading "Palestinian olive trees torched as settler pogroms escalate during harvest" [level=3] [ref=f1e871]
+                - paragraph [ref=f1e872]: It is Palestine’s olive harvest, but settlers have set their trees and vehicles on fire.
+            - generic [ref=f1e873]:
+              - link "Read source" [ref=f1e874]:
+                - /url: https://aljazeera.com/video/newsfeed/2026/10/16/palestinian-olive-trees-torched-as-settler-pogroms-escalate-during-harvest?traffic_source=rss
+              - button "Verify with TruthLens" [ref=f1e878]
+          - article [ref=f1e883] [cursor=pointer]:
+            - generic [ref=f1e884]:
+              - generic [ref=f1e885]:
+                - generic "No publisher image available" [ref=f1e886]
+                - generic [ref=f1e891]: World
+                - generic [ref=f1e897]: 30m ago
+              - generic [ref=f1e899]:
+                - generic [ref=f1e900]:
+                  - generic [ref=f1e901]:
+                    - generic [ref=f1e902]: Al Jazeera
+                    - generic "Syndicated regional or digital news publisher" [ref=f1e903]: Syndicated Media
+                  - generic [ref=f1e911]: 30m ago
+                - 'heading "Trump rules out using a nuclear bomb on Iran: Why that matters" [level=3] [ref=f1e912]'
+                - paragraph [ref=f1e913]: It is the first time the president has addressed nuclear weapons, but he didn't deny US could use 'mother of all bombs'.
+            - generic [ref=f1e914]:
+              - link "Read source" [ref=f1e915]:
+                - /url: https://aljazeera.com/news/2026/10/16/trump-rules-out-using-a-nuclear-bomb-on-iran-why-that-matters?traffic_source=rss
+              - button "Verify with TruthLens" [ref=f1e919]
+          - article [ref=f1e924] [cursor=pointer]:
+            - generic [ref=f1e925]:
+              - generic [ref=f1e926]:
+                - img "Bank shares drop as John Healey prepares to raise taxes on the banking sector in the budget – business live" [ref=f1e927]
+                - generic [ref=f1e928]: Business
+                - generic [ref=f1e933]: 30m ago
+              - generic [ref=f1e935]:
+                - generic [ref=f1e936]:
+                  - generic [ref=f1e937]:
+                    - generic [ref=f1e938]: The Guardian Business
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f1e939]: Accredited Wire
+                  - generic [ref=f1e944]: 30m ago
+                - heading "Bank shares drop as John Healey prepares to raise taxes on the banking sector in the budget – business live" [level=3] [ref=f1e945]
+                - paragraph [ref=f1e946]: Rolling coverage of the latest economic and financial news John Healey poised to raise taxes on banks in budget Elsewhere in the markets today, South Korea’s Kospi share index has recorded its biggest weekly loss since October 2008, down 14.5% this week. Although the Kospi did rise today (+2%), it was still a bad week for technology stocks – as investors worried about the borrowing, spending commitments and future profitability of AI companies. The reality is that while companies embraced AI aggressively as it first emerged, now they are figuring out how to use it effectively while keeping AI costs under control. A slowing, more careful, path towards corporate adoption has been missed by the market which remained wildly frothy about valuations. “A UK bank tax risk is now a base case. If it is confirmed on 28 October, it’ll be the size and timing that will be key. If Healey does go ahead, shares of Lloyds and NatWest, which are almost entirely exposed to the UK, would likely be impacted most, and you are seeing this already in the share price reaction today. Barclays is partly exposed. HSBC is least exposed in the mix.” Continue reading...
+            - generic [ref=f1e947]:
+              - link "Read source" [ref=f1e948]:
+                - /url: https://theguardian.com/business/live/2026/oct/16/john-healey-set-to-raise-bank-taxes-shares-profits-stock-markets-imf-latest-news-updates
+              - button "Verify with TruthLens" [ref=f1e952]
+          - article [ref=f1e957] [cursor=pointer]:
+            - generic [ref=f1e958]:
+              - generic [ref=f1e959]:
+                - img "Banks expect to be hit with higher taxes in Budget" [ref=f1e960]
+                - generic [ref=f1e961]: Business
+                - generic [ref=f1e966]: 35m ago
+              - generic [ref=f1e968]:
+                - generic [ref=f1e969]:
+                  - generic [ref=f1e970]:
+                    - generic [ref=f1e971]: BBC Business
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f1e972]: Accredited Wire
+                  - generic [ref=f1e977]: 35m ago
+                - heading "Banks expect to be hit with higher taxes in Budget" [level=3] [ref=f1e978]
+                - paragraph [ref=f1e979]: Senior banking executives have told the BBC they expect to be "on the menu" in the chancellor's Budget tax later this month.
+            - generic [ref=f1e980]:
+              - link "Read source" [ref=f1e981]:
+                - /url: https://bbc.co.uk/news/articles/c32l4k2xdvrzo
+              - button "Verify with TruthLens" [ref=f1e985]
+          - article [ref=f1e990] [cursor=pointer]:
+            - generic [ref=f1e991]:
+              - generic [ref=f1e992]:
+                - img "What is behind the success of dark skies festival?" [ref=f1e993]
+                - generic [ref=f1e994]: Science
+                - generic [ref=f1e999]: 38m ago
+              - generic [ref=f1e1001]:
+                - generic [ref=f1e1002]:
+                  - generic [ref=f1e1003]:
+                    - generic [ref=f1e1004]: BBC Science
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f1e1005]: Accredited Wire
+                  - generic [ref=f1e1010]: 38m ago
+                - heading "What is behind the success of dark skies festival?" [level=3] [ref=f1e1011]
+                - paragraph [ref=f1e1012]: Stargazers are preparing to enjoy an annual festival that celebrates the beauty of the night sky.
+            - generic [ref=f1e1013]:
+              - link "Read source" [ref=f1e1014]:
+                - /url: https://bbc.co.uk/news/articles/c68xzg941x5vo
+              - button "Verify with TruthLens" [ref=f1e1018]
+          - article [ref=f1e1023] [cursor=pointer]:
+            - generic [ref=f1e1024]:
+              - generic [ref=f1e1025]:
+                - img "Flash floods destroy villages in central Nepal" [ref=f1e1026]
+                - generic [ref=f1e1027]: World
+                - generic [ref=f1e1033]: 38m ago
+              - generic [ref=f1e1035]:
+                - generic [ref=f1e1036]:
+                  - generic [ref=f1e1037]:
+                    - generic [ref=f1e1038]: The Guardian World
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f1e1039]: Accredited Wire
+                  - generic [ref=f1e1044]: 38m ago
+                - heading "Flash floods destroy villages in central Nepal" [level=3] [ref=f1e1045]
+                - paragraph [ref=f1e1046]: Landslide blocks river and triggers downstream flooding, while summer temperatures persist in Portugal Flash floods have swept through Nepal’s central Gorkha district after a pre-dawn landslide on 11 October blocked the Budhi Gandaki River, triggering severe downstream flooding. Two villages in the worst-affected Chumanubri rural municipality were reportedly destroyed, with homes, roads and bridges washed away. Part of a hydropower station was also damaged. After river levels surged from 2 metres to nearly 8.5 metres within hours, the national disaster risk reduction and management authority reported that 204 homes were damaged, and more than 650 people had been affected. More than 100 foreign trekkers were stranded in the popular hiking region. The floods come just two months after catastrophic flooding and landslides devastated parts of the country on the border with Tibet, leaving thousands dead or missing. Continue reading...
+            - generic [ref=f1e1047]:
+              - link "Read source" [ref=f1e1048]:
+                - /url: https://theguardian.com/environment/2026/oct/16/flash-floods-deaths-nepal-high-temperatures-portugal
+              - button "Verify with TruthLens" [ref=f1e1052]
+          - article [ref=f1e1057] [cursor=pointer]:
+            - generic [ref=f1e1058]:
+              - generic [ref=f1e1059]:
+                - generic "No publisher image available" [ref=f1e1060]
+                - generic [ref=f1e1065]: World
+                - generic [ref=f1e1071]: 39m ago
+              - generic [ref=f1e1073]:
+                - generic [ref=f1e1074]:
+                  - generic [ref=f1e1075]:
+                    - generic [ref=f1e1076]: Al Jazeera
+                    - generic "Syndicated regional or digital news publisher" [ref=f1e1077]: Syndicated Media
+                  - generic [ref=f1e1085]: 39m ago
+                - heading "UN warns nearly 1 million in Gaza face flood risks as winter approaches" [level=3] [ref=f1e1086]
+                - paragraph [ref=f1e1087]: The UN is warning that nearly one million displaced Palestinians face flooding risks as winter approaches.
+            - generic [ref=f1e1088]:
+              - link "Read source" [ref=f1e1089]:
+                - /url: https://aljazeera.com/video/newsfeed/2026/10/16/un-warns-nearly-1-million-in-gaza-face-flood-risks-as-winter-approaches?traffic_source=rss
+              - button "Verify with TruthLens" [ref=f1e1093]
+          - article [ref=f1e1098] [cursor=pointer]:
+            - generic [ref=f1e1099]:
+              - generic [ref=f1e1100]:
+                - img "Museum releases historical photos of island where Amelia Earhart may have crashed" [ref=f1e1101]
+                - generic [ref=f1e1102]: World
+                - generic [ref=f1e1108]: 42m ago
+              - generic [ref=f1e1110]:
+                - generic [ref=f1e1111]:
+                  - generic [ref=f1e1112]:
+                    - generic [ref=f1e1113]: The Guardian World
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f1e1114]: Accredited Wire
+                  - generic [ref=f1e1119]: 42m ago
+                - heading "Museum releases historical photos of island where Amelia Earhart may have crashed" [level=3] [ref=f1e1120]
+                - paragraph [ref=f1e1121]: Images from New Zealand aerial survey of Nikumaroro in 1938 offer new clues over aviator’s disappearance A New Zealand museum has released nearly 50 photos from a 1938 aerial survey of the island where Amelia Earhart is believed to have crash-landed, offering amateur sleuths new evidence to scour for traces of the pioneering aviator and her plane. The black-and-white images were published by the Air Force Museum of New Zealand after renewed interest in one of the biggest mysteries of the 20th century, spurred by a US expedition to the Pacific atoll of Nikumaroro in search of new clues. Continue reading...
+            - generic [ref=f1e1122]:
+              - link "Read source" [ref=f1e1123]:
+                - /url: https://theguardian.com/us-news/2026/oct/16/amelia-earhart-new-zeland-museum-aerial-survey-photos-nikumaroro-island
+              - button "Verify with TruthLens" [ref=f1e1127]
+          - article [ref=f1e1132] [cursor=pointer]:
+            - generic [ref=f1e1133]:
+              - generic [ref=f1e1134]:
+                - img "British man fined €3,000 for causing two-year-old son’s death in Cyprus" [ref=f1e1135]
+                - generic [ref=f1e1136]: World
+                - generic [ref=f1e1142]: 45m ago
+              - generic [ref=f1e1144]:
+                - generic [ref=f1e1145]:
+                  - generic [ref=f1e1146]:
+                    - generic [ref=f1e1147]: The Guardian World
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f1e1148]: Accredited Wire
+                  - generic [ref=f1e1153]: 45m ago
+                - heading "British man fined €3,000 for causing two-year-old son’s death in Cyprus" [level=3] [ref=f1e1154]
+                - paragraph [ref=f1e1155]: Joshua Foster pleaded guilty over death of toddler who fell from fourth-floor window of hotel during family holiday A British man has been handed a €3,000 (£2,500) fine after his two-year-old son fell nearly 12 metres (40ft) to his death from the fourth floor window of a hotel in Cyprus. Joshua Foster thought the window was closed when he placed the boy on a sill to show him the view of a waterpark and “lost control” of him, the court previously heard. Continue reading...
+            - generic [ref=f1e1156]:
+              - link "Read source" [ref=f1e1157]:
+                - /url: https://theguardian.com/world/2026/oct/16/british-man-joshua-foster-fined-son-death-cyprus
+              - button "Verify with TruthLens" [ref=f1e1161]
+          - article [ref=f1e1166] [cursor=pointer]:
+            - generic [ref=f1e1167]:
+              - generic [ref=f1e1168]:
+                - img "Trump calls Ukraine’s renewed strikes on Russian oil refineries ‘a disgrace’" [ref=f1e1169]
+                - generic [ref=f1e1170]: World
+                - generic [ref=f1e1176]: 49m ago
+              - generic [ref=f1e1178]:
+                - generic [ref=f1e1179]:
+                  - generic [ref=f1e1180]:
+                    - generic [ref=f1e1181]: The Guardian World
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f1e1182]: Accredited Wire
+                  - generic [ref=f1e1187]: 49m ago
+                - heading "Trump calls Ukraine’s renewed strikes on Russian oil refineries ‘a disgrace’" [level=3] [ref=f1e1188]
+                - paragraph [ref=f1e1189]: US president says Zelenskyy ‘more difficult to deal with than Putin’ after ‘energy ceasefire’ collapses Europe live – latest updates Donald Trump has called Ukraine’s renewed strikes on Russian oil refineries “a disgrace”, while renewing his criticism of Volodymyr ⁠Zelenskyy after an energy ceasefire between Russia and Ukraine collapsed. Ukraine resumed strikes on Russian oil refineries ⁠after Zelenskyy said that Kyiv was abandoning a ceasefire abruptly declared by Trump last week, one that neither Russia nor Ukraine said they had agreed to. Continue reading...
+            - generic [ref=f1e1190]:
+              - link "Read source" [ref=f1e1191]:
+                - /url: https://theguardian.com/world/2026/oct/16/trump-calls-ukraines-resumption-of-strikes-on-russian-oil-refineries-a-disgrace
+              - button "Verify with TruthLens" [ref=f1e1195]
+          - article [ref=f1e1200] [cursor=pointer]:
+            - generic [ref=f1e1201]:
+              - generic [ref=f1e1202]:
+                - 'img "‘Opening the lid of a horrible secret’: Jamaicans confront enslavement with taboo-busting stories on screen" [ref=f1e1203]'
+                - generic [ref=f1e1204]: World
+                - generic [ref=f1e1210]: 51m ago
+              - generic [ref=f1e1212]:
+                - generic [ref=f1e1213]:
+                  - generic [ref=f1e1214]:
+                    - generic [ref=f1e1215]: The Guardian World
+                    - generic "Accredited primary wire service / authoritative news registry" [ref=f1e1216]: Accredited Wire
+                  - generic [ref=f1e1221]: 51m ago
+                - 'heading "‘Opening the lid of a horrible secret’: Jamaicans confront enslavement with taboo-busting stories on screen" [level=3] [ref=f1e1222]'
+                - paragraph [ref=f1e1223]: As violent spirits are unleashed in Sky’s Possession, observers see confident creatives reclaiming the island’s narratives in a form of ‘cultural reparation’ A woman opens a 300‑year‑old box, unleashing a violent spirit – it is the spirit of colonialism and oppression roaring back to life. It is a pivotal scene in Sky’s supernatural series Possession and symbolises a wider shift in Jamaica’s film industry, where directors are increasingly using the landscape to tell Jamaican stories – including those that confront enslavement, trauma and historical memory. The series is about a biracial British lawyer who travels to Jamaica to investigate a multimillion-pound inheritance dispute, only to uncover a dark, vengeful spirit tied to the plantation’s brutal colonial past. Continue reading...
+            - generic [ref=f1e1224]:
+              - link "Read source" [ref=f1e1225]:
+                - /url: https://theguardian.com/news/2026/oct/16/jamaicans-confront-enslavement-taboo-busting-stories-on-screen-possession
+              - button "Verify with TruthLens" [ref=f1e1229]
+          - article [ref=f1e1234] [cursor=pointer]:
+            - generic [ref=f1e1235]:
+              - generic [ref=f1e1236]:
+                - generic "No publisher image available" [ref=f1e1237]
+                - generic [ref=f1e1242]: World
+                - generic [ref=f1e1248]: 51m ago
+              - generic [ref=f1e1250]:
+                - generic [ref=f1e1251]:
+                  - generic [ref=f1e1252]:
+                    - generic [ref=f1e1253]: Al Jazeera
+                    - generic "Syndicated regional or digital news publisher" [ref=f1e1254]: Syndicated Media
+                  - generic [ref=f1e1262]: 51m ago
+                - heading "India’s mass voter purge is hollowing out democracy" [level=3] [ref=f1e1263]
+                - paragraph [ref=f1e1264]: The SIR is disenfranchising marginalised communities and advancing the Hindu nationalist project.
+            - generic [ref=f1e1265]:
+              - link "Read source" [ref=f1e1266]:
+                - /url: https://aljazeera.com/opinions/2026/10/16/indias-mass-voter-purge-is-hollowing-out-democracy?traffic_source=rss
+              - button "Verify with TruthLens" [ref=f1e1270]
+          - article [ref=f1e1275] [cursor=pointer]:
+            - generic [ref=f1e1276]:
+              - generic [ref=f1e1277]:
+                - 'img "Russia-Ukraine war: 30 claims we''ve investigated over the years" [ref=f1e1278]'
+                - generic [ref=f1e1279]: News
+                - generic [ref=f1e1285]: 51m ago
+              - generic [ref=f1e1287]:
+                - generic [ref=f1e1288]:
+                  - generic [ref=f1e1289]:
+                    - generic [ref=f1e1290]: Snopes
+                    - generic "Syndicated regional or digital news publisher" [ref=f1e1291]: Syndicated Media
+                  - generic [ref=f1e1299]: 51m ago
+                - 'heading "Russia-Ukraine war: 30 claims we''ve investigated over the years" [level=3] [ref=f1e1300]'
+                - paragraph [ref=f1e1301]: As the two countries traded strikes, we revisited dozens of war-related claims from our archives.
+            - generic [ref=f1e1302]:
+              - link "Read source" [ref=f1e1303]:
+                - /url: https://snopes.com/collections/russia-ukraine-war
+              - button "Verify with TruthLens" [ref=f1e1307]
+  - contentinfo [ref=f1e383]:
+    - generic [ref=f1e384]:
+      - generic [ref=f1e385]:
+        - generic [ref=f1e386]:
+          - generic [ref=f1e387]: TruthLens
+          - paragraph [ref=f1e393]: An open investigative web platform for automated multi-source news verification, media forensics, and claim analysis.
+          - generic [ref=f1e394]: Source-first verification · Real-time wire consensus
+        - generic [ref=f1e395]:
+          - heading "Verification Tools" [level=4] [ref=f1e396]
+          - list [ref=f1e397]:
+            - listitem [ref=f1e398]:
+              - button "Article URL Fact-Check" [ref=f1e399]
+            - listitem [ref=f1e400]:
+              - button "Text Claim Cross-Examination" [ref=f1e401]
+            - listitem [ref=f1e402]:
+              - button "Image ELA & Forensic Audit" [ref=f1e403]
+            - listitem [ref=f1e404]:
+              - button "Live Misinformation Monitor" [ref=f1e405]
+        - generic [ref=f1e406]:
+          - heading "News Coverage" [level=4] [ref=f1e407]
+          - list [ref=f1e408]:
+            - listitem [ref=f1e409]:
+              - button "Live News Aggregator" [active] [ref=f1e410]
+            - listitem [ref=f1e411]:
+              - button "World Wire Headlines" [ref=f1e412]
+            - listitem [ref=f1e413]:
+              - button "India National Wire" [ref=f1e414]
+            - listitem [ref=f1e415]:
+              - button "Fact Investigation Dossiers" [ref=f1e416]
+            - listitem [ref=f1e417]:
+              - link "REST API Documentation" [ref=f1e418] [cursor=pointer]:
+                - /url: http://localhost:8000/api/docs
+        - generic [ref=f1e423]:
+          - heading "Editorial Transparency" [level=4] [ref=f1e424]
+          - paragraph [ref=f1e425]: TruthLens synthesizes evidence from indexed news registries and official wire records. AI-assisted verdicts are probabilistic and should be reviewed alongside cited primary evidence.
+          - generic [ref=f1e426]: Data stored locally · No user tracking
+      - generic [ref=f1e427]:
+        - paragraph [ref=f1e428]: © 2026 TruthLens Media Intelligence. All rights reserved.
+        - paragraph [ref=f1e429]: Built with React 19, FastAPI, and open evidence datasets.

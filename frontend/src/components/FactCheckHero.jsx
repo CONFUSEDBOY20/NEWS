@@ -32,6 +32,7 @@ import {
   Globe,
   Radio,
   Rss,
+  Newspaper,
   Activity,
   ShieldCheck,
   Zap,
@@ -46,11 +47,13 @@ export function FactCheckHero() {
     isVerifying,
     setVerificationStage,
     setVerificationResult,
+    setVerificationError,
     setActiveClaimText,
     setStreamingAnalysisText,
     addToHistory,
     history,
     setActiveView,
+    setPendingNewsSearch,
     setShowHistoryDrawer,
     showToast,
   } = useApp();
@@ -194,8 +197,8 @@ export function FactCheckHero() {
   const handleImageSelect = (e) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 15 * 1024 * 1024) {
-        setInputError("Image size exceeds 15MB limit.");
+      if (file.size > 4 * 1024 * 1024) {
+        setInputError("Image size exceeds 4MB limit.");
         return;
       }
       setImageFile(file);
@@ -237,10 +240,12 @@ export function FactCheckHero() {
     }
 
     const claimToVerify = titleToUse || (tab === "image" ? imageFile?.name || "Uploaded Claim Image" : val);
+    setActiveView("verification-result");
     setActiveClaimText(claimToVerify);
     setStreamingAnalysisText("");
     setIsVerifying(true);
     setVerificationResult(null);
+    setVerificationError(null);
 
     // Initial stage
     setVerificationStage(0);
@@ -294,6 +299,7 @@ export function FactCheckHero() {
       const message = is429
         ? "Too many requests, wait a minute."
         : (err.message || "Verification service is unavailable. Please try again.");
+      setVerificationError(message);
       setInputError({
         message,
         is429,
@@ -307,9 +313,22 @@ export function FactCheckHero() {
     triggerVerification(activeTab, inputValue);
   };
 
+  const handleFindNews = () => {
+    const query = inputValue.trim();
+    if (!query || activeTab === "image") return;
+    setPendingNewsSearch(query);
+    setActiveView("live-news");
+  };
+
   // Merge real history with curated initial checks for Recent Checks panel
   const displayChecks = React.useMemo(() => {
     const formattedHistory = (history || []).slice(0, 4).map((h) => {
+      const historyTitle = h.resultData?.article_title || h.input || "";
+      const normalizedTitle = historyTitle.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+      const sourceArticle = [...(liveChecks || []), ...(newsArticles || []), ...(featuredStories || [])].find((article) => {
+        const articleTitle = (article.title || article.headline || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+        return articleTitle && articleTitle === normalizedTitle;
+      });
       let statusType = "review";
       let status = "Needs Review";
       const v = (h.verdict || "").toUpperCase();
@@ -331,11 +350,7 @@ export function FactCheckHero() {
         headline: h.input || "Claim Verification",
         explanation: h.resultData?.summary || "Analyzed against verified registries.",
         time_ago: "Recently",
-        image_url: resolveRealTimeNewsImage(
-          h.input || "Claim Verification",
-          statusType,
-          h.image_url || h.resultData?.image_url
-        ),
+        image_url: h.image_url || h.resultData?.image_url || sourceArticle?.source_image_url || null,
         claim_text: h.input,
         resultData: h.resultData,
       };
@@ -345,7 +360,7 @@ export function FactCheckHero() {
     // Fill remainder with real-time checks
     const needed = 4 - formattedHistory.length;
     return [...formattedHistory, ...(liveChecks || []).slice(0, needed)];
-  }, [history, liveChecks]);
+  }, [history, liveChecks, newsArticles, featuredStories]);
 
   const activeFeaturedStory = featuredStories[carouselIndex] || featuredStories[0];
 
@@ -396,7 +411,7 @@ export function FactCheckHero() {
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-xs font-bold text-blue-600 dark:text-blue-400 tracking-wider">
               <span className="w-4 h-[2px] bg-blue-600 dark:bg-blue-400 inline-block" />
-              <span>FACT CHECKING</span>
+              <span>NEWS CHECK</span>
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-[40px] font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15] font-sans">
               Check news, claims and media before you believe.
@@ -429,44 +444,47 @@ export function FactCheckHero() {
           <div className="bg-white dark:bg-[#0F172A] rounded-xl border border-slate-200 dark:border-slate-800 p-4 sm:p-5 shadow-xs space-y-4">
             
             {/* Tabs */}
-            <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+            <div className="grid grid-cols-3 items-center gap-1 sm:gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
               <button
                 type="button"
                 onClick={() => { setActiveTab("text"); setInputError(null); }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                aria-label="Check text"
+                className={`flex min-w-0 items-center justify-center gap-1 sm:gap-1.5 px-1.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                   activeTab === "text"
                     ? "bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800/60"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
                 <FileText className="w-3.5 h-3.5" />
-                <span>Check Text</span>
+                <span><span className="hidden min-[400px]:inline">Check </span>Text</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => { setActiveTab("url"); setInputError(null); }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                aria-label="Check URL"
+                className={`flex min-w-0 items-center justify-center gap-1 sm:gap-1.5 px-1.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                   activeTab === "url"
                     ? "bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800/60"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
                 <Link2 className="w-3.5 h-3.5" />
-                <span>Check URL</span>
+                <span><span className="hidden min-[400px]:inline">Check </span>URL</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => { setActiveTab("image"); setInputError(null); }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                aria-label="Check image"
+                className={`flex min-w-0 items-center justify-center gap-1 sm:gap-1.5 px-1.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                   activeTab === "image"
                     ? "bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800/60"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
                 <ImageIcon className="w-3.5 h-3.5" />
-                <span>Check Image</span>
+                <span><span className="hidden min-[400px]:inline">Check </span>Image</span>
               </button>
             </div>
 
@@ -535,7 +553,7 @@ export function FactCheckHero() {
                       <p className="text-xs font-medium text-slate-700 dark:text-slate-300">
                         Click or drag image to verify authenticity
                       </p>
-                      <p className="text-[10px] text-slate-400 font-mono mt-0.5">PNG, JPG, WEBP up to 15MB</p>
+                      <p className="text-[10px] text-slate-400 font-mono mt-0.5">PNG, JPG, WEBP up to 4MB</p>
                     </div>
                   )}
                   <input
@@ -545,6 +563,9 @@ export function FactCheckHero() {
                     onChange={handleImageSelect}
                     className="hidden"
                   />
+                  <p className="text-[10px] text-slate-400">
+                    AI-origin scores are probabilistic. If an external detector is enabled by the site, the image is sent to that provider for analysis.
+                  </p>
                 </div>
               )}
 
@@ -568,7 +589,7 @@ export function FactCheckHero() {
               )}
 
               {/* Action Bar: Language Selector + Check Claim Button */}
-              <div className="flex items-center justify-between gap-3 pt-1">
+              <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
                 <div className="relative">
                   <select
                     value={selectedLanguage}
@@ -586,23 +607,36 @@ export function FactCheckHero() {
                   <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2 top-2.5 pointer-events-none" />
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={isVerifying}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors disabled:opacity-50 cursor-pointer"
-                >
-                  {isVerifying ? (
-                    <>
-                      <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                      <span>Checking...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Search className="w-3.5 h-3.5" />
-                      <span>Check Claim</span>
-                    </>
+                <div className="flex items-center gap-2 ml-auto">
+                  {activeTab !== "image" && (
+                    <button
+                      type="button"
+                      onClick={handleFindNews}
+                      disabled={!inputValue.trim() || isVerifying}
+                      className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-lg shadow-sm hover:border-blue-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors disabled:opacity-50 cursor-pointer"
+                    >
+                      <Newspaper className="w-3.5 h-3.5" />
+                      <span>Find news</span>
+                    </button>
                   )}
-                </button>
+                  <button
+                    type="submit"
+                    disabled={isVerifying}
+                    className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors disabled:opacity-50 cursor-pointer"
+                  >
+                    {isVerifying ? (
+                      <>
+                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                        <span>Checking...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Search className="w-3.5 h-3.5" />
+                        <span>{activeTab === "url" ? "Check URL" : activeTab === "image" ? "Check Image" : "Check Claim"}</span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             </form>
 
@@ -738,6 +772,7 @@ export function FactCheckHero() {
                   onClick={() => {
                     if (item.resultData) {
                       setVerificationResult(item.resultData);
+                      setActiveView("verification-result");
                       window.scrollTo({ top: 0, behavior: "smooth" });
                     } else if (item.article) {
                       setSelectedNewsArticle({
@@ -770,15 +805,18 @@ export function FactCheckHero() {
                   }}
                   className="flex items-start gap-3 group cursor-pointer p-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors"
                 >
-                  <img
-                    src={item.image_url}
-                    alt={item.headline}
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = resolveRealTimeNewsImage(item.headline, item.status);
-                    }}
-                    className="w-14 h-14 rounded-lg object-cover shrink-0 border border-slate-100 dark:border-slate-800 group-hover:opacity-90"
-                  />
+                  <div className="w-14 h-14 rounded-lg shrink-0 overflow-hidden border border-slate-100 dark:border-slate-800 bg-slate-100 dark:bg-slate-800/70 flex items-center justify-center">
+                    {item.image_url ? (
+                      <img
+                        src={item.image_url}
+                        alt={item.headline}
+                        onError={(e) => { e.currentTarget.style.visibility = "hidden"; }}
+                        className="w-full h-full object-cover group-hover:opacity-90"
+                      />
+                    ) : (
+                      <ImageIcon className="w-5 h-5 text-slate-400" aria-hidden="true" />
+                    )}
+                  </div>
                   <div className="flex-1 min-w-0 space-y-1">
                     <div className="flex items-center justify-between gap-1">
                       {getStatusBadge(item.statusType, item.status)}
@@ -800,133 +838,6 @@ export function FactCheckHero() {
           </div>
         </div>
 
-      </section>
-
-      {/* ========================================================================= */}
-      {/* REAL-TIME NEWS WIRE TELEMETRY & META NUMBERS (Live, Non-Mock Backend Data) */}
-      {/* ========================================================================= */}
-      <section className="bg-white dark:bg-[#0F172A] rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-xs space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800/80 pb-3">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800/60 flex items-center justify-center text-blue-600 dark:text-blue-400">
-              <Radio className="w-4 h-4" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white font-sans">
-                  Real-Time News Wire Telemetry
-                </h3>
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  LIVE BACKEND DATA
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                Aggregated live from official syndication wires, Google News RSS, and vetted global newsrooms.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-mono text-slate-400">
-              {newsMeta?.last_updated ? `Synced ${new Date(newsMeta.last_updated).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : "Sync: 15m intervals"}
-            </span>
-            <button
-              type="button"
-              onClick={refreshMetaStats}
-              disabled={isRefreshingMeta}
-              title="Refresh live telemetry"
-              className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors disabled:opacity-50 cursor-pointer"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${isRefreshingMeta ? "animate-spin text-blue-500" : ""}`} />
-            </button>
-          </div>
-        </div>
-
-        {/* 4 Telemetry Metrics Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-          
-          {/* 1. Vetted RSS & Wire Feeds */}
-          <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800/80 space-y-1">
-            <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
-              <span className="text-[11px] font-mono uppercase tracking-wider font-semibold">RSS Wire Feeds</span>
-              <Rss className="w-3.5 h-3.5 text-emerald-500" />
-            </div>
-            <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-mono">
-              {newsMeta?.rss_feeds_registered || 30}
-            </div>
-            <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
-              +{newsMeta?.google_news_feeds || 9} Google News Feeds
-            </p>
-          </div>
-
-          {/* 2. Accredited Outlets */}
-          <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800/80 space-y-1">
-            <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
-              <span className="text-[11px] font-mono uppercase tracking-wider font-semibold">Live Outlets</span>
-              <Globe className="w-3.5 h-3.5 text-blue-500" />
-            </div>
-            <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-mono">
-              {newsMeta?.unique_news_sources || 30}
-            </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
-              BBC, Reuters, Hindu, AP, DW
-            </p>
-          </div>
-
-          {/* 3. Real-Time Articles Monitored */}
-          <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800/80 space-y-1">
-            <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
-              <span className="text-[11px] font-mono uppercase tracking-wider font-semibold">Wire Depth</span>
-              <Activity className="w-3.5 h-3.5 text-indigo-500" />
-            </div>
-            <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-mono">
-              {newsMeta?.live_articles_monitored || 382}
-            </div>
-            <p className="text-[11px] text-indigo-600 dark:text-indigo-400 font-medium">
-              Active verified wire pool
-            </p>
-          </div>
-
-          {/* 4. Provider Grid Status */}
-          <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800/80 space-y-1">
-            <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
-              <span className="text-[11px] font-mono uppercase tracking-wider font-semibold">Provider Mesh</span>
-              <Zap className="w-3.5 h-3.5 text-amber-500" />
-            </div>
-            <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-mono">
-              {newsMeta ? `${newsMeta.active_providers}/${newsMeta.total_providers}` : "7/7"}
-            </div>
-            <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
-              Circuit breakers 100% OK
-            </p>
-          </div>
-
-        </div>
-
-        {/* Live Outlets Ticker Tagline */}
-        <div className="pt-1 flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800/60">
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="font-semibold text-slate-700 dark:text-slate-300">Live Coverage:</span>
-            <span>World</span>
-            <span>·</span>
-            <span>India</span>
-            <span>·</span>
-            <span>Technology</span>
-            <span>·</span>
-            <span>Science</span>
-            <span>·</span>
-            <span>Health</span>
-            <span>·</span>
-            <span>Business</span>
-            <span>·</span>
-            <span>Politics</span>
-          </div>
-          <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
-            <ShieldCheck className="w-3 h-3" />
-            <span>Zero Mock Records · 100% Real-Time Aggregation</span>
-          </div>
-        </div>
       </section>
 
       {/* ========================================================================= */}
@@ -1014,16 +925,19 @@ export function FactCheckHero() {
                     <div>
                       {/* Image Thumbnail with Original News Photo */}
                       <div className="relative h-32 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
-                        <img
-                          src={art.image_url}
-                          alt={art.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          loading="lazy"
-                          onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80";
-                          }}
-                        />
+                        {art.image_url ? (
+                          <img
+                            src={art.image_url}
+                            alt={art.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            loading="lazy"
+                            onError={(e) => { e.currentTarget.style.display = "none"; }}
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-slate-400" aria-label="No publisher image available">
+                            <ImageIcon className="w-7 h-7" aria-hidden="true" />
+                          </div>
+                        )}
                         {/* Wire Status Badge */}
                         <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-md text-[10px] font-bold text-white border border-white/10">
                           <span className={`w-1.5 h-1.5 rounded-full ${art.is_delayed ? "bg-amber-400" : "bg-emerald-400 animate-pulse"}`} />
@@ -1257,6 +1171,133 @@ export function FactCheckHero() {
 
         </div>
 
+      </section>
+
+      {/* ========================================================================= */}
+      {/* REAL-TIME NEWS WIRE TELEMETRY & META NUMBERS (Live, Non-Mock Backend Data) */}
+      {/* ========================================================================= */}
+      <section className="bg-white dark:bg-[#0F172A] rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800/80 pb-3">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800/60 flex items-center justify-center text-blue-600 dark:text-blue-400">
+              <Radio className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white font-sans">
+                  Real-Time News Wire Telemetry
+                </h3>
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  LIVE BACKEND DATA
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                Aggregated live from official syndication wires, Google News RSS, and vetted global newsrooms.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-mono text-slate-400">
+              {newsMeta?.last_updated ? `Synced ${new Date(newsMeta.last_updated).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : "Sync: 15m intervals"}
+            </span>
+            <button
+              type="button"
+              onClick={refreshMetaStats}
+              disabled={isRefreshingMeta}
+              title="Refresh live telemetry"
+              className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors disabled:opacity-50 cursor-pointer"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isRefreshingMeta ? "animate-spin text-blue-500" : ""}`} />
+            </button>
+          </div>
+        </div>
+
+        {/* 4 Telemetry Metrics Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+          
+          {/* 1. Vetted RSS & Wire Feeds */}
+          <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800/80 space-y-1">
+            <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
+              <span className="text-[11px] font-mono uppercase tracking-wider font-semibold">RSS Wire Feeds</span>
+              <Rss className="w-3.5 h-3.5 text-emerald-500" />
+            </div>
+            <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-mono">
+              {newsMeta?.rss_feeds_registered || 30}
+            </div>
+            <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
+              +{newsMeta?.google_news_feeds || 9} Google News Feeds
+            </p>
+          </div>
+
+          {/* 2. Accredited Outlets */}
+          <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800/80 space-y-1">
+            <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
+              <span className="text-[11px] font-mono uppercase tracking-wider font-semibold">Live Outlets</span>
+              <Globe className="w-3.5 h-3.5 text-blue-500" />
+            </div>
+            <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-mono">
+              {newsMeta?.unique_news_sources || 30}
+            </div>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+              BBC, Reuters, Hindu, AP, DW
+            </p>
+          </div>
+
+          {/* 3. Real-Time Articles Monitored */}
+          <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800/80 space-y-1">
+            <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
+              <span className="text-[11px] font-mono uppercase tracking-wider font-semibold">Wire Depth</span>
+              <Activity className="w-3.5 h-3.5 text-indigo-500" />
+            </div>
+            <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-mono">
+              {newsMeta?.live_articles_monitored || 382}
+            </div>
+            <p className="text-[11px] text-indigo-600 dark:text-indigo-400 font-medium">
+              Active verified wire pool
+            </p>
+          </div>
+
+          {/* 4. Provider Grid Status */}
+          <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800/80 space-y-1">
+            <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
+              <span className="text-[11px] font-mono uppercase tracking-wider font-semibold">Provider Mesh</span>
+              <Zap className="w-3.5 h-3.5 text-amber-500" />
+            </div>
+            <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-mono">
+              {newsMeta ? `${newsMeta.active_providers}/${newsMeta.total_providers}` : "7/7"}
+            </div>
+            <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
+              Circuit breakers 100% OK
+            </p>
+          </div>
+
+        </div>
+
+        {/* Live Outlets Ticker Tagline */}
+        <div className="pt-1 flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800/60">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="font-semibold text-slate-700 dark:text-slate-300">Live Coverage:</span>
+            <span>World</span>
+            <span>·</span>
+            <span>India</span>
+            <span>·</span>
+            <span>Technology</span>
+            <span>·</span>
+            <span>Science</span>
+            <span>·</span>
+            <span>Health</span>
+            <span>·</span>
+            <span>Business</span>
+            <span>·</span>
+            <span>Politics</span>
+          </div>
+          <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+            <ShieldCheck className="w-3 h-3" />
+            <span>Zero Mock Records · 100% Real-Time Aggregation</span>
+          </div>
+        </div>
       </section>
 
       {/* Investigation Detail Modal */}

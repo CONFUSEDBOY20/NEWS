@@ -81,7 +81,11 @@ class ImageAnalysisMetadata(BaseModel):
     format: Optional[str] = None
     exif_found: bool = False
     manipulation_risk: str = "LOW"  # LOW, MODERATE, HIGH, CRITICAL
-    ai_generated_probability: float = 0.0
+    ai_generated_probability: Optional[float] = None
+    ai_detection_status: str = "not_configured"  # available, not_configured, error
+    ai_detection_verdict: str = "INCONCLUSIVE"  # LIKELY_AI, LIKELY_NOT_AI, INCONCLUSIVE
+    ai_detection_provider: Optional[str] = None
+    ai_generator_scores: Dict[str, float] = {}
     ela_anomaly_score: float = 0.0
     findings: List[str] = []
 

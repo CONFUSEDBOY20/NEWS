@@ -1,0 +1,254 @@
+- generic [ref=f2e3]:
+  - status "Loading TruthLens" [ref=f2e4]:
+    - generic [ref=f2e5]: TruthLens
+    - generic [ref=f2e9]: News intelligence, made clear
+    - generic [ref=f2e16]: Loading TruthLens
+  - generic [ref=f2e17]:
+    - banner [ref=f2e18]:
+      - generic [ref=f2e19]:
+        - generic [ref=f2e20]: TruthLens
+        - generic [ref=f2e28]:
+          - button "Live Connected" [ref=f2e29] [cursor=pointer]
+          - button "Search" [ref=f2e37] [cursor=pointer]
+          - button "Toggle dark mode" [ref=f2e41] [cursor=pointer]
+          - button "History" [ref=f2e44] [cursor=pointer]
+          - button "Admin settings" [ref=f2e50]
+          - button "Open mobile navigation" [ref=f2e52]
+    - generic [ref=f2e55]:
+      - generic [ref=f2e56]:
+        - generic [ref=f2e57]: LIVE
+        - generic [ref=f2e60]: "Trending Now :"
+      - generic [ref=f2e61]: Updating live wire intelligence...
+      - generic [ref=f2e65]:
+        - button "Previous headline" [ref=f2e66] [cursor=pointer]
+        - button "Next headline" [ref=f2e69] [cursor=pointer]
+    - main [ref=f2e72]:
+      - generic [ref=f2e73]:
+        - generic [ref=f2e74]:
+          - generic [ref=f2e75]:
+            - generic [ref=f2e76]:
+              - generic [ref=f2e77]: NEWS CHECK
+              - heading "Check news, claims and media before you believe." [level=1] [ref=f2e80]
+              - paragraph [ref=f2e81]: Verify viral headlines, social media claims, images and articles with trusted sources.
+              - generic [ref=f2e82]:
+                - generic [ref=f2e83]: 30+ Live Wires
+                - generic [ref=f2e86]: Google News RSS
+                - generic [ref=f2e92]: 30+ Outlets
+                - generic [ref=f2e97]: 382 Monitored
+            - generic [ref=f2e101]:
+              - generic [ref=f2e102]:
+                - button "Check text" [ref=f2e103] [cursor=pointer]:
+                  - generic [ref=f2e107]: Check Text
+                - button "Check URL" [ref=f2e108] [cursor=pointer]
+                - button "Check image" [ref=f2e113] [cursor=pointer]:
+                  - generic [ref=f2e118]: Check Image
+              - generic [ref=f2e119]:
+                - generic [ref=f2e120]:
+                  - textbox "Paste a news headline, social media message, or article excerpt to verify..." [ref=f2e121]
+                  - generic [ref=f2e122]: 0/1000
+                - generic [ref=f2e123]:
+                  - combobox [ref=f2e125] [cursor=pointer]:
+                    - option "Auto-detect language" [selected]
+                    - option "English"
+                    - option "हिन्दी (Hindi)"
+                    - option "বাংলা (Bengali)"
+                    - option "मराठी (Marathi)"
+                    - option "தமிழ் (Tamil)"
+                    - option "తెలుగు (Telugu)"
+                  - button "Check Claim" [ref=f2e126] [cursor=pointer]
+              - generic [ref=f2e131]:
+                - generic [ref=f2e132]: "Try an example:"
+                - button "\"5G causes health problems\"" [ref=f2e133] [cursor=pointer]
+                - button "\"Government gives free laptops\"" [ref=f2e134] [cursor=pointer]
+                - button "\"This image is from a recent flood\"" [ref=f2e135] [cursor=pointer]
+          - generic [ref=f2e137]:
+            - img "Understanding Disinformation Patterns in Public Health" [ref=f2e138]
+            - generic [ref=f2e140]:
+              - generic [ref=f2e141]: Editorial example
+              - generic [ref=f2e142]:
+                - button "Previous story" [ref=f2e143] [cursor=pointer]
+                - button "Next story" [ref=f2e146] [cursor=pointer]
+            - generic [ref=f2e149]:
+              - heading "Understanding Disinformation Patterns in Public Health" [level=2] [ref=f2e150] [cursor=pointer]
+              - paragraph [ref=f2e151]: Educational analysis of how unsubstantiated health claims spread across messaging channels.
+              - generic [ref=f2e152]:
+                - button "Go to slide 1" [ref=f2e153] [cursor=pointer]
+                - button "Go to slide 2" [ref=f2e154] [cursor=pointer]
+          - generic [ref=f2e157]:
+            - heading "Recent Checks" [level=3] [ref=f2e158]
+            - button "View all" [ref=f2e159] [cursor=pointer]
+        - generic [ref=f2e163]:
+          - generic [ref=f2e164]:
+            - generic [ref=f2e165]:
+              - generic [ref=f2e166]:
+                - heading "Latest News" [level=2] [ref=f2e167]
+                - button "View all" [ref=f2e168] [cursor=pointer]
+              - generic [ref=f2e172]:
+                - button "All" [ref=f2e173] [cursor=pointer]
+                - button "India" [ref=f2e174] [cursor=pointer]
+                - button "World" [ref=f2e175] [cursor=pointer]
+                - button "Technology" [ref=f2e176] [cursor=pointer]
+                - button "Health" [ref=f2e177] [cursor=pointer]
+                - button "Environment" [ref=f2e178] [cursor=pointer]
+                - button "Politics" [ref=f2e179] [cursor=pointer]
+              - generic [ref=f2e180]:
+                - article [ref=f2e181] [cursor=pointer]:
+                  - generic [ref=f2e182]:
+                    - generic [ref=f2e183]:
+                      - generic "No publisher image available" [ref=f2e184]
+                      - generic [ref=f2e189]: LIVE
+                      - generic [ref=f2e192]: World
+                    - generic [ref=f2e193]:
+                      - generic [ref=f2e194]:
+                        - generic [ref=f2e195]: Deutsche Welle
+                        - generic [ref=f2e196]: 11m ago
+                      - heading "How prepared is Kenya for an Ebola outbreak?" [level=3] [ref=f2e197]
+                      - paragraph [ref=f2e198]: The first confirmed Ebola cases in Kenya have raised urgent questions about the country's public health preparedness and border controls. But the health ministry says there is no need for panic.
+                  - generic [ref=f2e199]:
+                    - generic [ref=f2e200]: Read & Check
+                    - generic [ref=f2e204]: AI Verify
+                - article [ref=f2e205] [cursor=pointer]:
+                  - generic [ref=f2e206]:
+                    - generic [ref=f2e207]:
+                      - img "Zelensky rallies EU support as Trump says Ukraine leader 'more difficult to deal with than Putin'" [ref=f2e208]
+                      - generic [ref=f2e209]: LIVE
+                      - generic [ref=f2e212]: World
+                    - generic [ref=f2e213]:
+                      - generic [ref=f2e214]:
+                        - generic [ref=f2e215]: BBC World
+                        - generic [ref=f2e216]: 14m ago
+                      - heading "Zelensky rallies EU support as Trump says Ukraine leader 'more difficult to deal with than Putin'" [level=3] [ref=f2e217]
+                      - paragraph [ref=f2e218]: The US president launches a new wave of blistering criticism at Volodymyr Zelensky ahead of a meeting of EU leaders in Brussels.
+                  - generic [ref=f2e219]:
+                    - generic [ref=f2e220]: Read & Check
+                    - generic [ref=f2e224]: AI Verify
+                - article [ref=f2e225] [cursor=pointer]:
+                  - generic [ref=f2e226]:
+                    - generic [ref=f2e227]:
+                      - generic "No publisher image available" [ref=f2e228]
+                      - generic [ref=f2e233]: LIVE
+                      - generic [ref=f2e236]: World
+                    - generic [ref=f2e237]:
+                      - generic [ref=f2e238]:
+                        - generic [ref=f2e239]: Deutsche Welle
+                        - generic [ref=f2e240]: 15m ago
+                      - heading "Italy cuts air traffic in half amid data transmission issue" [level=3] [ref=f2e241]
+                      - paragraph [ref=f2e242]: Citing problems with the data transmission network, Italian authorities have drastically reduced the volume of flights in their airspace. The ENAV authority ruled out malicious activity and said flights remained safe.
+                  - generic [ref=f2e243]:
+                    - generic [ref=f2e244]: Read & Check
+                    - generic [ref=f2e248]: AI Verify
+                - article [ref=f2e249] [cursor=pointer]:
+                  - generic [ref=f2e250]:
+                    - generic [ref=f2e251]:
+                      - img "EU’s von der Leyen pledges to ‘not lift any sanctions unless Russia stops the war’ as leaders discuss Ukraine – Europe live" [ref=f2e252]
+                      - generic [ref=f2e253]: LIVE
+                      - generic [ref=f2e256]: World
+                    - generic [ref=f2e257]:
+                      - generic [ref=f2e258]:
+                        - generic [ref=f2e259]: The Guardian World
+                        - generic [ref=f2e260]: 15m ago
+                      - heading "EU’s von der Leyen pledges to ‘not lift any sanctions unless Russia stops the war’ as leaders discuss Ukraine – Europe live" [level=3] [ref=f2e261]
+                      - paragraph [ref=f2e262]: European leaders are meeting in Brussels amid worsening relations between Washington and Kyiv Several leaders offered Zelenskyy very friendly welcome or, in some cases, simply a big hug as he walked into the room before the formal part of the meeting got under way. Speaking to Newsmax last night, Donald Trump repeated his views of the two leaders involved in the conflict. Continue reading...
+                  - generic [ref=f2e263]:
+                    - generic [ref=f2e264]: Read & Check
+                    - generic [ref=f2e268]: AI Verify
+            - generic [ref=f2e269]:
+              - heading "How TruthLens works" [level=3] [ref=f2e270]
+              - generic [ref=f2e271]:
+                - generic [ref=f2e272]:
+                  - generic [ref=f2e273]: "1"
+                  - generic [ref=f2e274]:
+                    - heading "Submit a claim" [level=4] [ref=f2e275]
+                    - paragraph [ref=f2e276]: Paste text, URL or upload an image.
+                - generic [ref=f2e285]:
+                  - heading "We analyse it" [level=4] [ref=f2e286]
+                  - paragraph [ref=f2e287]: Our system checks multiple trusted sources and verifies the content.
+                - generic [ref=f2e296]:
+                  - heading "Get a clear result" [level=4] [ref=f2e297]
+                  - paragraph [ref=f2e298]: See whether it's true, false, misleading or needs more context.
+          - generic [ref=f2e300]:
+            - heading "Popular Investigations" [level=2] [ref=f2e301]
+            - button "View all" [ref=f2e302] [cursor=pointer]
+        - generic [ref=f2e306]:
+          - generic [ref=f2e307]:
+            - generic [ref=f2e316]:
+              - generic [ref=f2e317]:
+                - heading "Real-Time News Wire Telemetry" [level=3] [ref=f2e318]
+                - generic [ref=f2e319]: LIVE BACKEND DATA
+              - paragraph [ref=f2e321]: Aggregated live from official syndication wires, Google News RSS, and vetted global newsrooms.
+            - generic [ref=f2e322]:
+              - generic [ref=f2e323]: "Sync: 15m intervals"
+              - button "Refresh live telemetry" [ref=f2e324] [cursor=pointer]
+          - generic [ref=f2e330]:
+            - generic [ref=f2e331]:
+              - generic [ref=f2e332]: RSS Wire Feeds
+              - generic [ref=f2e338]: "30"
+              - paragraph [ref=f2e339]: +9 Google News Feeds
+            - generic [ref=f2e340]:
+              - generic [ref=f2e341]: Live Outlets
+              - generic [ref=f2e346]: "30"
+              - paragraph [ref=f2e347]: BBC, Reuters, Hindu, AP, DW
+            - generic [ref=f2e348]:
+              - generic [ref=f2e349]: Wire Depth
+              - generic [ref=f2e353]: "382"
+              - paragraph [ref=f2e354]: Active verified wire pool
+            - generic [ref=f2e355]:
+              - generic [ref=f2e356]: Provider Mesh
+              - generic [ref=f2e360]: 7/7
+              - paragraph [ref=f2e361]: Circuit breakers 100% OK
+          - generic [ref=f2e362]:
+            - generic [ref=f2e363]:
+              - generic [ref=f2e364]: "Live Coverage:"
+              - generic [ref=f2e365]: World
+              - generic [ref=f2e366]: ·
+              - generic [ref=f2e367]: India
+              - generic [ref=f2e368]: ·
+              - generic [ref=f2e369]: Technology
+              - generic [ref=f2e370]: ·
+              - generic [ref=f2e371]: Science
+              - generic [ref=f2e372]: ·
+              - generic [ref=f2e373]: Health
+              - generic [ref=f2e374]: ·
+              - generic [ref=f2e375]: Business
+              - generic [ref=f2e376]: ·
+              - generic [ref=f2e377]: Politics
+            - generic [ref=f2e378]: Zero Mock Records · 100% Real-Time Aggregation
+  - contentinfo [ref=f2e383]:
+    - generic [ref=f2e384]:
+      - generic [ref=f2e385]:
+        - generic [ref=f2e386]:
+          - generic [ref=f2e387]: TruthLens
+          - paragraph [ref=f2e393]: An open investigative web platform for automated multi-source news verification, media forensics, and claim analysis.
+          - generic [ref=f2e394]: Source-first verification · Real-time wire consensus
+        - generic [ref=f2e395]:
+          - heading "Verification Tools" [level=4] [ref=f2e396]
+          - list [ref=f2e397]:
+            - listitem [ref=f2e398]:
+              - button "Article URL Fact-Check" [ref=f2e399]
+            - listitem [ref=f2e400]:
+              - button "Text Claim Cross-Examination" [ref=f2e401]
+            - listitem [ref=f2e402]:
+              - button "Image ELA & Forensic Audit" [ref=f2e403]
+            - listitem [ref=f2e404]:
+              - button "Live Misinformation Monitor" [ref=f2e405]
+        - generic [ref=f2e406]:
+          - heading "News Coverage" [level=4] [ref=f2e407]
+          - list [ref=f2e408]:
+            - listitem [ref=f2e409]:
+              - button "Live News Aggregator" [ref=f2e410]
+            - listitem [ref=f2e411]:
+              - button "World Wire Headlines" [ref=f2e412]
+            - listitem [ref=f2e413]:
+              - button "India National Wire" [ref=f2e414]
+            - listitem [ref=f2e415]:
+              - button "Fact Investigation Dossiers" [ref=f2e416]
+            - listitem [ref=f2e417]:
+              - link "REST API Documentation" [ref=f2e418] [cursor=pointer]:
+                - /url: http://localhost:8000/api/docs
+        - generic [ref=f2e423]:
+          - heading "Editorial Transparency" [level=4] [ref=f2e424]
+          - paragraph [ref=f2e425]: TruthLens synthesizes evidence from indexed news registries and official wire records. AI-assisted verdicts are probabilistic and should be reviewed alongside cited primary evidence.
+          - generic [ref=f2e426]: Data stored locally · No user tracking
+      - generic [ref=f2e427]:
+        - paragraph [ref=f2e428]: © 2026 TruthLens Media Intelligence. All rights reserved.
+        - paragraph [ref=f2e429]: Built with React 19, FastAPI, and open evidence datasets.

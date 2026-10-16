@@ -1,0 +1,238 @@
+- generic [ref=e3]:
+  - generic [ref=e17]:
+    - banner [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21] [cursor=pointer]: TruthLens
+          - navigation [ref=e28]:
+            - button "Fact Check" [ref=e29] [cursor=pointer]
+            - button "Live News" [ref=e32] [cursor=pointer]
+            - button "World News" [ref=e34] [cursor=pointer]
+            - button "India News" [ref=e36] [cursor=pointer]
+            - button "Investigations" [ref=e38] [cursor=pointer]
+            - button "Topics" [ref=e41] [cursor=pointer]
+            - button "About" [ref=e45] [cursor=pointer]
+        - generic [ref=e46]:
+          - button "Live Connected" [ref=e47] [cursor=pointer]
+          - button "Search" [ref=e55] [cursor=pointer]
+          - button "Toggle dark mode" [ref=e59] [cursor=pointer]
+          - button "History 1" [ref=e565] [cursor=pointer]:
+            - generic [ref=e67]: History
+            - generic [ref=e566]: "1"
+          - button "Admin settings" [ref=e68]
+    - generic [ref=e71]:
+      - generic [ref=e72]:
+        - generic [ref=e73]: LIVE
+        - generic [ref=e76]: "Trending Now :"
+      - generic [ref=e379]:
+        - button "Dad fined after son, 2, died in Cyprus hotel fall" [ref=e382] [cursor=pointer]
+        - button "Banks expect to be hit with higher taxes in Budget" [ref=e385] [cursor=pointer]
+        - button "Children aged 5, 8 and 11 killed in US school shooting before suspect shot by bystander" [ref=e388] [cursor=pointer]
+        - button "What is behind the success of dark skies festival?" [ref=e391] [cursor=pointer]
+        - button "Flash floods destroy villages in central Nepal" [ref=e394] [cursor=pointer]
+        - button "Museum releases historical photos of island where Amelia Earhart may have crashed" [ref=e397] [cursor=pointer]
+        - button "प्रधानमंत्री श्री नरेन्द्र मोदी ने एशियाई खेल 2026 में भाग लेने वाले भारतीय एथलीट दल से बातचीत की" [ref=e400] [cursor=pointer]
+        - button "भारतीय तटरक्षक बल और कोरियाई तटरक्षक बल के बीच 14वीं उच्च-स्तरीय बैठक इंचियोन में आयोजित हुई" [ref=e403] [cursor=pointer]
+        - button "Dad fined after son, 2, died in Cyprus hotel fall" [ref=e406] [cursor=pointer]
+        - button "Banks expect to be hit with higher taxes in Budget" [ref=e409] [cursor=pointer]
+        - button "Children aged 5, 8 and 11 killed in US school shooting before suspect shot by bystander" [ref=e412] [cursor=pointer]
+        - button "What is behind the success of dark skies festival?" [ref=e415] [cursor=pointer]
+        - button "Flash floods destroy villages in central Nepal" [ref=e418] [cursor=pointer]
+        - button "Museum releases historical photos of island where Amelia Earhart may have crashed" [ref=e421] [cursor=pointer]
+        - button "प्रधानमंत्री श्री नरेन्द्र मोदी ने एशियाई खेल 2026 में भाग लेने वाले भारतीय एथलीट दल से बातचीत की" [ref=e424] [cursor=pointer]
+        - button "भारतीय तटरक्षक बल और कोरियाई तटरक्षक बल के बीच 14वीं उच्च-स्तरीय बैठक इंचियोन में आयोजित हुई" [ref=e427] [cursor=pointer]
+      - generic [ref=e81]:
+        - button "Previous headline" [ref=e82] [cursor=pointer]
+        - button "Next headline" [ref=e85] [cursor=pointer]
+    - main [ref=e567]:
+      - generic [ref=e568]:
+        - generic [ref=e569]:
+          - generic [ref=e570]:
+            - paragraph [ref=e571]: TruthLens report
+            - heading "Verification details" [level=1] [ref=e572]
+          - button "Back to home" [ref=e573]
+        - generic [ref=e574]:
+          - generic [ref=e575]:
+            - generic [ref=e576]:
+              - generic [ref=e577]:
+                - generic [ref=e578]: Fact-Check Report
+                - generic [ref=e579]: ·
+                - generic [ref=e580]: fc-6ba06d4f4
+                - generic [ref=e581]: ·
+                - generic [ref=e582]: Live AI Verification
+              - generic [ref=e584]:
+                - button "New check" [ref=e585]
+                - button "Share" [ref=e591]
+            - generic [ref=e598]:
+              - generic [ref=e604]:
+                - heading "Unverified" [level=1] [ref=e605]
+                - paragraph [ref=e606]: Not enough evidence to confirm or deny the claim.
+              - blockquote [ref=e607]: "\"Did the Apollo 11 mission land on the Moon in 1969\""
+              - generic [ref=e608]:
+                - generic [ref=e609]: Science
+                - generic [ref=e610]: 5040ms
+          - generic [ref=e615]:
+            - generic [ref=e616]:
+              - generic [ref=e617]: 40%
+              - generic [ref=e618]: Confidence
+            - generic [ref=e619]:
+              - generic [ref=e620]: weak
+              - generic [ref=e621]: Evidence
+            - generic [ref=e622]:
+              - generic [ref=e623]: "4"
+              - generic [ref=e624]: Sources
+          - generic [ref=e625]:
+            - heading "Verification breakdown" [level=2] [ref=e626]
+            - generic [ref=e627]:
+              - generic [ref=e629]:
+                - generic [ref=e630]: Source credibility
+                - generic [ref=e631]: 91%
+              - generic [ref=e635]:
+                - generic [ref=e636]: Evidence strength
+                - generic [ref=e637]: 50%
+              - generic [ref=e641]:
+                - generic [ref=e642]: Cross-source agreement
+                - generic [ref=e643]: 100%
+              - generic [ref=e647]:
+                - generic [ref=e648]: Claim consistency
+                - generic [ref=e649]: 40%
+          - generic [ref=e652]:
+            - heading "Claims identified" [level=2] [ref=e653]
+            - list [ref=e654]:
+              - listitem [ref=e655]:
+                - generic [ref=e656]: "1."
+                - generic [ref=e657]:
+                  - paragraph [ref=e658]: Did the Apollo 11 mission land on the Moon in 1969
+                  - generic [ref=e659]:
+                    - generic [ref=e660]: Science
+                    - generic [ref=e661]: ·
+                    - generic [ref=e662]: Moon
+          - generic [ref=e663]:
+            - heading "Supporting evidence(4)" [level=2] [ref=e664]:
+              - text: Supporting evidence
+              - generic [ref=e665]: (4)
+            - generic [ref=e666]:
+              - generic [ref=e667]:
+                - generic [ref=e668]:
+                  - generic [ref=e669]:
+                    - generic [ref=e670]: Wikipedia (Verified Encyclopedic Knowledge)
+                    - generic [ref=e671]: Context
+                  - heading "Apollo 11 — Encyclopedic Summary" [level=3] [ref=e672]
+                  - paragraph [ref=e673]: Apollo 11 (July 16–24, 1969) was the American spaceflight that first landed humans on the Moon, and the fifth crewed mission of NASA's Apollo program
+                - generic [ref=e674]:
+                  - generic [ref=e675]:
+                    - text: "Reliability:"
+                    - strong [ref=e676]: 94.5%
+                  - link "View source" [ref=e677] [cursor=pointer]:
+                    - /url: https://en.wikipedia.org/wiki/Apollo_11
+              - generic [ref=e683]:
+                - generic [ref=e684]:
+                  - generic [ref=e685]:
+                    - generic [ref=e686]: Wikipedia (Verified Encyclopedic Knowledge)
+                    - generic [ref=e687]: Context
+                  - heading "List of retroreflectors on the Moon — Encyclopedic Summary" [level=3] [ref=e688]
+                  - paragraph [ref=e689]: left at seven sites on the Moon by three crews of the Apollo program, two by remote landers of the Lunokhod program, one by the Commercial Lunar Payload
+                - generic [ref=e690]:
+                  - generic [ref=e691]:
+                    - text: "Reliability:"
+                    - strong [ref=e692]: 94.5%
+                  - link "View source" [ref=e693] [cursor=pointer]:
+                    - /url: https://en.wikipedia.org/wiki/List_of_retroreflectors_on_the_Moon
+              - generic [ref=e699]:
+                - generic [ref=e700]:
+                  - generic [ref=e701]:
+                    - generic [ref=e702]: Britannica
+                    - generic [ref=e703]: Context
+                  - heading "Today in History July 20 | 1969, Apollo 11, Moon, & Neil Armstrong - Britannica" [level=3] [ref=e704]
+                  - paragraph [ref=e705]: Today in History July 20 | 1969, Apollo 11, Moon, & Neil Armstrong Britannica
+                - generic [ref=e706]:
+                  - generic [ref=e707]:
+                    - text: "Reliability:"
+                    - strong [ref=e708]: 88%
+                  - link "View source" [ref=e709] [cursor=pointer]:
+                    - /url: https://news.google.com/rss/articles/CBMilAFBVV95cUxOZ2g5a0FmU093WTYtMHdGV0RNSGJKcExvLUZFWkp5OXBoUTJMLU9FeEI2ZFNaYXpENVdBWlZiQ1QtRGlMSW4zOG1FMUl4bzU2dHgtY014YllPSWg2aHRYS0dYR3JMZFdNY2JxYkhDdThGRXpJdUU4NVlFb3hzLUFoY2JCeGl3YTZFT3B2SXFldXpaVThW?oc=5
+              - generic [ref=e715]:
+                - generic [ref=e716]:
+                  - generic [ref=e717]:
+                    - generic [ref=e718]: BBC
+                    - generic [ref=e719]: Context
+                  - heading "Margaret Hamilton, whose software helped land Apollo 11 on the Moon, dies at 90 - BBC" [level=3] [ref=e720]
+                  - paragraph [ref=e721]: Margaret Hamilton, whose software helped land Apollo 11 on the Moon, dies at 90 BBC
+                - generic [ref=e722]:
+                  - generic [ref=e723]:
+                    - text: "Reliability:"
+                    - strong [ref=e724]: 88%
+                  - link "View source" [ref=e725] [cursor=pointer]:
+                    - /url: https://news.google.com/rss/articles/CBMiW0FVX3lxTE1UNG9aQmd2OEpaVVota1dlRkRkQ3JfWXhVZEREamNMLTBTSl9rbl9zdlpmOEdPdzY0WVlLYkZadHZ0d0VJaVg1X2FOQTdHMy1BUWdzNjU2YkpfZUU?oc=5
+          - generic [ref=e731]:
+            - heading "Contradicting evidence(0)" [level=2] [ref=e732]:
+              - text: Contradicting evidence
+              - generic [ref=e733]: (0)
+            - paragraph [ref=e734]: No contradicting sources were found.
+          - generic [ref=e735]:
+            - heading "Sources referenced" [level=2] [ref=e736]
+            - generic [ref=e737]:
+              - generic [ref=e738]:
+                - generic [ref=e739]:
+                  - generic [ref=e740]: Wikipedia (Verified Encyclopedic Knowledge)
+                  - generic [ref=e741]: encyclopedic
+                - generic [ref=e742]: 94.5%
+              - generic [ref=e743]:
+                - generic [ref=e744]:
+                  - generic [ref=e745]: Britannica
+                  - generic [ref=e746]: news_wire
+                - generic [ref=e747]: 88%
+              - generic [ref=e748]:
+                - generic [ref=e749]:
+                  - generic [ref=e750]: BBC
+                  - generic [ref=e751]: news_wire
+                - generic [ref=e752]: 88%
+          - generic [ref=e753]:
+            - heading "Analysis" [level=2] [ref=e754]
+            - paragraph [ref=e755]: The verification engine found contextually related information from Wikipedia (Verified Encyclopedic Knowledge), but no source directly confirms or refutes this specific claim. Related information existing does NOT constitute evidence that the claim is true. Independent verification is recommended before sharing.
+            - generic [ref=e756]: Cross-examined across 4 independent reference and wire sources.
+          - generic [ref=e757]:
+            - generic [ref=e758]: Checked Oct 16, 2026 · 4 sources
+            - generic [ref=e759]:
+              - button "Copy report" [ref=e760]
+              - button "Check another claim" [ref=e764]
+  - generic [ref=e771]: Fact-check completed with corroborating sources.
+  - contentinfo [ref=e332]:
+    - generic [ref=e333]:
+      - generic [ref=e334]:
+        - generic [ref=e335]:
+          - generic [ref=e336]: TruthLens
+          - paragraph [ref=e342]: An open investigative web platform for automated multi-source news verification, media forensics, and claim analysis.
+          - generic [ref=e343]: Source-first verification · Real-time wire consensus
+        - generic [ref=e344]:
+          - heading "Verification Tools" [level=4] [ref=e345]
+          - list [ref=e346]:
+            - listitem [ref=e347]:
+              - button "Article URL Fact-Check" [ref=e348]
+            - listitem [ref=e349]:
+              - button "Text Claim Cross-Examination" [ref=e350]
+            - listitem [ref=e351]:
+              - button "Image ELA & Forensic Audit" [ref=e352]
+            - listitem [ref=e353]:
+              - button "Live Misinformation Monitor" [ref=e354]
+        - generic [ref=e355]:
+          - heading "News Coverage" [level=4] [ref=e356]
+          - list [ref=e357]:
+            - listitem [ref=e358]:
+              - button "Live News Aggregator" [ref=e359]
+            - listitem [ref=e360]:
+              - button "World Wire Headlines" [ref=e361]
+            - listitem [ref=e362]:
+              - button "India National Wire" [ref=e363]
+            - listitem [ref=e364]:
+              - button "Fact Investigation Dossiers" [ref=e365]
+            - listitem [ref=e366]:
+              - link "REST API Documentation" [ref=e367] [cursor=pointer]:
+                - /url: http://localhost:8000/api/docs
+        - generic [ref=e372]:
+          - heading "Editorial Transparency" [level=4] [ref=e373]
+          - paragraph [ref=e374]: TruthLens synthesizes evidence from indexed news registries and official wire records. AI-assisted verdicts are probabilistic and should be reviewed alongside cited primary evidence.
+          - generic [ref=e375]: Data stored locally · No user tracking
+      - generic [ref=e376]:
+        - paragraph [ref=e377]: © 2026 TruthLens Media Intelligence. All rights reserved.
+        - paragraph [ref=e378]: Built with React 19, FastAPI, and open evidence datasets.

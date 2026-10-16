@@ -1,41 +1,19 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import path from 'path'
-import { fileURLToPath, pathToFileURL } from 'url'
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-
-function vercelNewsDevPlugin() {
-  return {
-    name: 'vercel-news-dev',
-    configureServer(server) {
-      server.middlewares.use('/api/news', async (req, res, next) => {
-        try {
-          const modulePath = pathToFileURL(path.resolve(__dirname, '../api/news.js')).href
-          const newsModule = await import(modulePath)
-          const handler = newsModule.default
-          const fullUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`)
-          req.query = Object.fromEntries(fullUrl.searchParams.entries())
-          res.status = (code) => {
-            res.statusCode = code
-            return res
-          }
-          res.json = (data) => {
-            res.setHeader('Content-Type', 'application/json')
-            res.end(JSON.stringify(data))
-          }
-          await handler(req, res)
-        } catch (err) {
-          next(err)
-        }
-      })
-    },
-  }
-}
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), vercelNewsDevPlugin()],
+  plugins: [react()],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true,
+        timeout: 60_000,
+        proxyTimeout: 60_000,
+      },
+    },
+  },
   build: {
     // Warn when chunks exceed 600KB
     chunkSizeWarningLimit: 600,

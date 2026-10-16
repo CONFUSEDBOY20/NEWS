@@ -1,0 +1,99 @@
+- generic [ref=f2e3]:
+  - generic [ref=f2e17]:
+    - banner [ref=f2e18]:
+      - generic [ref=f2e19]:
+        - generic [ref=f2e20]: TruthLens
+        - generic [ref=f2e28]:
+          - button "Live Connected" [ref=f2e29] [cursor=pointer]
+          - button "Search" [ref=f2e37] [cursor=pointer]
+          - button "Toggle dark mode" [ref=f2e41] [cursor=pointer]
+          - button "History" [ref=f2e44] [cursor=pointer]
+          - button "Admin settings" [ref=f2e50]
+          - button "Open mobile navigation" [ref=f2e52]
+    - generic [ref=f2e55]:
+      - generic [ref=f2e56]:
+        - generic [ref=f2e57]: LIVE
+        - generic [ref=f2e60]: "Trending Now :"
+      - generic [ref=f2e430]:
+        - button "EU’s von der Leyen pledges to ‘not lift any sanctions unless Russia stops the war’ as leaders discuss Ukraine – Europe live" [ref=f2e433] [cursor=pointer]
+        - button "How prepared is Kenya for an Ebola outbreak?" [ref=f2e436] [cursor=pointer]
+        - 'button "India vs West India: Fifth T20 International – teams, start, lineups, Hope" [ref=f2e439] [cursor=pointer]'
+        - button "Zelensky rallies EU support as Trump says Ukraine leader 'more difficult to deal with than Putin'" [ref=f2e442] [cursor=pointer]
+        - button "Italy cuts air traffic in half amid data transmission issue" [ref=f2e445] [cursor=pointer]
+        - button "Children aged 5, 8 and 11 killed in US school shooting before suspect shot by bystander" [ref=f2e448] [cursor=pointer]
+        - button "प्रधानमंत्री श्री नरेन्द्र मोदी ने एशियाई खेल 2026 में भाग लेने वाले भारतीय एथलीट दल से बातचीत की" [ref=f2e451] [cursor=pointer]
+        - button "भारतीय तटरक्षक बल और कोरियाई तटरक्षक बल के बीच 14वीं उच्च-स्तरीय बैठक इंचियोन में आयोजित हुई" [ref=f2e454] [cursor=pointer]
+        - button "EU’s von der Leyen pledges to ‘not lift any sanctions unless Russia stops the war’ as leaders discuss Ukraine – Europe live" [ref=f2e457] [cursor=pointer]
+        - button "How prepared is Kenya for an Ebola outbreak?" [ref=f2e460] [cursor=pointer]
+        - 'button "India vs West India: Fifth T20 International – teams, start, lineups, Hope" [ref=f2e463] [cursor=pointer]'
+        - button "Zelensky rallies EU support as Trump says Ukraine leader 'more difficult to deal with than Putin'" [ref=f2e466] [cursor=pointer]
+        - button "Italy cuts air traffic in half amid data transmission issue" [ref=f2e469] [cursor=pointer]
+        - button "Children aged 5, 8 and 11 killed in US school shooting before suspect shot by bystander" [ref=f2e472] [cursor=pointer]
+        - button "प्रधानमंत्री श्री नरेन्द्र मोदी ने एशियाई खेल 2026 में भाग लेने वाले भारतीय एथलीट दल से बातचीत की" [ref=f2e475] [cursor=pointer]
+        - button "भारतीय तटरक्षक बल और कोरियाई तटरक्षक बल के बीच 14वीं उच्च-स्तरीय बैठक इंचियोन में आयोजित हुई" [ref=f2e478] [cursor=pointer]
+      - generic [ref=f2e65]:
+        - button "Previous headline" [ref=f2e66] [cursor=pointer]
+        - button "Next headline" [ref=f2e69] [cursor=pointer]
+    - main [ref=f2e540]:
+      - generic [ref=f2e541]:
+        - generic [ref=f2e542]:
+          - generic [ref=f2e543]:
+            - generic [ref=f2e544]:
+              - generic [ref=f2e551]: Live Multi-Source Wire
+              - generic [ref=f2e552]: LIVE WIRE
+            - heading "Live News Aggregator" [level=2] [ref=f2e554]
+            - generic [ref=f2e555]:
+              - generic [ref=f2e556]: Last updated 3m ago
+              - generic [ref=f2e557]: •
+              - generic [ref=f2e558]:
+                - generic [ref=f2e559]: "Sources:"
+                - generic [ref=f2e560]: RSS · GDELT
+          - generic [ref=f2e561]:
+            - textbox "Search live headlines or claims..." [ref=f2e563]
+            - button "Refresh live feeds" [ref=f2e567] [cursor=pointer]
+        - generic [ref=f2e573]:
+          - button "Top" [ref=f2e574] [cursor=pointer]
+          - button "World" [active] [ref=f2e575] [cursor=pointer]
+          - button "India" [ref=f2e576] [cursor=pointer]
+          - button "Tech" [ref=f2e577] [cursor=pointer]
+          - button "Business" [ref=f2e578] [cursor=pointer]
+          - button "Health" [ref=f2e579] [cursor=pointer]
+  - contentinfo [ref=f2e383]:
+    - generic [ref=f2e384]:
+      - generic [ref=f2e385]:
+        - generic [ref=f2e386]:
+          - generic [ref=f2e387]: TruthLens
+          - paragraph [ref=f2e393]: An open investigative web platform for automated multi-source news verification, media forensics, and claim analysis.
+          - generic [ref=f2e394]: Source-first verification · Real-time wire consensus
+        - generic [ref=f2e395]:
+          - heading "Verification Tools" [level=4] [ref=f2e396]
+          - list [ref=f2e397]:
+            - listitem [ref=f2e398]:
+              - button "Article URL Fact-Check" [ref=f2e399]
+            - listitem [ref=f2e400]:
+              - button "Text Claim Cross-Examination" [ref=f2e401]
+            - listitem [ref=f2e402]:
+              - button "Image ELA & Forensic Audit" [ref=f2e403]
+            - listitem [ref=f2e404]:
+              - button "Live Misinformation Monitor" [ref=f2e405]
+        - generic [ref=f2e406]:
+          - heading "News Coverage" [level=4] [ref=f2e407]
+          - list [ref=f2e408]:
+            - listitem [ref=f2e409]:
+              - button "Live News Aggregator" [ref=f2e410]
+            - listitem [ref=f2e411]:
+              - button "World Wire Headlines" [ref=f2e412]
+            - listitem [ref=f2e413]:
+              - button "India National Wire" [ref=f2e414]
+            - listitem [ref=f2e415]:
+              - button "Fact Investigation Dossiers" [ref=f2e416]
+            - listitem [ref=f2e417]:
+              - link "REST API Documentation" [ref=f2e418] [cursor=pointer]:
+                - /url: http://localhost:8000/api/docs
+        - generic [ref=f2e423]:
+          - heading "Editorial Transparency" [level=4] [ref=f2e424]
+          - paragraph [ref=f2e425]: TruthLens synthesizes evidence from indexed news registries and official wire records. AI-assisted verdicts are probabilistic and should be reviewed alongside cited primary evidence.
+          - generic [ref=f2e426]: Data stored locally · No user tracking
+      - generic [ref=f2e427]:
+        - paragraph [ref=f2e428]: © 2026 TruthLens Media Intelligence. All rights reserved.
+        - paragraph [ref=f2e429]: Built with React 19, FastAPI, and open evidence datasets.

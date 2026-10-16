@@ -110,6 +110,10 @@ async def delete_fact_article(article_id: str, admin: dict = Depends(get_current
 async def get_system_settings(admin: dict = Depends(get_current_admin)):
     return admin_service.get_settings()
 
+@router.get("/provider-status")
+async def get_runtime_provider_status(admin: dict = Depends(get_current_admin)):
+    return admin_service.get_runtime_provider_status()
+
 @router.put("/settings")
 @router.post("/settings")
 async def update_system_settings(updates: Dict[str, Any], admin: dict = Depends(get_current_admin)):

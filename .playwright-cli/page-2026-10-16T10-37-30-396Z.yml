@@ -1,0 +1,123 @@
+- generic [ref=f1e3]:
+  - generic [ref=f1e17]:
+    - banner [ref=f1e18]:
+      - generic [ref=f1e19]:
+        - generic [ref=f1e20]: TruthLens
+        - generic [ref=f1e46]:
+          - button "Search" [ref=f1e55] [cursor=pointer]
+          - button "Toggle dark mode" [ref=f1e59] [cursor=pointer]
+          - button "1" [ref=f1e1680] [cursor=pointer]
+          - button "Admin settings" [ref=f1e69]
+          - button "Open mobile navigation" [active] [ref=f1e1681]
+      - generic [ref=f1e2605]:
+        - button "Fact Check" [ref=f1e2606]
+        - button "Live News" [ref=f1e2607]
+        - button "World News" [ref=f1e2608]
+        - button "India News" [ref=f1e2609]
+        - button "Investigations" [ref=f1e2610]
+        - button "Topics" [ref=f1e2611]
+        - button "About TruthLens" [ref=f1e2614]
+    - generic [ref=f1e72]:
+      - generic [ref=f1e73]: LIVE
+      - generic [ref=f1e80]:
+        - button "Germany, France agree deal to support European car industry" [ref=f1e1685] [cursor=pointer]
+        - button "Dad fined after son, 2, died in Cyprus hotel fall" [ref=f1e1688] [cursor=pointer]
+        - button "EU’s von der Leyen pledges to ‘not lift any sanctions unless Russia stops the war’ as leaders discuss Ukraine – Europe live" [ref=f1e1691] [cursor=pointer]
+        - button "Bank shares drop as John Healey prepares to raise taxes on the banking sector in the budget – business live" [ref=f1e1694] [cursor=pointer]
+        - button "Banks expect to be hit with higher taxes in Budget" [ref=f1e1697] [cursor=pointer]
+        - button "Children aged 5, 8 and 11 killed in US school shooting before suspect shot by bystander" [ref=f1e1700] [cursor=pointer]
+        - button "प्रधानमंत्री श्री नरेन्द्र मोदी ने एशियाई खेल 2026 में भाग लेने वाले भारतीय एथलीट दल से बातचीत की" [ref=f1e101] [cursor=pointer]
+        - button "भारतीय तटरक्षक बल और कोरियाई तटरक्षक बल के बीच 14वीं उच्च-स्तरीय बैठक इंचियोन में आयोजित हुई" [ref=f1e104] [cursor=pointer]
+        - button "Germany, France agree deal to support European car industry" [ref=f1e1703] [cursor=pointer]
+        - button "Dad fined after son, 2, died in Cyprus hotel fall" [ref=f1e1706] [cursor=pointer]
+        - button "EU’s von der Leyen pledges to ‘not lift any sanctions unless Russia stops the war’ as leaders discuss Ukraine – Europe live" [ref=f1e1709] [cursor=pointer]
+        - button "Bank shares drop as John Healey prepares to raise taxes on the banking sector in the budget – business live" [ref=f1e1712] [cursor=pointer]
+        - button "Banks expect to be hit with higher taxes in Budget" [ref=f1e1715] [cursor=pointer]
+        - button "Children aged 5, 8 and 11 killed in US school shooting before suspect shot by bystander" [ref=f1e1718] [cursor=pointer]
+        - button "प्रधानमंत्री श्री नरेन्द्र मोदी ने एशियाई खेल 2026 में भाग लेने वाले भारतीय एथलीट दल से बातचीत की" [ref=f1e125] [cursor=pointer]
+        - button "भारतीय तटरक्षक बल और कोरियाई तटरक्षक बल के बीच 14वीं उच्च-स्तरीय बैठक इंचियोन में आयोजित हुई" [ref=f1e128] [cursor=pointer]
+      - generic [ref=f1e129]:
+        - button "Previous headline" [ref=f1e130] [cursor=pointer]
+        - button "Next headline" [ref=f1e133] [cursor=pointer]
+    - main [ref=f1e2528]:
+      - generic [ref=f1e2529]:
+        - generic [ref=f1e2530]:
+          - generic [ref=f1e2531]: Fact Investigations
+          - heading "Investigative Fact Dossiers" [level=2] [ref=f1e2536]
+          - paragraph [ref=f1e2537]: Journalistic breakdowns examining viral disinformation campaigns, manipulated media cases, and forensic findings.
+        - generic [ref=f1e2538]:
+          - generic [ref=f1e2539] [cursor=pointer]:
+            - generic [ref=f1e2540]:
+              - generic [ref=f1e2541]:
+                - 'img "Anatomy of a Viral Deepfake: How Synthetic Media Manipulates Elections" [ref=f1e2542]'
+                - generic [ref=f1e2543]: Technology
+              - generic [ref=f1e2544]:
+                - generic [ref=f1e2545]:
+                  - generic [ref=f1e2546]: TruthLens Investigation Team
+                  - generic [ref=f1e2550]: 5 min read
+                - 'heading "Anatomy of a Viral Deepfake: How Synthetic Media Manipulates Elections" [level=3] [ref=f1e2554]'
+                - paragraph [ref=f1e2555]: An in-depth investigation into modern generative video pipelines, voice cloning tactics, and how journalists detect forensic artifacts.
+            - generic [ref=f1e2556]: Read Full Investigation
+          - generic [ref=f1e2560] [cursor=pointer]:
+            - generic [ref=f1e2561]:
+              - generic [ref=f1e2562]:
+                - img "Medical Misinformation in the Age of Social Algorithms" [ref=f1e2563]
+                - generic [ref=f1e2564]: Health
+              - generic [ref=f1e2565]:
+                - generic [ref=f1e2566]:
+                  - generic [ref=f1e2567]: Dr. Sarah Chen, TruthLens Health Desk
+                  - generic [ref=f1e2571]: 6 min read
+                - heading "Medical Misinformation in the Age of Social Algorithms" [level=3] [ref=f1e2575]
+                - paragraph [ref=f1e2576]: Why health hoaxes spread 6x faster than peer-reviewed medical guidance and the psychological levers exploited by pseudo-scientific influencers.
+            - generic [ref=f1e2577]: Read Full Investigation
+          - generic [ref=f1e2581] [cursor=pointer]:
+            - generic [ref=f1e2582]:
+              - generic [ref=f1e2583]:
+                - 'img "Financial Fraud & AI Voice Impersonation: Protecting Your Assets" [ref=f1e2584]'
+                - generic [ref=f1e2585]: Economy
+              - generic [ref=f1e2586]:
+                - generic [ref=f1e2587]:
+                  - generic [ref=f1e2588]: Marcus Vance, Cyber Threat Analyst
+                  - generic [ref=f1e2592]: 4 min read
+                - 'heading "Financial Fraud & AI Voice Impersonation: Protecting Your Assets" [level=3] [ref=f1e2596]'
+                - paragraph [ref=f1e2597]: Emergency response guide on how cybercriminals use 3-second voice samples to impersonate executives and family members.
+            - generic [ref=f1e2598]: Read Full Investigation
+  - contentinfo [ref=f1e452]:
+    - generic [ref=f1e453]:
+      - generic [ref=f1e454]:
+        - generic [ref=f1e455]:
+          - generic [ref=f1e456]: TruthLens
+          - paragraph [ref=f1e462]: An open investigative web platform for automated multi-source news verification, media forensics, and claim analysis.
+          - generic [ref=f1e463]: Source-first verification · Real-time wire consensus
+        - generic [ref=f1e464]:
+          - heading "Verification Tools" [level=4] [ref=f1e465]
+          - list [ref=f1e466]:
+            - listitem [ref=f1e467]:
+              - button "Article URL Fact-Check" [ref=f1e468]
+            - listitem [ref=f1e469]:
+              - button "Text Claim Cross-Examination" [ref=f1e470]
+            - listitem [ref=f1e471]:
+              - button "Image ELA & Forensic Audit" [ref=f1e472]
+            - listitem [ref=f1e473]:
+              - button "Live Misinformation Monitor" [ref=f1e474]
+        - generic [ref=f1e475]:
+          - heading "News Coverage" [level=4] [ref=f1e476]
+          - list [ref=f1e477]:
+            - listitem [ref=f1e478]:
+              - button "Live News Aggregator" [ref=f1e479]
+            - listitem [ref=f1e480]:
+              - button "World Wire Headlines" [ref=f1e481]
+            - listitem [ref=f1e482]:
+              - button "India National Wire" [ref=f1e483]
+            - listitem [ref=f1e484]:
+              - button "Fact Investigation Dossiers" [ref=f1e485]
+            - listitem [ref=f1e486]:
+              - link "REST API Documentation" [ref=f1e487] [cursor=pointer]:
+                - /url: http://localhost:8000/api/docs
+        - generic [ref=f1e492]:
+          - heading "Editorial Transparency" [level=4] [ref=f1e493]
+          - paragraph [ref=f1e494]: TruthLens synthesizes evidence from indexed news registries and official wire records. AI-assisted verdicts are probabilistic and should be reviewed alongside cited primary evidence.
+          - generic [ref=f1e495]: Data stored locally · No user tracking
+      - generic [ref=f1e496]:
+        - paragraph [ref=f1e497]: © 2026 TruthLens Media Intelligence. All rights reserved.
+        - paragraph [ref=f1e498]: Built with React 19, FastAPI, and open evidence datasets.

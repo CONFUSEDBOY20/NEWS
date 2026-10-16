@@ -1,0 +1,270 @@
+- generic [ref=f3e3]:
+  - status "Loading TruthLens" [ref=f3e4]:
+    - generic [ref=f3e5]: TruthLens
+    - generic [ref=f3e9]: News intelligence, made clear
+    - generic [ref=f3e16]: Loading TruthLens
+  - generic [ref=f3e17]:
+    - banner [ref=f3e18]:
+      - generic [ref=f3e19]:
+        - generic [ref=f3e20]: TruthLens
+        - generic [ref=f3e28]:
+          - button "Live Connected" [ref=f3e29] [cursor=pointer]
+          - button "Search" [ref=f3e37] [cursor=pointer]
+          - button "Toggle dark mode" [ref=f3e41] [cursor=pointer]
+          - button "History" [ref=f3e44] [cursor=pointer]
+          - button "Admin settings" [ref=f3e50]
+          - button "Open mobile navigation" [ref=f3e52]
+    - generic [ref=f3e55]:
+      - generic [ref=f3e56]:
+        - generic [ref=f3e57]: LIVE
+        - generic [ref=f3e60]: "Trending Now :"
+      - generic [ref=f3e63]:
+        - button "EU’s von der Leyen pledges to ‘not lift any sanctions unless Russia stops the war’ as leaders discuss Ukraine – Europe live" [ref=f3e66] [cursor=pointer]
+        - button "How prepared is Kenya for an Ebola outbreak?" [ref=f3e69] [cursor=pointer]
+        - 'button "India vs West India: Fifth T20 International – teams, start, lineups, Hope" [ref=f3e72] [cursor=pointer]'
+        - button "Zelensky rallies EU support as Trump says Ukraine leader 'more difficult to deal with than Putin'" [ref=f3e75] [cursor=pointer]
+        - button "Italy cuts air traffic in half amid data transmission issue" [ref=f3e78] [cursor=pointer]
+        - button "Children aged 5, 8 and 11 killed in US school shooting before suspect shot by bystander" [ref=f3e81] [cursor=pointer]
+        - button "Germany, France agree on deal to support Europe's struggling car industry" [ref=f3e84] [cursor=pointer]
+        - button "Dad fined after son, 2, died in Cyprus hotel fall" [ref=f3e87] [cursor=pointer]
+        - button "EU’s von der Leyen pledges to ‘not lift any sanctions unless Russia stops the war’ as leaders discuss Ukraine – Europe live" [ref=f3e90] [cursor=pointer]
+        - button "How prepared is Kenya for an Ebola outbreak?" [ref=f3e93] [cursor=pointer]
+        - 'button "India vs West India: Fifth T20 International – teams, start, lineups, Hope" [ref=f3e96] [cursor=pointer]'
+        - button "Zelensky rallies EU support as Trump says Ukraine leader 'more difficult to deal with than Putin'" [ref=f3e99] [cursor=pointer]
+        - button "Italy cuts air traffic in half amid data transmission issue" [ref=f3e102] [cursor=pointer]
+        - button "Children aged 5, 8 and 11 killed in US school shooting before suspect shot by bystander" [ref=f3e105] [cursor=pointer]
+        - button "Germany, France agree on deal to support Europe's struggling car industry" [ref=f3e108] [cursor=pointer]
+        - button "Dad fined after son, 2, died in Cyprus hotel fall" [ref=f3e111] [cursor=pointer]
+      - generic [ref=f3e112]:
+        - button "Previous headline" [ref=f3e113] [cursor=pointer]
+        - button "Next headline" [ref=f3e116] [cursor=pointer]
+    - main [ref=f3e119]:
+      - generic [ref=f3e120]:
+        - generic [ref=f3e121]:
+          - generic [ref=f3e122]:
+            - generic [ref=f3e123]:
+              - generic [ref=f3e124]: NEWS CHECK
+              - heading "Check news, claims and media before you believe." [level=1] [ref=f3e127]
+              - paragraph [ref=f3e128]: Verify viral headlines, social media claims, images and articles with trusted sources.
+              - generic [ref=f3e129]:
+                - generic [ref=f3e130]: 30+ Live Wires
+                - generic [ref=f3e133]: Google News RSS
+                - generic [ref=f3e139]: 30+ Outlets
+                - generic [ref=f3e144]: 382 Monitored
+            - generic [ref=f3e148]:
+              - generic [ref=f3e149]:
+                - button "Check text" [ref=f3e150] [cursor=pointer]:
+                  - generic [ref=f3e154]: Check Text
+                - button "Check URL" [ref=f3e155] [cursor=pointer]
+                - button "Check image" [ref=f3e160] [cursor=pointer]:
+                  - generic [ref=f3e165]: Check Image
+              - generic [ref=f3e166]:
+                - generic [ref=f3e167]:
+                  - textbox "Paste a news headline, social media message, or article excerpt to verify..." [ref=f3e168]
+                  - generic [ref=f3e169]: 0/1000
+                - generic [ref=f3e170]:
+                  - combobox [ref=f3e172] [cursor=pointer]:
+                    - option "Auto-detect language" [selected]
+                    - option "English"
+                    - option "हिन्दी (Hindi)"
+                    - option "বাংলা (Bengali)"
+                    - option "मराठी (Marathi)"
+                    - option "தமிழ் (Tamil)"
+                    - option "తెలుగు (Telugu)"
+                  - button "Check Claim" [ref=f3e173] [cursor=pointer]
+              - generic [ref=f3e178]:
+                - generic [ref=f3e179]: "Try an example:"
+                - button "\"5G causes health problems\"" [ref=f3e180] [cursor=pointer]
+                - button "\"Government gives free laptops\"" [ref=f3e181] [cursor=pointer]
+                - button "\"This image is from a recent flood\"" [ref=f3e182] [cursor=pointer]
+          - generic [ref=f3e184]:
+            - img "Understanding Disinformation Patterns in Public Health" [ref=f3e185]
+            - generic [ref=f3e187]:
+              - generic [ref=f3e188]: Editorial example
+              - generic [ref=f3e189]:
+                - button "Previous story" [ref=f3e190] [cursor=pointer]
+                - button "Next story" [ref=f3e193] [cursor=pointer]
+            - generic [ref=f3e196]:
+              - heading "Understanding Disinformation Patterns in Public Health" [level=2] [ref=f3e197] [cursor=pointer]
+              - paragraph [ref=f3e198]: Educational analysis of how unsubstantiated health claims spread across messaging channels.
+              - generic [ref=f3e199]:
+                - button "Go to slide 1" [ref=f3e200] [cursor=pointer]
+                - button "Go to slide 2" [ref=f3e201] [cursor=pointer]
+          - generic [ref=f3e204]:
+            - heading "Recent Checks" [level=3] [ref=f3e205]
+            - button "View all" [ref=f3e206] [cursor=pointer]
+        - generic [ref=f3e210]:
+          - generic [ref=f3e211]:
+            - generic [ref=f3e212]:
+              - generic [ref=f3e213]:
+                - heading "Latest News" [level=2] [ref=f3e214]
+                - button "View all" [ref=f3e215] [cursor=pointer]
+              - generic [ref=f3e219]:
+                - button "All" [ref=f3e220] [cursor=pointer]
+                - button "India" [ref=f3e221] [cursor=pointer]
+                - button "World" [ref=f3e222] [cursor=pointer]
+                - button "Technology" [ref=f3e223] [cursor=pointer]
+                - button "Health" [ref=f3e224] [cursor=pointer]
+                - button "Environment" [ref=f3e225] [cursor=pointer]
+                - button "Politics" [ref=f3e226] [cursor=pointer]
+              - generic [ref=f3e227]:
+                - article [ref=f3e228] [cursor=pointer]:
+                  - generic [ref=f3e229]:
+                    - generic [ref=f3e230]:
+                      - img "EU’s von der Leyen pledges to ‘not lift any sanctions unless Russia stops the war’ as leaders discuss Ukraine – Europe live" [ref=f3e231]
+                      - generic [ref=f3e232]: LIVE
+                      - generic [ref=f3e235]: World
+                    - generic [ref=f3e236]:
+                      - generic [ref=f3e237]:
+                        - generic [ref=f3e238]: The Guardian World
+                        - generic [ref=f3e239]: 10m ago
+                      - heading "EU’s von der Leyen pledges to ‘not lift any sanctions unless Russia stops the war’ as leaders discuss Ukraine – Europe live" [level=3] [ref=f3e240]
+                      - paragraph [ref=f3e241]: European leaders are meeting in Brussels amid worsening relations between Washington and Kyiv Several leaders offered Zelenskyy very friendly welcome or, in some cases, simply a big hug as he walked into the room before the formal part of the meeting got under way. Speaking to Newsmax last night, Donald Trump repeated his views of the two leaders involved in the conflict. Continue reading...
+                  - generic [ref=f3e242]:
+                    - generic [ref=f3e243]: Read & Check
+                    - generic [ref=f3e247]: AI Verify
+                - article [ref=f3e248] [cursor=pointer]:
+                  - generic [ref=f3e249]:
+                    - generic [ref=f3e250]:
+                      - generic "No publisher image available" [ref=f3e251]
+                      - generic [ref=f3e256]: LIVE
+                      - generic [ref=f3e259]: World
+                    - generic [ref=f3e260]:
+                      - generic [ref=f3e261]:
+                        - generic [ref=f3e262]: Deutsche Welle
+                        - generic [ref=f3e263]: 13m ago
+                      - heading "How prepared is Kenya for an Ebola outbreak?" [level=3] [ref=f3e264]
+                      - paragraph [ref=f3e265]: The first confirmed Ebola cases in Kenya have raised urgent questions about the country's public health preparedness and border controls. But the health ministry says there is no need for panic.
+                  - generic [ref=f3e266]:
+                    - generic [ref=f3e267]: Read & Check
+                    - generic [ref=f3e271]: AI Verify
+                - article [ref=f3e272] [cursor=pointer]:
+                  - generic [ref=f3e273]:
+                    - generic [ref=f3e274]:
+                      - generic "No publisher image available" [ref=f3e275]
+                      - generic [ref=f3e280]: LIVE
+                      - generic [ref=f3e283]: World
+                    - generic [ref=f3e284]:
+                      - generic [ref=f3e285]:
+                        - generic [ref=f3e286]: Al Jazeera
+                        - generic [ref=f3e287]: 16m ago
+                      - 'heading "India vs West India: Fifth T20 International – teams, start, lineups, Hope" [level=3] [ref=f3e288]'
+                      - paragraph [ref=f3e289]: India host West Indies in the final match of the tour on Saturday with an all-time classic T20 series level at 2-2.
+                  - generic [ref=f3e290]:
+                    - generic [ref=f3e291]: Read & Check
+                    - generic [ref=f3e295]: AI Verify
+                - article [ref=f3e296] [cursor=pointer]:
+                  - generic [ref=f3e297]:
+                    - generic [ref=f3e298]:
+                      - img "Zelensky rallies EU support as Trump says Ukraine leader 'more difficult to deal with than Putin'" [ref=f3e299]
+                      - generic [ref=f3e300]: LIVE
+                      - generic [ref=f3e303]: World
+                    - generic [ref=f3e304]:
+                      - generic [ref=f3e305]:
+                        - generic [ref=f3e306]: BBC World
+                        - generic [ref=f3e307]: 16m ago
+                      - heading "Zelensky rallies EU support as Trump says Ukraine leader 'more difficult to deal with than Putin'" [level=3] [ref=f3e308]
+                      - paragraph [ref=f3e309]: The US president launches a new wave of blistering criticism at Volodymyr Zelensky ahead of a meeting of EU leaders in Brussels.
+                  - generic [ref=f3e310]:
+                    - generic [ref=f3e311]: Read & Check
+                    - generic [ref=f3e315]: AI Verify
+            - generic [ref=f3e316]:
+              - heading "How TruthLens works" [level=3] [ref=f3e317]
+              - generic [ref=f3e318]:
+                - generic [ref=f3e319]:
+                  - generic [ref=f3e320]: "1"
+                  - generic [ref=f3e321]:
+                    - heading "Submit a claim" [level=4] [ref=f3e322]
+                    - paragraph [ref=f3e323]: Paste text, URL or upload an image.
+                - generic [ref=f3e332]:
+                  - heading "We analyse it" [level=4] [ref=f3e333]
+                  - paragraph [ref=f3e334]: Our system checks multiple trusted sources and verifies the content.
+                - generic [ref=f3e343]:
+                  - heading "Get a clear result" [level=4] [ref=f3e344]
+                  - paragraph [ref=f3e345]: See whether it's true, false, misleading or needs more context.
+          - generic [ref=f3e347]:
+            - heading "Popular Investigations" [level=2] [ref=f3e348]
+            - button "View all" [ref=f3e349] [cursor=pointer]
+        - generic [ref=f3e353]:
+          - generic [ref=f3e354]:
+            - generic [ref=f3e363]:
+              - generic [ref=f3e364]:
+                - heading "Real-Time News Wire Telemetry" [level=3] [ref=f3e365]
+                - generic [ref=f3e366]: LIVE BACKEND DATA
+              - paragraph [ref=f3e368]: Aggregated live from official syndication wires, Google News RSS, and vetted global newsrooms.
+            - generic [ref=f3e369]:
+              - generic [ref=f3e370]: "Sync: 15m intervals"
+              - button "Refresh live telemetry" [ref=f3e371] [cursor=pointer]
+          - generic [ref=f3e377]:
+            - generic [ref=f3e378]:
+              - generic [ref=f3e379]: RSS Wire Feeds
+              - generic [ref=f3e385]: "30"
+              - paragraph [ref=f3e386]: +9 Google News Feeds
+            - generic [ref=f3e387]:
+              - generic [ref=f3e388]: Live Outlets
+              - generic [ref=f3e393]: "30"
+              - paragraph [ref=f3e394]: BBC, Reuters, Hindu, AP, DW
+            - generic [ref=f3e395]:
+              - generic [ref=f3e396]: Wire Depth
+              - generic [ref=f3e400]: "382"
+              - paragraph [ref=f3e401]: Active verified wire pool
+            - generic [ref=f3e402]:
+              - generic [ref=f3e403]: Provider Mesh
+              - generic [ref=f3e407]: 7/7
+              - paragraph [ref=f3e408]: Circuit breakers 100% OK
+          - generic [ref=f3e409]:
+            - generic [ref=f3e410]:
+              - generic [ref=f3e411]: "Live Coverage:"
+              - generic [ref=f3e412]: World
+              - generic [ref=f3e413]: ·
+              - generic [ref=f3e414]: India
+              - generic [ref=f3e415]: ·
+              - generic [ref=f3e416]: Technology
+              - generic [ref=f3e417]: ·
+              - generic [ref=f3e418]: Science
+              - generic [ref=f3e419]: ·
+              - generic [ref=f3e420]: Health
+              - generic [ref=f3e421]: ·
+              - generic [ref=f3e422]: Business
+              - generic [ref=f3e423]: ·
+              - generic [ref=f3e424]: Politics
+            - generic [ref=f3e425]: Zero Mock Records · 100% Real-Time Aggregation
+  - contentinfo [ref=f3e430]:
+    - generic [ref=f3e431]:
+      - generic [ref=f3e432]:
+        - generic [ref=f3e433]:
+          - generic [ref=f3e434]: TruthLens
+          - paragraph [ref=f3e440]: An open investigative web platform for automated multi-source news verification, media forensics, and claim analysis.
+          - generic [ref=f3e441]: Source-first verification · Real-time wire consensus
+        - generic [ref=f3e442]:
+          - heading "Verification Tools" [level=4] [ref=f3e443]
+          - list [ref=f3e444]:
+            - listitem [ref=f3e445]:
+              - button "Article URL Fact-Check" [ref=f3e446]
+            - listitem [ref=f3e447]:
+              - button "Text Claim Cross-Examination" [ref=f3e448]
+            - listitem [ref=f3e449]:
+              - button "Image ELA & Forensic Audit" [ref=f3e450]
+            - listitem [ref=f3e451]:
+              - button "Live Misinformation Monitor" [ref=f3e452]
+        - generic [ref=f3e453]:
+          - heading "News Coverage" [level=4] [ref=f3e454]
+          - list [ref=f3e455]:
+            - listitem [ref=f3e456]:
+              - button "Live News Aggregator" [ref=f3e457]
+            - listitem [ref=f3e458]:
+              - button "World Wire Headlines" [ref=f3e459]
+            - listitem [ref=f3e460]:
+              - button "India National Wire" [ref=f3e461]
+            - listitem [ref=f3e462]:
+              - button "Fact Investigation Dossiers" [ref=f3e463]
+            - listitem [ref=f3e464]:
+              - link "REST API Documentation" [ref=f3e465] [cursor=pointer]:
+                - /url: http://localhost:8000/api/docs
+        - generic [ref=f3e470]:
+          - heading "Editorial Transparency" [level=4] [ref=f3e471]
+          - paragraph [ref=f3e472]: TruthLens synthesizes evidence from indexed news registries and official wire records. AI-assisted verdicts are probabilistic and should be reviewed alongside cited primary evidence.
+          - generic [ref=f3e473]: Data stored locally · No user tracking
+      - generic [ref=f3e474]:
+        - paragraph [ref=f3e475]: © 2026 TruthLens Media Intelligence. All rights reserved.
+        - paragraph [ref=f3e476]: Built with React 19, FastAPI, and open evidence datasets.

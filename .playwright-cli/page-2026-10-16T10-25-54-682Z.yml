@@ -1,0 +1,95 @@
+- generic [ref=f1e3]:
+  - generic [ref=f1e17]:
+    - banner [ref=f1e18]:
+      - generic [ref=f1e19]:
+        - generic [ref=f1e20]:
+          - generic [ref=f1e21] [cursor=pointer]: TruthLens
+          - navigation [ref=f1e28]:
+            - button "Fact Check" [ref=f1e29] [cursor=pointer]
+            - button "Live News" [ref=f1e32] [cursor=pointer]
+            - button "World News" [ref=f1e34] [cursor=pointer]
+            - button "India News" [ref=f1e36] [cursor=pointer]
+            - button "Investigations" [ref=f1e38] [cursor=pointer]
+            - button "Topics" [ref=f1e41] [cursor=pointer]
+            - button "About" [ref=f1e45] [cursor=pointer]
+        - generic [ref=f1e46]:
+          - button "Live Connected" [ref=f1e47] [cursor=pointer]
+          - button "Search" [ref=f1e55] [cursor=pointer]
+          - button "Toggle dark mode" [ref=f1e59] [cursor=pointer]
+          - button "History 1" [ref=f1e62] [cursor=pointer]:
+            - generic [ref=f1e67]: History
+            - generic [ref=f1e68]: "1"
+          - button "Admin settings" [ref=f1e69]
+    - generic [ref=f1e72]:
+      - generic [ref=f1e73]:
+        - generic [ref=f1e74]: LIVE
+        - generic [ref=f1e77]: "Trending Now :"
+      - generic [ref=f1e80]:
+        - button "Dad fined after son, 2, died in Cyprus hotel fall" [ref=f1e83] [cursor=pointer]
+        - button "Banks expect to be hit with higher taxes in Budget" [ref=f1e86] [cursor=pointer]
+        - button "Children aged 5, 8 and 11 killed in US school shooting before suspect shot by bystander" [ref=f1e89] [cursor=pointer]
+        - button "What is behind the success of dark skies festival?" [ref=f1e92] [cursor=pointer]
+        - button "Flash floods destroy villages in central Nepal" [ref=f1e95] [cursor=pointer]
+        - button "Museum releases historical photos of island where Amelia Earhart may have crashed" [ref=f1e98] [cursor=pointer]
+        - button "प्रधानमंत्री श्री नरेन्द्र मोदी ने एशियाई खेल 2026 में भाग लेने वाले भारतीय एथलीट दल से बातचीत की" [ref=f1e101] [cursor=pointer]
+        - button "भारतीय तटरक्षक बल और कोरियाई तटरक्षक बल के बीच 14वीं उच्च-स्तरीय बैठक इंचियोन में आयोजित हुई" [ref=f1e104] [cursor=pointer]
+        - button "Dad fined after son, 2, died in Cyprus hotel fall" [ref=f1e107] [cursor=pointer]
+        - button "Banks expect to be hit with higher taxes in Budget" [ref=f1e110] [cursor=pointer]
+        - button "Children aged 5, 8 and 11 killed in US school shooting before suspect shot by bystander" [ref=f1e113] [cursor=pointer]
+        - button "What is behind the success of dark skies festival?" [ref=f1e116] [cursor=pointer]
+        - button "Flash floods destroy villages in central Nepal" [ref=f1e119] [cursor=pointer]
+        - button "Museum releases historical photos of island where Amelia Earhart may have crashed" [ref=f1e122] [cursor=pointer]
+        - button "प्रधानमंत्री श्री नरेन्द्र मोदी ने एशियाई खेल 2026 में भाग लेने वाले भारतीय एथलीट दल से बातचीत की" [ref=f1e125] [cursor=pointer]
+        - button "भारतीय तटरक्षक बल और कोरियाई तटरक्षक बल के बीच 14वीं उच्च-स्तरीय बैठक इंचियोन में आयोजित हुई" [ref=f1e128] [cursor=pointer]
+      - generic [ref=f1e129]:
+        - button "Previous headline" [ref=f1e130] [cursor=pointer]
+        - button "Next headline" [ref=f1e133] [cursor=pointer]
+    - main [ref=f1e1296]:
+      - generic [ref=f1e1297]:
+        - generic [ref=f1e1298]:
+          - generic [ref=f1e1299]:
+            - paragraph [ref=f1e1300]: TruthLens report
+            - heading "Verification details" [level=1] [ref=f1e1301]
+          - button "Back to home" [ref=f1e1302]
+        - generic [ref=f1e1303]:
+          - paragraph [ref=f1e1304]: Verification could not be completed
+          - paragraph [ref=f1e1305]: Failed to fetch
+  - contentinfo [ref=f1e452]:
+    - generic [ref=f1e453]:
+      - generic [ref=f1e454]:
+        - generic [ref=f1e455]:
+          - generic [ref=f1e456]: TruthLens
+          - paragraph [ref=f1e462]: An open investigative web platform for automated multi-source news verification, media forensics, and claim analysis.
+          - generic [ref=f1e463]: Source-first verification · Real-time wire consensus
+        - generic [ref=f1e464]:
+          - heading "Verification Tools" [level=4] [ref=f1e465]
+          - list [ref=f1e466]:
+            - listitem [ref=f1e467]:
+              - button "Article URL Fact-Check" [ref=f1e468]
+            - listitem [ref=f1e469]:
+              - button "Text Claim Cross-Examination" [ref=f1e470]
+            - listitem [ref=f1e471]:
+              - button "Image ELA & Forensic Audit" [ref=f1e472]
+            - listitem [ref=f1e473]:
+              - button "Live Misinformation Monitor" [ref=f1e474]
+        - generic [ref=f1e475]:
+          - heading "News Coverage" [level=4] [ref=f1e476]
+          - list [ref=f1e477]:
+            - listitem [ref=f1e478]:
+              - button "Live News Aggregator" [ref=f1e479]
+            - listitem [ref=f1e480]:
+              - button "World Wire Headlines" [ref=f1e481]
+            - listitem [ref=f1e482]:
+              - button "India National Wire" [ref=f1e483]
+            - listitem [ref=f1e484]:
+              - button "Fact Investigation Dossiers" [ref=f1e485]
+            - listitem [ref=f1e486]:
+              - link "REST API Documentation" [ref=f1e487] [cursor=pointer]:
+                - /url: http://localhost:8000/api/docs
+        - generic [ref=f1e492]:
+          - heading "Editorial Transparency" [level=4] [ref=f1e493]
+          - paragraph [ref=f1e494]: TruthLens synthesizes evidence from indexed news registries and official wire records. AI-assisted verdicts are probabilistic and should be reviewed alongside cited primary evidence.
+          - generic [ref=f1e495]: Data stored locally · No user tracking
+      - generic [ref=f1e496]:
+        - paragraph [ref=f1e497]: © 2026 TruthLens Media Intelligence. All rights reserved.
+        - paragraph [ref=f1e498]: Built with React 19, FastAPI, and open evidence datasets.

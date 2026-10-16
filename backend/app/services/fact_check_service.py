@@ -127,22 +127,47 @@ class FactCheckService:
 
     async def verify_image(self, image_bytes: bytes, filename: str, language: str = "en") -> FactCheckResponse:
         start_time = time.time()
-        
-        # 1. Image Forensics
         img_meta = await self.image_provider.analyze_image(image_bytes, filename)
-        
-        # 2. Extract textual cues from filename
-        clean_name = filename.rsplit(".", 1)[0].replace("_", " ").replace("-", " ")
-        text_content = f"Image forensic verification: {clean_name}"
-
-        response = await self._run_pipeline(
+        verdict_text = {
+            "LIKELY_AI": "The detector found signals associated with AI-generated imagery.",
+            "LIKELY_NOT_AI": "The detector found fewer signals associated with AI-generated imagery.",
+            "INCONCLUSIVE": "There is not enough detector evidence to estimate image origin.",
+        }[img_meta.ai_detection_verdict]
+        ai_explanation = (
+            f"{verdict_text}"
+            + (f" Estimated AI-generation probability: {img_meta.ai_generated_probability:.1f}%. "
+               if img_meta.ai_generated_probability is not None else " ")
+            + "This is a probabilistic image-origin assessment, not a verification of the image's depicted claim."
+        )
+        response = FactCheckResponse(
+            id=f"fc-{uuid.uuid4().hex[:10]}",
             submission_type="image",
             submitted_input=filename,
-            text_content=text_content,
+            primary_claim="AI-generated image detection",
+            extracted_claims=[ExtractedClaim(
+                claim_text="AI-generated image detection",
+                topic="Media Forensics",
+                entities=[],
+                verdict=VerdictEnum.UNVERIFIED,
+                confidence=0.0,
+            )],
+            verdict=VerdictEnum.UNVERIFIED,
+            confidence=0.0,
+            evidence_strength="NONE",
+            verification_status="UNVERIFIED",
+            entities=[],
+            category="Media Forensics",
             language=language,
-            start_time=start_time,
+            ai_explanation=ai_explanation,
+            supporting_evidence=[],
+            contradictory_evidence=[],
+            contextual_notes="A detector score can be wrong. Missing or stripped metadata does not establish that an image is AI-generated.",
+            processing_time_ms=int((time.time() - start_time) * 1000),
+            verification_providers=[img_meta.ai_detection_provider or "Local image metadata analysis"],
+            created_at=datetime.now(timezone.utc).isoformat(),
             image_analysis=img_meta,
         )
+        await self.fact_db.save_fact_check(response.model_dump())
         return response
 
     async def detect_live_news(
@@ -448,14 +473,6 @@ class FactCheckService:
                 f"Related information does not constitute evidence of truth. "
                 f"This claim remains UNVERIFIED pending primary source confirmation."
             )
-
-        if image_analysis:
-            if image_analysis.manipulation_risk == "HIGH" or image_analysis.ai_generated_probability > 75.0:
-                verdict = VerdictEnum.MISLEADING
-                confidence = max(confidence, 88.0)
-                ai_explanation += f" Forensic imaging analysis detected high manipulation risk ({image_analysis.ai_generated_probability:.0f}% AI synthesis probability / ELA score {image_analysis.ela_anomaly_score})."
-            elif image_analysis.exif_found:
-                ai_explanation += " Digital camera provenance metadata verified without synthetic tampering indicators."
 
         # Step 6: Create response object
         check_id = f"fc-{uuid.uuid4().hex[:10]}"

@@ -21,7 +21,17 @@ import { api } from "../services/api";
 import { useApp } from "../context/AppContext";
 
 export function NewsReaderFactCheckModal({ article, onClose, onDeepVerify }) {
-  const { showToast, setInputValue, setActiveClaimText } = useApp();
+  const {
+    showToast,
+    setInputValue,
+    setActiveClaimText,
+    setActiveView,
+    setIsVerifying: setPageVerifying,
+    setVerificationStage: setPageVerificationStage,
+    setVerificationResult,
+    setVerificationError: setPageVerificationError,
+    addToHistory,
+  } = useApp();
 
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationStage, setVerificationStage] = useState(0); // 0: idle, 1: claims, 2: wires, 3: forensic, 4: consensus
@@ -70,56 +80,53 @@ export function NewsReaderFactCheckModal({ article, onClose, onDeepVerify }) {
 
   // Build live verification
   const runFactCheck = async () => {
+    const queryText = `${article.title}. ${article.description || ""}`;
     setIsVerifying(true);
     setIsToggleActive(true);
     setVerificationError(null);
     setVerificationStage(1);
+    setActiveClaimText(article.title);
+    setPageVerificationStage(1);
+    setPageVerifying(true);
+    setVerificationResult(null);
+    setPageVerificationError(null);
+    setActiveView("verification-result");
+    onClose();
 
-    const stageTimer1 = setTimeout(() => setVerificationStage(2), 600);
-    const stageTimer2 = setTimeout(() => setVerificationStage(3), 1300);
-    const stageTimer3 = setTimeout(() => setVerificationStage(4), 1900);
+    const stageTimer1 = setTimeout(() => setPageVerificationStage(2), 600);
+    const stageTimer2 = setTimeout(() => setPageVerificationStage(3), 1300);
+    const stageTimer3 = setTimeout(() => setPageVerificationStage(4), 1900);
 
     try {
-      const queryText = `${article.title}. ${article.description || ""}`;
-      const result = await api.verifyText(queryText);
-
-      setIsVerifying(false);
-      setVerifiedResult({
-        verdict: result.verdict || "UNVERIFIED",
-        confidence: result.confidence || 0,
-        explanation:
-          result.ai_explanation ||
-          result.explanation ||
-          "Cross-referenced against verified wire archives and fact-check registries.",
-        sources: (result.supporting_evidence || [])
-          .concat(result.contradictory_evidence || [])
-          .map((e) => e.source_name)
-          .filter(Boolean)
-          .slice(0, 4),
-        breakdown: {
-          wireAgreement: Math.round(result.confidence || 85),
-          factualConsistency: Math.round((result.confidence || 80) * 0.95),
-          neutralTone: 88,
-        },
-      });
+      const rawResult = await api.verifyText(queryText);
+      const result = {
+        ...rawResult,
+        primary_claim: rawResult.primary_claim || article.title,
+        article_title: article.title,
+        article_url: article.link || article.url || null,
+        submitted_input: queryText,
+        submission_type: "text",
+      };
+      setPageVerificationStage(4);
+      setVerificationResult(result);
+      addToHistory(result);
+      showToast("News story verification completed.");
     } catch (err) {
-      clearTimeout(stageTimer1);
-      clearTimeout(stageTimer2);
-      clearTimeout(stageTimer3);
-      setIsVerifying(false);
-      setVerifiedResult(null);
+      setVerificationResult(null);
       const is429 = err.status === 429 || err.code === "RATE_LIMITED";
       const message = is429
         ? "Too many requests, wait a minute."
         : (err.message || "Verification service is unavailable. Please try again.");
       setVerificationError(message);
-    }
-
-    return () => {
+      setPageVerificationError(message);
+      showToast(message);
+    } finally {
       clearTimeout(stageTimer1);
       clearTimeout(stageTimer2);
       clearTimeout(stageTimer3);
-    };
+      setPageVerifying(false);
+      setIsVerifying(false);
+    }
   };
 
   const handleToggle = () => {
@@ -611,7 +618,7 @@ export function NewsReaderFactCheckModal({ article, onClose, onDeepVerify }) {
                 onClick={handleDeepVerifyClick}
                 className="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
               >
-                <span>Open in Deep Forensic Inspector</span>
+                <span>Add headline to text check</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
 

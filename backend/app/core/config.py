@@ -96,6 +96,9 @@ class Settings(BaseModel):
     NEWS_API_KEY: str = os.getenv("NEWS_API_KEY", "") or os.getenv("NEWSAPI_KEY", "")
     SEARCH_API_KEY: str = os.getenv("SEARCH_API_KEY", "")
     GOOGLE_FACTCHECK_API_KEY: str = os.getenv("GOOGLE_FACTCHECK_API_KEY", "")
+    # Optional pixel-based AI image detector. Keep credentials server-side only.
+    SIGHTENGINE_API_USER: str = os.getenv("SIGHTENGINE_API_USER", "")
+    SIGHTENGINE_API_SECRET: str = os.getenv("SIGHTENGINE_API_SECRET", "")
     
     # Firebase Cloud Configuration (Backend Server-Side Only)
     # Supports JSON payload, credential file path, or individual fields

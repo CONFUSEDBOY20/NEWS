@@ -1,0 +1,272 @@
+- generic [ref=f2e3]:
+  - generic [ref=f2e4]:
+    - banner [ref=f2e5]:
+      - generic [ref=f2e6]:
+        - generic [ref=f2e7]:
+          - generic [ref=f2e8] [cursor=pointer]: TruthLens
+          - navigation [ref=f2e15]:
+            - button "Fact Check" [active] [ref=f2e16] [cursor=pointer]
+            - button "Live News" [ref=f2e19] [cursor=pointer]
+            - button "World News" [ref=f2e21] [cursor=pointer]
+            - button "India News" [ref=f2e23] [cursor=pointer]
+            - button "Investigations" [ref=f2e25] [cursor=pointer]
+            - button "Topics" [ref=f2e28] [cursor=pointer]
+            - button "About" [ref=f2e32] [cursor=pointer]
+        - generic [ref=f2e33]:
+          - button "Live Connected" [ref=f2e34] [cursor=pointer]
+          - button "Search" [ref=f2e42] [cursor=pointer]
+          - button "Toggle dark mode" [ref=f2e46] [cursor=pointer]
+          - button "History" [ref=f2e49] [cursor=pointer]
+          - button "Admin settings" [ref=f2e55]
+    - generic [ref=f2e58]:
+      - generic [ref=f2e59]:
+        - generic [ref=f2e60]: LIVE
+        - generic [ref=f2e63]: "Trending Now :"
+      - generic [ref=f2e531]:
+        - button "Who was Eva Mamlok? Berlin square renamed after Jewish anti-fascist resistance fighter" [ref=f2e2474] [cursor=pointer]
+        - button "EU’s von der Leyen pledges to ‘not lift any sanctions unless Russia stops the war’ as leaders discuss Ukraine – Europe live" [ref=f2e2477] [cursor=pointer]
+        - button "Europe promotes sovereign, trusted AI as it struggles to catch US and China" [ref=f2e2480] [cursor=pointer]
+        - button "Trump calls Ukraine’s renewed strikes on Russian oil refineries a ‘disgrace’" [ref=f2e2483] [cursor=pointer]
+        - button "Bank shares drop as John Healey prepares to raise taxes on the banking sector in the budget – business live" [ref=f2e2486] [cursor=pointer]
+        - button "School's plan to use toilet chaperones puts pupils at risk, says campaigner" [ref=f2e2489] [cursor=pointer]
+        - button "सीमा शुल्क अधिकारियों ने आईजीआई हवाई अड्डे के एयर कार्गो कॉम्प्लेक्स में बैंकॉक से आयात किए गए 148.67 किलोग्राम हाइड्रोपोनिक मादक पदार्थ का पता लगाया" [ref=f2e2492] [cursor=pointer]
+        - button "प्रधानमंत्री श्री नरेन्द्र मोदी ने एशियाई खेल 2026 में भाग लेने वाले भारतीय एथलीट दल से बातचीत की" [ref=f2e2495] [cursor=pointer]
+        - button "Who was Eva Mamlok? Berlin square renamed after Jewish anti-fascist resistance fighter" [ref=f2e2498] [cursor=pointer]
+        - button "EU’s von der Leyen pledges to ‘not lift any sanctions unless Russia stops the war’ as leaders discuss Ukraine – Europe live" [ref=f2e2501] [cursor=pointer]
+        - button "Europe promotes sovereign, trusted AI as it struggles to catch US and China" [ref=f2e2504] [cursor=pointer]
+        - button "Trump calls Ukraine’s renewed strikes on Russian oil refineries a ‘disgrace’" [ref=f2e2507] [cursor=pointer]
+        - button "Bank shares drop as John Healey prepares to raise taxes on the banking sector in the budget – business live" [ref=f2e2510] [cursor=pointer]
+        - button "School's plan to use toilet chaperones puts pupils at risk, says campaigner" [ref=f2e2513] [cursor=pointer]
+        - button "सीमा शुल्क अधिकारियों ने आईजीआई हवाई अड्डे के एयर कार्गो कॉम्प्लेक्स में बैंकॉक से आयात किए गए 148.67 किलोग्राम हाइड्रोपोनिक मादक पदार्थ का पता लगाया" [ref=f2e2516] [cursor=pointer]
+        - button "प्रधानमंत्री श्री नरेन्द्र मोदी ने एशियाई खेल 2026 में भाग लेने वाले भारतीय एथलीट दल से बातचीत की" [ref=f2e2519] [cursor=pointer]
+      - generic [ref=f2e68]:
+        - button "Previous headline" [ref=f2e69] [cursor=pointer]
+        - button "Next headline" [ref=f2e72] [cursor=pointer]
+    - main [ref=f2e75]:
+      - generic [ref=f2e2592]:
+        - generic [ref=f2e2593]:
+          - generic [ref=f2e2594]:
+            - generic [ref=f2e2595]:
+              - generic [ref=f2e2596]: NEWS CHECK
+              - heading "Check news, claims and media before you believe." [level=1] [ref=f2e2599]
+              - paragraph [ref=f2e2600]: Verify viral headlines, social media claims, images and articles with trusted sources.
+              - generic [ref=f2e2601]:
+                - generic [ref=f2e2602]: 30+ Live Wires
+                - generic [ref=f2e2605]: Google News RSS
+                - generic [ref=f2e2611]: 30+ Outlets
+                - generic [ref=f2e2616]: 382 Monitored
+            - generic [ref=f2e2620]:
+              - generic [ref=f2e2621]:
+                - button "Check Text" [ref=f2e2622] [cursor=pointer]
+                - button "Check URL" [ref=f2e2627] [cursor=pointer]
+                - button "Check Image" [ref=f2e2632] [cursor=pointer]
+              - generic [ref=f2e2638]:
+                - generic [ref=f2e2639]:
+                  - textbox "Paste a news headline, social media message, or article excerpt to verify..." [ref=f2e2640]
+                  - generic [ref=f2e2641]: 0/1000
+                - generic [ref=f2e2642]:
+                  - combobox [ref=f2e2644] [cursor=pointer]:
+                    - option "Auto-detect language" [selected]
+                    - option "English"
+                    - option "हिन्दी (Hindi)"
+                    - option "বাংলা (Bengali)"
+                    - option "मराठी (Marathi)"
+                    - option "தமிழ் (Tamil)"
+                    - option "తెలుగు (Telugu)"
+                  - button "Check Claim" [ref=f2e2645] [cursor=pointer]
+              - generic [ref=f2e2650]:
+                - generic [ref=f2e2651]: "Try an example:"
+                - button "\"5G causes health problems\"" [ref=f2e2652] [cursor=pointer]
+                - button "\"Government gives free laptops\"" [ref=f2e2653] [cursor=pointer]
+                - button "\"This image is from a recent flood\"" [ref=f2e2654] [cursor=pointer]
+          - generic [ref=f2e2656]:
+            - img "Understanding Disinformation Patterns in Public Health" [ref=f2e2657]
+            - generic [ref=f2e2659]:
+              - generic [ref=f2e2660]: Editorial example
+              - generic [ref=f2e2661]:
+                - button "Previous story" [ref=f2e2662] [cursor=pointer]
+                - button "Next story" [ref=f2e2665] [cursor=pointer]
+            - generic [ref=f2e2668]:
+              - heading "Understanding Disinformation Patterns in Public Health" [level=2] [ref=f2e2669] [cursor=pointer]
+              - paragraph [ref=f2e2670]: Educational analysis of how unsubstantiated health claims spread across messaging channels.
+              - generic [ref=f2e2671]:
+                - button "Go to slide 1" [ref=f2e2672] [cursor=pointer]
+                - button "Go to slide 2" [ref=f2e2673] [cursor=pointer]
+          - generic [ref=f2e2676]:
+            - heading "Recent Checks" [level=3] [ref=f2e2677]
+            - button "View all" [ref=f2e2678] [cursor=pointer]
+        - generic [ref=f2e2683]:
+          - generic [ref=f2e2684]:
+            - generic [ref=f2e2693]:
+              - generic [ref=f2e2694]:
+                - heading "Real-Time News Wire Telemetry" [level=3] [ref=f2e2695]
+                - generic [ref=f2e2696]: LIVE BACKEND DATA
+              - paragraph [ref=f2e2698]: Aggregated live from official syndication wires, Google News RSS, and vetted global newsrooms.
+            - generic [ref=f2e2699]:
+              - generic [ref=f2e2700]: "Sync: 15m intervals"
+              - button "Refresh live telemetry" [ref=f2e2701] [cursor=pointer]
+          - generic [ref=f2e2707]:
+            - generic [ref=f2e2708]:
+              - generic [ref=f2e2709]: RSS Wire Feeds
+              - generic [ref=f2e2715]: "30"
+              - paragraph [ref=f2e2716]: +9 Google News Feeds
+            - generic [ref=f2e2717]:
+              - generic [ref=f2e2718]: Live Outlets
+              - generic [ref=f2e2723]: "30"
+              - paragraph [ref=f2e2724]: BBC, Reuters, Hindu, AP, DW
+            - generic [ref=f2e2725]:
+              - generic [ref=f2e2726]: Wire Depth
+              - generic [ref=f2e2730]: "382"
+              - paragraph [ref=f2e2731]: Active verified wire pool
+            - generic [ref=f2e2732]:
+              - generic [ref=f2e2733]: Provider Mesh
+              - generic [ref=f2e2737]: 7/7
+              - paragraph [ref=f2e2738]: Circuit breakers 100% OK
+          - generic [ref=f2e2739]:
+            - generic [ref=f2e2740]:
+              - generic [ref=f2e2741]: "Live Coverage:"
+              - generic [ref=f2e2742]: World
+              - generic [ref=f2e2743]: ·
+              - generic [ref=f2e2744]: India
+              - generic [ref=f2e2745]: ·
+              - generic [ref=f2e2746]: Technology
+              - generic [ref=f2e2747]: ·
+              - generic [ref=f2e2748]: Science
+              - generic [ref=f2e2749]: ·
+              - generic [ref=f2e2750]: Health
+              - generic [ref=f2e2751]: ·
+              - generic [ref=f2e2752]: Business
+              - generic [ref=f2e2753]: ·
+              - generic [ref=f2e2754]: Politics
+            - generic [ref=f2e2755]: Zero Mock Records · 100% Real-Time Aggregation
+        - generic [ref=f2e2760]:
+          - generic [ref=f2e2761]:
+            - generic [ref=f2e2762]:
+              - generic [ref=f2e2763]:
+                - heading "Latest News" [level=2] [ref=f2e2764]
+                - button "View all" [ref=f2e2765] [cursor=pointer]
+              - generic [ref=f2e2769]:
+                - button "All" [ref=f2e2770] [cursor=pointer]
+                - button "India" [ref=f2e2771] [cursor=pointer]
+                - button "World" [ref=f2e2772] [cursor=pointer]
+                - button "Technology" [ref=f2e2773] [cursor=pointer]
+                - button "Health" [ref=f2e2774] [cursor=pointer]
+                - button "Environment" [ref=f2e2775] [cursor=pointer]
+                - button "Politics" [ref=f2e2776] [cursor=pointer]
+              - generic [ref=f2e2777]:
+                - article [ref=f2e2778] [cursor=pointer]:
+                  - generic [ref=f2e2779]:
+                    - generic [ref=f2e2780]:
+                      - img "EU’s von der Leyen pledges to ‘not lift any sanctions unless Russia stops the war’ as leaders discuss Ukraine – Europe live" [ref=f2e2781]
+                      - generic [ref=f2e2782]: LIVE
+                      - generic [ref=f2e2785]: World
+                    - generic [ref=f2e2786]:
+                      - generic [ref=f2e2787]:
+                        - generic [ref=f2e2788]: The Guardian World
+                        - generic [ref=f2e2789]: 14m ago
+                      - heading "EU’s von der Leyen pledges to ‘not lift any sanctions unless Russia stops the war’ as leaders discuss Ukraine – Europe live" [level=3] [ref=f2e2790]
+                      - paragraph [ref=f2e2791]: European leaders are meeting in Brussels amid worsening relations between Washington and Kyiv Speaking to Newsmax last night, Donald Trump repeated his views of the two leaders involved in the conflict. “I’m not a big fan of Zelenskyy,” Trump said. “I think they actually both would like to see it ⁠end, but I think I find Zelenskyy to be more difficult to deal with than Putin.” “ So, our perspectives on this differ significantly. It is crucial that everyone in the Nato alliance understands that when Europe is attacked, European security – and by extension, the security of the entire alliance – is under threat. Therefore, we must continue to defend ourselves, while also continuing to build up our military capabilities.” Continue reading...
+                  - generic [ref=f2e2792]:
+                    - generic [ref=f2e2793]: Read & Check
+                    - generic [ref=f2e2797]: AI Verify
+                - article [ref=f2e2798] [cursor=pointer]:
+                  - generic [ref=f2e2799]:
+                    - generic [ref=f2e2800]:
+                      - img "Europe promotes sovereign, trusted AI as it struggles to catch US and China" [ref=f2e2801]
+                      - generic [ref=f2e2802]: LIVE
+                      - generic [ref=f2e2805]: World
+                    - generic [ref=f2e2806]:
+                      - generic [ref=f2e2807]:
+                        - generic [ref=f2e2808]: Deutsche Welle
+                        - generic [ref=f2e2809]: 16m ago
+                      - heading "Europe promotes sovereign, trusted AI as it struggles to catch US and China" [level=3] [ref=f2e2810]
+                      - paragraph [ref=f2e2811]: At an international AI summit in Dublin, European leaders promoted trusted and independent AI. Critics question whether the EU can close the gap with the US and China while maintaining strict regulation.
+                  - generic [ref=f2e2812]:
+                    - generic [ref=f2e2813]: Read & Check
+                    - generic [ref=f2e2817]: AI Verify
+                - article [ref=f2e2818] [cursor=pointer]:
+                  - generic [ref=f2e2819]:
+                    - generic [ref=f2e2820]:
+                      - img "Trump calls Ukraine’s renewed strikes on Russian oil refineries a ‘disgrace’" [ref=f2e2821]
+                      - generic [ref=f2e2822]: LIVE
+                      - generic [ref=f2e2825]: World
+                    - generic [ref=f2e2826]:
+                      - generic [ref=f2e2827]:
+                        - generic [ref=f2e2828]: The Guardian World
+                        - generic [ref=f2e2829]: 17m ago
+                      - heading "Trump calls Ukraine’s renewed strikes on Russian oil refineries a ‘disgrace’" [level=3] [ref=f2e2830]
+                      - paragraph [ref=f2e2831]: US president says Zelenskyy ‘more difficult to deal with than Putin’ after ‘energy ceasefire’ collapses Europe live – latest updates Donald Trump has called Ukraine’s renewed strikes on Russian oil refineries a “disgrace”, while renewing his criticism of Volodymyr ⁠Zelenskyy after an energy ceasefire between Russia and Ukraine collapsed. Ukraine resumed strikes on Russian oil refineries ⁠after Zelenskyy said that Kyiv was abandoning a ceasefire abruptly declared by Trump last week, one that neither Russia nor Ukraine said they had agreed to. Continue reading...
+                  - generic [ref=f2e2832]:
+                    - generic [ref=f2e2833]: Read & Check
+                    - generic [ref=f2e2837]: AI Verify
+                - article [ref=f2e2838] [cursor=pointer]:
+                  - generic [ref=f2e2839]:
+                    - generic [ref=f2e2840]:
+                      - img "Bank shares drop as John Healey prepares to raise taxes on the banking sector in the budget – business live" [ref=f2e2841]
+                      - generic [ref=f2e2842]: LIVE
+                      - generic [ref=f2e2845]: Business
+                    - generic [ref=f2e2846]:
+                      - generic [ref=f2e2847]:
+                        - generic [ref=f2e2848]: The Guardian Business
+                        - generic [ref=f2e2849]: 18m ago
+                      - heading "Bank shares drop as John Healey prepares to raise taxes on the banking sector in the budget – business live" [level=3] [ref=f2e2850]
+                      - paragraph [ref=f2e2851]: Rolling coverage of the latest economic and financial news John Healey poised to raise taxes on banks in budget Elsewhere in the markets today, South Korea’s Kospi share index has recorded its biggest weekly loss since October 2008, down 14.5% this week. Although the Kospi did rise today (+2%), it was still a bad week for technology stocks – as investors worried about the borrowing, spending commitments and future profitability of AI companies. The reality is that while companies embraced AI aggressively as it first emerged, now they are figuring out how to use it effectively while keeping AI costs under control. A slowing, more careful, path towards corporate adoption has been missed by the market which remained wildly frothy about valuations. “A UK bank tax risk is now a base case. If it is confirmed on 28 October, it’ll be the size and timing that will be key. If Healey does go ahead, shares of Lloyds and NatWest, which are almost entirely exposed to the UK, would likely be impacted most, and you are seeing this already in the share price reaction today. Barclays is partly exposed. HSBC is least exposed in the mix.” Continue reading...
+                  - generic [ref=f2e2852]:
+                    - generic [ref=f2e2853]: Read & Check
+                    - generic [ref=f2e2857]: AI Verify
+            - generic [ref=f2e2858]:
+              - heading "How TruthLens works" [level=3] [ref=f2e2859]
+              - generic [ref=f2e2860]:
+                - generic [ref=f2e2861]:
+                  - generic [ref=f2e2862]: "1"
+                  - generic [ref=f2e2863]:
+                    - heading "Submit a claim" [level=4] [ref=f2e2864]
+                    - paragraph [ref=f2e2865]: Paste text, URL or upload an image.
+                - generic [ref=f2e2874]:
+                  - heading "We analyse it" [level=4] [ref=f2e2875]
+                  - paragraph [ref=f2e2876]: Our system checks multiple trusted sources and verifies the content.
+                - generic [ref=f2e2885]:
+                  - heading "Get a clear result" [level=4] [ref=f2e2886]
+                  - paragraph [ref=f2e2887]: See whether it's true, false, misleading or needs more context.
+          - generic [ref=f2e2889]:
+            - heading "Popular Investigations" [level=2] [ref=f2e2890]
+            - button "View all" [ref=f2e2891] [cursor=pointer]
+  - contentinfo [ref=f2e319]:
+    - generic [ref=f2e320]:
+      - generic [ref=f2e321]:
+        - generic [ref=f2e322]:
+          - generic [ref=f2e323]: TruthLens
+          - paragraph [ref=f2e329]: An open investigative web platform for automated multi-source news verification, media forensics, and claim analysis.
+          - generic [ref=f2e330]: Source-first verification · Real-time wire consensus
+        - generic [ref=f2e331]:
+          - heading "Verification Tools" [level=4] [ref=f2e332]
+          - list [ref=f2e333]:
+            - listitem [ref=f2e334]:
+              - button "Article URL Fact-Check" [ref=f2e335]
+            - listitem [ref=f2e336]:
+              - button "Text Claim Cross-Examination" [ref=f2e337]
+            - listitem [ref=f2e338]:
+              - button "Image ELA & Forensic Audit" [ref=f2e339]
+            - listitem [ref=f2e340]:
+              - button "Live Misinformation Monitor" [ref=f2e341]
+        - generic [ref=f2e342]:
+          - heading "News Coverage" [level=4] [ref=f2e343]
+          - list [ref=f2e344]:
+            - listitem [ref=f2e345]:
+              - button "Live News Aggregator" [ref=f2e346]
+            - listitem [ref=f2e347]:
+              - button "World Wire Headlines" [ref=f2e348]
+            - listitem [ref=f2e349]:
+              - button "India National Wire" [ref=f2e350]
+            - listitem [ref=f2e351]:
+              - button "Fact Investigation Dossiers" [ref=f2e352]
+            - listitem [ref=f2e353]:
+              - link "REST API Documentation" [ref=f2e354] [cursor=pointer]:
+                - /url: http://localhost:8000/api/docs
+        - generic [ref=f2e359]:
+          - heading "Editorial Transparency" [level=4] [ref=f2e360]
+          - paragraph [ref=f2e361]: TruthLens synthesizes evidence from indexed news registries and official wire records. AI-assisted verdicts are probabilistic and should be reviewed alongside cited primary evidence.
+          - generic [ref=f2e362]: Data stored locally · No user tracking
+      - generic [ref=f2e363]:
+        - paragraph [ref=f2e364]: © 2026 TruthLens Media Intelligence. All rights reserved.
+        - paragraph [ref=f2e365]: Built with React 19, FastAPI, and open evidence datasets.

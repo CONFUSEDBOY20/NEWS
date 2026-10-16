@@ -5,6 +5,8 @@ from typing import Dict, Any, List, Optional
 from app.providers.fact_db_provider import FactDatabaseProvider
 from app.schemas.admin import DashboardOverviewStats, RawDataRecord, FactArticle
 from app.core.news_sources import VETTED_RSS_FEEDS
+from app.core.config import settings
+from app.providers.fact_db_provider import is_firestore_configured
 
 class AdminService:
     def __init__(self):
@@ -175,6 +177,23 @@ class AdminService:
 
     def update_settings(self, updates: Dict[str, Any]) -> Dict[str, Any]:
         return self.fact_db.update_settings(updates)
+
+    def get_runtime_provider_status(self) -> Dict[str, Any]:
+        """Expose configuration readiness without returning any credential values."""
+        providers = [
+            {"id": "rss", "name": "RSS and GDELT news feeds", "configured": True, "env": ["No API key required"]},
+            {"id": "gemini", "name": "Gemini AI", "configured": bool(settings.GEMINI_API_KEY), "env": ["GEMINI_API_KEY"]},
+            {"id": "google_fact_check", "name": "Google Fact Check Tools", "configured": bool(settings.GOOGLE_FACTCHECK_API_KEY), "env": ["GOOGLE_FACTCHECK_API_KEY"]},
+            {"id": "search", "name": "Search API key", "configured": bool(settings.SEARCH_API_KEY), "env": ["SEARCH_API_KEY"], "note": "Public search fallbacks are used when this key is absent."},
+            {"id": "sightengine", "name": "AI image detector (Sightengine)", "configured": bool(settings.SIGHTENGINE_API_USER and settings.SIGHTENGINE_API_SECRET), "env": ["SIGHTENGINE_API_USER", "SIGHTENGINE_API_SECRET"]},
+            {"id": "guardian", "name": "Guardian News API", "configured": bool(settings.GUARDIAN_API_KEY), "env": ["GUARDIAN_API_KEY"]},
+            {"id": "currents", "name": "Currents News API", "configured": bool(settings.CURRENTS_API_KEY), "env": ["CURRENTS_API_KEY"]},
+            {"id": "newsdata", "name": "NewsData API", "configured": bool(settings.NEWSDATA_API_KEY), "env": ["NEWSDATA_API_KEY"]},
+            {"id": "gnews", "name": "GNews API", "configured": bool(settings.GNEWS_API_KEY), "env": ["GNEWS_API_KEY"]},
+            {"id": "newsapi", "name": "NewsAPI", "configured": bool(settings.NEWS_API_KEY), "env": ["NEWS_API_KEY"]},
+            {"id": "firestore", "name": "Firestore", "configured": is_firestore_configured(), "env": ["FIREBASE_PROJECT_ID", "FIREBASE_CLIENT_EMAIL", "FIREBASE_PRIVATE_KEY"]},
+        ]
+        return {"api_base": "/api", "providers": providers}
 
     def export_raw_data_csv(self) -> str:
         items = self.fact_db.get_all_raw_data()

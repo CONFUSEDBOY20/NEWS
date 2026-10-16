@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AppProvider, useApp } from "./context/AppContext";
 import { Header } from "./components/Header";
 import { NewsTicker } from "./components/NewsTicker";
@@ -13,15 +13,20 @@ import { FactArticlesView } from "./components/FactArticlesView";
 import { LiveDetectionView } from "./components/LiveDetectionView";
 import { AdminModal } from "./components/AdminModal";
 import { AdminDashboard } from "./components/AdminDashboard";
+import { QuickSearchBar } from "./components/QuickSearchBar";
 import { API_BASE } from "./services/api";
-import { ShieldCheck, CheckCircle2, ArrowUpRight } from "lucide-react";
+import { CheckCircle2, ArrowUpRight } from "lucide-react";
+import { TruthLensLogo } from "./components/TruthLensLogo";
 
 function MainContent() {
+  const [showSplash, setShowSplash] = useState(true);
   const {
     activeView,
     setActiveView,
+    setVerificationError,
     isVerifying,
     verificationResult,
+    verificationError,
     isAdminLoggedIn,
     toastMessage,
     theme
@@ -29,10 +34,31 @@ function MainContent() {
 
   const isDark = theme === "dark";
 
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setShowSplash(false);
+      return undefined;
+    }
+    const timer = window.setTimeout(() => setShowSplash(false), 1650);
+    return () => window.clearTimeout(timer);
+  }, []);
+
   return (
     <div className={`truth-app min-h-screen flex flex-col justify-between transition-colors duration-200 relative font-sans ${
       isDark ? "truth-dark" : "truth-light"
     }`}>
+
+      {showSplash && (
+        <div className="truth-splash" role="status" aria-label="Loading TruthLens">
+          <div className="truth-splash-brand">
+            <TruthLensLogo imageClassName="w-[190px] sm:w-[220px]" />
+          </div>
+          <div className="truth-splash-loading" aria-hidden="true">
+            <span className="truth-splash-loader"><i /><i /><i /><i /></span>
+            <span>Loading TruthLens</span>
+          </div>
+        </div>
+      )}
 
       <div className="relative z-10 flex-1 flex flex-col">
         {/* Full-width Website Header */}
@@ -41,14 +67,49 @@ function MainContent() {
         {/* Full-width Wire Ticker */}
         <NewsTicker />
 
+        {/* Search and verification actions live with the page tools, below the nav and ticker. */}
+        {activeView !== "admin" && activeView !== "fact-check" && <QuickSearchBar />}
+
         {/* Main Website Page Content */}
-        <main className="flex-1 pb-16">
+        <main className="flex-1 pb-16 route-transition" key={activeView}>
           {activeView === "fact-check" && (
             <>
               <FactCheckHero />
+            </>
+          )}
+
+          {activeView === "verification-result" && (
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+              <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">TruthLens report</p>
+                  <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1">Verification details</h1>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setVerificationError(null);
+                    setActiveView("fact-check");
+                  }}
+                  className="px-4 py-2 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.04] text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/[0.08] transition-colors"
+                >
+                  Back to home
+                </button>
+              </div>
               {isVerifying && <FactCheckProgress />}
               {!isVerifying && verificationResult && <FactCheckResult />}
-            </>
+              {!isVerifying && !verificationResult && verificationError && (
+                <div className="rounded-2xl border border-rose-300 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-500/10 p-6 text-center">
+                  <p className="font-semibold text-rose-700 dark:text-rose-300">Verification could not be completed</p>
+                  <p className="mt-2 text-sm text-rose-700/80 dark:text-rose-200/80">{verificationError}</p>
+                </div>
+              )}
+              {!isVerifying && !verificationResult && !verificationError && (
+                <div className="rounded-2xl border border-slate-200 dark:border-white/10 p-8 text-center text-slate-600 dark:text-slate-300">
+                  No verification report is available. Return home and start a new check.
+                </div>
+              )}
+            </section>
           )}
 
           {activeView === "live-news" && <LiveNewsView />}
@@ -90,12 +151,7 @@ function MainContent() {
             
             {/* Col 1: Brand & Mission */}
             <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-md bg-blue-600/10 text-blue-600 flex items-center justify-center">
-                  <ShieldCheck className="w-4 h-4" />
-                </div>
-                <span className="font-bold text-slate-900 dark:text-white text-sm">Truth<span className="text-blue-600">Lens</span></span>
-              </div>
+              <TruthLensLogo imageClassName="w-[120px]" />
               <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                 An open investigative web platform for automated multi-source news verification, media forensics, and claim analysis.
               </p>

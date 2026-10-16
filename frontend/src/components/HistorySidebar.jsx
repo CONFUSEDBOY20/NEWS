@@ -18,7 +18,7 @@ export function HistorySidebar() {
   const handleSelectHistory = (item) => {
     if (item.resultData) {
       setVerificationResult(item.resultData);
-      setActiveView("fact-check");
+      setActiveView("verification-result");
       setShowHistoryDrawer(false);
     }
   };

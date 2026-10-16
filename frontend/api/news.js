@@ -183,10 +183,16 @@ async function fetchGoogleNewsRss(query, category) {
       rssUrl = "https://news.google.com/rss?hl=en-IN&gl=IN&ceid=IN:en";
     } else if (cat === "tech" || cat === "technology") {
       rssUrl = "https://news.google.com/rss/headlines/section/topic/TECHNOLOGY?hl=en-US&gl=US&ceid=US:en";
-    } else if (cat === "business") {
+    } else if (cat === "business" || cat === "economy") {
       rssUrl = "https://news.google.com/rss/headlines/section/topic/BUSINESS?hl=en-US&gl=US&ceid=US:en";
     } else if (cat === "health") {
       rssUrl = "https://news.google.com/rss/headlines/section/topic/HEALTH?hl=en-US&gl=US&ceid=US:en";
+    } else if (cat === "science") {
+      rssUrl = "https://news.google.com/rss/headlines/section/topic/SCIENCE?hl=en-US&gl=US&ceid=US:en";
+    } else if (cat === "politics") {
+      rssUrl = "https://news.google.com/rss/headlines/section/topic/NATION?hl=en-US&gl=US&ceid=US:en";
+    } else if (cat === "climate" || cat === "environment") {
+      rssUrl = "https://news.google.com/rss/search?q=climate+change+environment&hl=en-US&gl=US&ceid=US:en";
     }
   }
 

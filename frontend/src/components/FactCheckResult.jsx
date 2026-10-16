@@ -270,10 +270,22 @@ export function FactCheckResult() {
       <div className="space-y-5">
         {/* Top bar: label + actions */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-baseline gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs text-slate-500 font-medium">Fact-Check Report</span>
             <span className="text-xs text-slate-600">·</span>
             <span className="text-xs text-slate-500 tabular-nums font-mono">{res.id?.slice(0, 12) || "—"}</span>
+            <span className="text-xs text-slate-600">·</span>
+            {res.isLiveVerification !== false && res.verificationSource !== "client-fallback" ? (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Live AI Verification
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                Offline Heuristic Engine
+              </span>
+            )}
           </div>
           <div className="flex items-center gap-2">
             <button

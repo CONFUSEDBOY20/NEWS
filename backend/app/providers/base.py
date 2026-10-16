@@ -7,17 +7,17 @@ class BaseNewsProvider(ABC):
     @abstractmethod
     async def get_world_news(
         self, category: Optional[str] = None, page: int = 1, page_size: int = 20, fresh: bool = False
-    ) -> List[NewsArticle]:
+    ) -> Any:
         pass
 
     @abstractmethod
     async def get_india_news(
         self, category: Optional[str] = None, page: int = 1, page_size: int = 20, fresh: bool = False
-    ) -> List[NewsArticle]:
+    ) -> Any:
         pass
 
     @abstractmethod
-    async def search_news(self, query: str, page: int = 1, page_size: int = 20) -> List[NewsArticle]:
+    async def search_news(self, query: str, page: int = 1, page_size: int = 20) -> Any:
         pass
 
 class BaseSearchProvider(ABC):

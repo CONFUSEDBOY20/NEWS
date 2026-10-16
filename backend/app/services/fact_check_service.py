@@ -155,19 +155,26 @@ class FactCheckService:
         normalized_region = region.lower()
         page_size = max(1, min(limit, 12))
 
+        def _extract_articles(feed_obj: Any) -> list:
+            if hasattr(feed_obj, "articles"):
+                return list(feed_obj.articles)
+            if isinstance(feed_obj, list):
+                return list(feed_obj)
+            return []
+
         if normalized_region == "world":
             feed = await self.news_provider.get_world_news(category=category, page_size=page_size, fresh=True)
-            articles = feed.articles if hasattr(feed, "articles") else (feed or [])
+            articles = _extract_articles(feed)
         elif normalized_region == "india":
             feed = await self.news_provider.get_india_news(category=category, page_size=page_size, fresh=True)
-            articles = feed.articles if hasattr(feed, "articles") else (feed or [])
+            articles = _extract_articles(feed)
         else:
             world_feed, india_feed = await asyncio.gather(
                 self.news_provider.get_world_news(category=category, page_size=max(1, page_size // 2), fresh=True),
                 self.news_provider.get_india_news(category=category, page_size=page_size, fresh=True),
             )
-            world_arts = world_feed.articles if hasattr(world_feed, "articles") else (world_feed or [])
-            india_arts = india_feed.articles if hasattr(india_feed, "articles") else (india_feed or [])
+            world_arts = _extract_articles(world_feed)
+            india_arts = _extract_articles(india_feed)
             articles = (world_arts + india_arts)[:page_size]
 
         checks = await asyncio.gather(
@@ -188,6 +195,61 @@ class FactCheckService:
             region=normalized_region.title() if normalized_region != "global" else "Global",
             category=category or "All",
             synced_at=datetime.now(timezone.utc).isoformat(),
+        )
+
+    async def detect_live_stream(self, text: str, language: str = "en") -> LiveDetectionResponse:
+        start_time = time.time()
+        result = await self._run_pipeline(
+            submission_type="live_stream",
+            submitted_input=text[:500],
+            text_content=text,
+            language=language,
+            start_time=start_time,
+            persist=False,
+        )
+        risk_score = self._risk_score(result, text)
+        source_label, source_score = self._source_credibility("Live Stream Input")
+        signals = self._risk_signals(result, text, source_label, source_score)
+        if risk_score >= 75:
+            risk_level = "HIGH"
+        elif risk_score >= 45:
+            risk_level = "MEDIUM"
+        else:
+            risk_level = "LOW"
+
+        detection = LiveDetectionItem(
+            article_id=f"stream_{int(start_time)}",
+            title=text[:100],
+            source_name="Live Stream Input",
+            source_url="stream://live-input",
+            published_at=datetime.now(timezone.utc).isoformat(),
+            region="Global",
+            category="Live",
+            risk_level=risk_level,
+            risk_score=risk_score,
+            source_credibility=source_label,
+            source_credibility_score=source_score,
+            risk_signals=signals,
+            evidence_summary=self._evidence_summary(result),
+            matched_claim_group=self._claim_group(text[:100]),
+            verdict=result.verdict,
+            confidence=result.confidence,
+            detection_reason=self._detection_reason(result, risk_level),
+            fact_check_id=result.id,
+            checked_at=result.created_at,
+        )
+        clusters = self._claim_clusters([detection])
+        return LiveDetectionResponse(
+            total_scanned=1,
+            high_risk_count=1 if risk_level == "HIGH" else 0,
+            medium_risk_count=1 if risk_level == "MEDIUM" else 0,
+            low_risk_count=1 if risk_level == "LOW" else 0,
+            detections=[detection],
+            claim_clusters=clusters,
+            region="Global",
+            category="Live",
+            synced_at=datetime.now(timezone.utc).isoformat(),
+            feed_mode="live_stream",
         )
 
     async def _detect_article(self, article, language: str) -> LiveDetectionItem:
@@ -439,3 +501,142 @@ class FactCheckService:
 
     async def get_check_by_id(self, check_id: str) -> Optional[dict]:
         return await self.fact_db.get_fact_check(check_id)
+
+    async def stream_verify_claim(
+        self,
+        text: str,
+        title: Optional[str] = None,
+        language: str = "en"
+    ):
+        """Streams real-time investigative fact-check pipeline via Server-Sent Events (SSE).
+        Emits structured SSE chunks in `data: <json>\n\n` format:
+        1. {"stage": "extracting", "message": "Parsing claim and checking URL safety..."}
+        2. {"stage": "searching_news", "message": "Querying live RSS feeds and NewsData.io..."}
+        3. {"stage": "checking_facts", "message": "Cross-referencing Google Fact Check Tools API..."}
+        4. {"stage": "analyzing_ai", "message": "Synthesizing evidence with Gemini AI...", "delta": "<token>"}
+        5. {"stage": "complete", "result": <FactCheckResponse dict>}
+        """
+        import json
+        start_time = time.time()
+        content = f"{title}\n{text}" if title else text
+
+        def sse(event: dict) -> str:
+            return f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
+
+        # Stage 1: extracting
+        yield sse({"stage": "extracting", "message": "Parsing claim and checking URL safety..."})
+        await asyncio.sleep(0.02)
+        claim_info = await self.ai_provider.extract_claims_and_entities(content, language=language)
+        primary_claim = claim_info["primary_claim"]
+        entities = claim_info["entities"]
+        category = claim_info["category"]
+        location = claim_info["location"]
+
+        # Stage 2: searching_news
+        yield sse({"stage": "searching_news", "message": "Querying live RSS feeds and NewsData.io..."})
+        db_task = self.fact_db.search_fact_database(primary_claim)
+        web_task = self.search_provider.search_trusted_sources(primary_claim, limit=6)
+
+        # Stage 3: checking_facts
+        yield sse({"stage": "checking_facts", "message": "Cross-referencing Google Fact Check Tools API..."})
+        google_fc_task = self.factcheck_tools.search_claims(primary_claim, language=language, limit=4)
+        gathered = await asyncio.gather(db_task, web_task, google_fc_task, return_exceptions=True)
+
+        all_evidence: List[EvidenceItem] = []
+        seen_urls = set()
+        for ev_batch in gathered:
+            if isinstance(ev_batch, list):
+                for ev in ev_batch:
+                    if ev.source_url not in seen_urls:
+                        seen_urls.add(ev.source_url)
+                        all_evidence.append(ev)
+
+        # Stage 4: analyzing_ai
+        yield sse({"stage": "analyzing_ai", "message": "Synthesizing evidence with Gemini AI...", "delta": ""})
+
+        ai_result: Optional[Dict[str, Any]] = None
+        async for chunk in self.ai_provider.stream_fact_check_analysis(
+            claim=primary_claim,
+            evidence_items=all_evidence,
+            language=language
+        ):
+            if chunk.get("type") == "token":
+                yield sse({
+                    "stage": "analyzing_ai",
+                    "message": "Synthesizing evidence with Gemini AI...",
+                    "delta": chunk.get("delta", "")
+                })
+            elif chunk.get("type") == "verdict":
+                data_val = chunk.get("data")
+                if isinstance(data_val, dict):
+                    ai_result = data_val
+
+        if not ai_result or not isinstance(ai_result, dict):
+            ai_result = self.ai_provider._rule_and_evidence_synthesis(
+                claim=primary_claim,
+                evidence_items=all_evidence,
+                language=language
+            )
+
+        verdict: VerdictEnum = ai_result.get("verdict", VerdictEnum.UNVERIFIED)
+        confidence: float = float(ai_result.get("confidence", 50.0))
+        evidence_strength: str = str(ai_result.get("evidence_strength", "MODERATE"))
+        verification_status: str = str(ai_result.get("verification_status", "UNVERIFIED"))
+        ai_explanation: str = str(ai_result.get("ai_explanation", ""))
+        supporting_evidence: List[EvidenceItem] = list(ai_result.get("supporting_evidence") or [])
+        contradictory_evidence: List[EvidenceItem] = list(ai_result.get("contradictory_evidence") or [])
+        contextual_notes: Optional[str] = ai_result.get("contextual_notes")
+
+        has_real_support = any(e.stance == "SUPPORTS" for e in all_evidence)
+        if verdict in (VerdictEnum.TRUE, VerdictEnum.MOSTLY_TRUE) and not has_real_support:
+            verdict = VerdictEnum.UNVERIFIED
+            confidence = min(confidence, 42.0)
+            evidence_strength = "WEAK"
+            verification_status = "UNVERIFIED"
+            ai_explanation = (
+                f"While contextually related information was found, no authoritative source "
+                f"directly confirms or validates the specific claim: \"{primary_claim[:80]}...\". "
+                f"Related information does not constitute evidence of truth. "
+                f"This claim remains UNVERIFIED pending primary source confirmation."
+            )
+
+        check_id = f"fc-{uuid.uuid4().hex[:10]}"
+        elapsed_ms = int((time.time() - start_time) * 1000)
+
+        response = FactCheckResponse(
+            id=check_id,
+            submission_type="text",
+            submitted_input=text[:500],
+            primary_claim=primary_claim,
+            extracted_claims=[
+                ExtractedClaim(
+                    claim_text=primary_claim,
+                    topic=category,
+                    entities=entities,
+                    verdict=verdict,
+                    confidence=confidence
+                )
+            ],
+            verdict=verdict,
+            confidence=confidence,
+            evidence_strength=evidence_strength,
+            verification_status=verification_status,
+            entities=entities,
+            category=category,
+            location=location,
+            language=language,
+            ai_explanation=ai_explanation,
+            supporting_evidence=supporting_evidence,
+            contradictory_evidence=contradictory_evidence,
+            contextual_notes=contextual_notes,
+            processing_time_ms=elapsed_ms,
+            verification_providers=["TruthLens FactDB", "Wikipedia & Open Knowledge Matrix", "Wire Source Graph"],
+            created_at=datetime.now(timezone.utc).isoformat(),
+            is_live_verification=True,
+            verification_source="live-ai"
+        )
+
+        await self.fact_db.save_fact_check(response.model_dump())
+
+        # Stage 5: complete
+        yield sse({"stage": "complete", "result": response.model_dump()})

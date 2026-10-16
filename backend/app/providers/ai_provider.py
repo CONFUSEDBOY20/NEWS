@@ -302,6 +302,155 @@ Return ONLY a valid JSON object without any additional markdown text or preamble
             logger.warning(f"Gemini verification call failed: {e}")
             return None
 
+    async def stream_fact_check_analysis(
+        self,
+        claim: str,
+        evidence_items: List[EvidenceItem],
+        language: str = "en"
+    ):
+        """Asynchronously streams reasoning tokens from Gemini AI or fallback synthesis engine.
+        Yields events:
+        {"type": "token", "delta": token_string}
+        and finishes with:
+        {"type": "verdict", "data": ai_result_dict}
+        """
+        key = settings.GEMINI_API_KEY or os.getenv("GEMINI_API_KEY") or os.getenv("AI_API_KEY") or self.gemini_key
+        client = getattr(self, "client", None)
+        if not client and key:
+            try:
+                client = genai.Client(api_key=key)
+                self.client = client
+            except Exception as e:
+                logger.warning(f"Error initializing Gemini client for streaming: {e}")
+
+        if client and key:
+            try:
+                evidence_summary = ""
+                if evidence_items:
+                    evidence_summary = "\n".join(
+                        f"- Source: {e.source_name} ({e.reliability_label or 'Reference'})\n  Title: {e.title}\n  Snippet: {e.evidence_text}"
+                        for e in evidence_items[:6]
+                    )
+                else:
+                    evidence_summary = "No indexed external evidence documents or articles provided."
+
+                lang_instruction = "Hindi (हिन्दी)" if language == "hi" else "English"
+                prompt = f"""You are TruthLens, an investigative fact-checking AI and logical reasoning system.
+
+Evaluate the factual accuracy and plausibility of the following CLAIM:
+CLAIM: "{claim}"
+
+RETRIEVED EVIDENCE:
+{evidence_summary}
+
+VERIFICATION & REASONING GUIDELINES:
+1. Physical Laws, Biological Realities & World Knowledge:
+   - Use general world knowledge, fundamental scientific laws, biological facts, and logical plausibility even when no external evidence documents are provided.
+   - Absurd, physically impossible, or biologically impossible claims MUST be judged as FALSE with high confidence (88-99%).
+   - Universally established facts MUST be judged as TRUE with high confidence (90-99%).
+2. Strict Verdict Format:
+   - You MUST select the verdict from one of these exact values:
+     "TRUE", "MOSTLY TRUE", "PARTLY TRUE", "MISLEADING", "FALSE", "UNVERIFIED", "SATIRE", "INSUFFICIENT EVIDENCE"
+   - "evidence_strength" must be one of: "VERY STRONG", "STRONG", "MODERATE", "WEAK", "NONE"
+   - "confidence" must be a float between 0.0 and 100.0
+   - "ai_explanation" must be a clear, informative explanation written in {lang_instruction}.
+   - "contextual_notes" must be a concise note in {lang_instruction}.
+
+Return ONLY a valid JSON object without any additional markdown text or preamble:
+{{
+  "verdict": "<VerdictEnum>",
+  "confidence": <float>,
+  "evidence_strength": "<VERY STRONG | STRONG | MODERATE | WEAK | NONE>",
+  "ai_explanation": "<concise explanation in {lang_instruction}>",
+  "contextual_notes": "<concise context note in {lang_instruction}>"
+}}
+"""
+                response_stream = await client.aio.models.generate_content_stream(
+                    model="gemini-2.0-flash",
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        temperature=0.1,
+                        response_mime_type="application/json"
+                    )
+                )
+
+                accumulated = ""
+                async for chunk in response_stream:
+                    chunk_text = getattr(chunk, "text", "") or ""
+                    if chunk_text:
+                        accumulated += chunk_text
+                        yield {"type": "token", "delta": chunk_text}
+
+                # Try parsing the accumulated JSON
+                clean_json = accumulated.strip()
+                if clean_json.startswith("```"):
+                    clean_json = re.sub(r"^```(?:json)?\s*", "", clean_json)
+                    clean_json = re.sub(r"\s*```$", "", clean_json)
+
+                match = re.search(r"\{.*\}", clean_json, re.DOTALL)
+                if match:
+                    parsed = json.loads(match.group(0))
+                    v_raw = str(parsed.get("verdict", "")).strip().upper()
+                    verdict_map = {
+                        "TRUE": VerdictEnum.TRUE,
+                        "MOSTLY TRUE": VerdictEnum.MOSTLY_TRUE,
+                        "MOSTLY_TRUE": VerdictEnum.MOSTLY_TRUE,
+                        "PARTLY TRUE": VerdictEnum.PARTLY_TRUE,
+                        "PARTLY_TRUE": VerdictEnum.PARTLY_TRUE,
+                        "MISLEADING": VerdictEnum.MISLEADING,
+                        "FALSE": VerdictEnum.FALSE,
+                        "UNVERIFIED": VerdictEnum.UNVERIFIED,
+                        "SATIRE": VerdictEnum.SATIRE,
+                        "INSUFFICIENT EVIDENCE": VerdictEnum.INSUFFICIENT_EVIDENCE,
+                        "INSUFFICIENT_EVIDENCE": VerdictEnum.INSUFFICIENT_EVIDENCE,
+                    }
+                    verdict = verdict_map.get(v_raw, VerdictEnum.UNVERIFIED)
+                    try:
+                        confidence = float(parsed.get("confidence", 70.0))
+                        confidence = max(0.0, min(100.0, confidence))
+                    except (ValueError, TypeError):
+                        confidence = 70.0
+
+                    evidence_strength = str(parsed.get("evidence_strength", "MODERATE")).strip().upper()
+                    if evidence_strength not in ["VERY STRONG", "STRONG", "MODERATE", "WEAK", "NONE"]:
+                        evidence_strength = "STRONG" if verdict in (VerdictEnum.TRUE, VerdictEnum.FALSE) else "MODERATE"
+
+                    supporting = [e for e in evidence_items if e.stance == "SUPPORTS"]
+                    contradicting = [e for e in evidence_items if e.stance == "CONTRADICTS"]
+                    neutral = [e for e in evidence_items if e.stance in ["NEUTRAL", "CONTEXT"]]
+
+                    ai_explanation = str(parsed.get("ai_explanation", "")).strip()
+                    contextual_notes = str(parsed.get("contextual_notes", "Evaluated with Gemini intelligence.")).strip()
+                    v_status = "VERIFIED" if verdict in (VerdictEnum.TRUE, VerdictEnum.FALSE, VerdictEnum.MOSTLY_TRUE) else "UNVERIFIED"
+
+                    yield {
+                        "type": "verdict",
+                        "data": {
+                            "verdict": verdict,
+                            "confidence": confidence,
+                            "evidence_strength": evidence_strength,
+                            "verification_status": v_status,
+                            "supporting_evidence": supporting + neutral,
+                            "contradictory_evidence": contradicting,
+                            "ai_explanation": ai_explanation,
+                            "contextual_notes": contextual_notes
+                        }
+                    }
+                    return
+            except Exception as ex:
+                logger.warning(f"Gemini streaming analysis exception: {ex}")
+
+        # Fallback to deterministic synthesis engine with simulated token streaming
+        fallback_res = self._rule_and_evidence_synthesis(claim, evidence_items, language)
+        explanation = fallback_res.get("ai_explanation", "")
+        # Yield words as token chunks
+        words = explanation.split(" ")
+        for i, word in enumerate(words):
+            yield {"type": "token", "delta": word + (" " if i < len(words) - 1 else "")}
+            await asyncio.sleep(0.01)
+
+        yield {"type": "verdict", "data": fallback_res}
+
     def _rule_and_evidence_synthesis(
         self,
         claim: str,

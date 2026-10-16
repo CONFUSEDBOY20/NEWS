@@ -8,7 +8,27 @@
 
 import { api } from "./api";
 
-const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes cache
+const CACHE_TTL_MS = 60 * 1000; // 60 seconds live cache
+
+const newsSubscribers = new Set();
+
+/**
+ * Subscribe to background revalidated news updates
+ */
+export function subscribeNewsUpdates(callback) {
+  newsSubscribers.add(callback);
+  return () => newsSubscribers.delete(callback);
+}
+
+function notifyNewsSubscribers(data) {
+  for (const cb of newsSubscribers) {
+    try {
+      cb(data);
+    } catch (e) {
+      console.warn("News subscriber callback error:", e);
+    }
+  }
+}
 
 // Curated high-resolution editorial topic assets for legitimate visual context
 export const EDITORIAL_ASSETS = {
@@ -158,18 +178,24 @@ export function getRelativeTimeString(dateString) {
 }
 
 /**
- * Fetch latest news directly from backend with caching
+ * Fetch latest news directly from backend with caching and background revalidation
  */
 export async function fetchLatestNews({ category = "All", fresh = false } = {}) {
   const cacheKey = `truthlens_news_${category.toLowerCase()}`;
+  let cachedPayload = null;
   
   if (!fresh) {
     try {
       const cached = localStorage.getItem(cacheKey);
       if (cached) {
         const { data, timestamp } = JSON.parse(cached);
-        if (Date.now() - timestamp < CACHE_TTL_MS && Array.isArray(data) && data.length > 0) {
-          return { articles: data, fromCache: true, source: "cache" };
+        if (Array.isArray(data) && data.length > 0) {
+          cachedPayload = { articles: data, fromCache: true, source: "cache" };
+          // If cache is still warm, return immediately
+          if (Date.now() - timestamp < CACHE_TTL_MS) {
+            return cachedPayload;
+          }
+          // If cache is stale, return cached articles immediately and revalidate in background
         }
       }
     } catch {
@@ -178,40 +204,63 @@ export async function fetchLatestNews({ category = "All", fresh = false } = {}) 
   }
 
   const isIndia = category.toLowerCase() === "india";
-  const backendData = isIndia
-    ? await api.getIndiaNews("All", fresh)
-    : await api.getWorldNews(category, fresh);
 
-  if (backendData?.articles && Array.isArray(backendData.articles) && backendData.articles.length > 0) {
-    const normalized = backendData.articles.map((art) => ({
-      id: art.id || `backend-${art.title?.slice(0, 10)}`,
-      title: art.title,
-      description: art.description || art.summary || "Summary corroborated by automated wire aggregation.",
-      image_url: resolveRealTimeNewsImage(art.title, art.category || category, art.url_to_image || art.image_url),
-      link: art.url || art.link || "#",
-      source: art.source_name || art.source || "Official Wire",
-      published_at: art.published_at || new Date().toISOString(),
-      time_ago: art.time_ago || getRelativeTimeString(art.published_at),
-      category: capitalize(art.category || category),
-      is_delayed: Boolean(art.is_delayed),
-      provider: art.provider,
-      content_paragraphs: [
-        art.description || art.summary,
-        "Original wire dispatch indexed via multi-source syndication feed.",
-        "Cross-referenced with verified fact-checking standards and publisher consensus."
-      ].filter(Boolean),
-    }));
+  const fetchAndProcessFresh = async () => {
+    try {
+      const backendData = isIndia
+        ? await api.getIndiaNews("All", true)
+        : await api.getWorldNews(category, true);
 
-    const unique = deduplicateArticles(normalized);
-    saveToCache(cacheKey, unique);
-    return {
-      articles: unique,
-      fromCache: false,
-      source: "backend",
-      is_live: backendData.is_live,
-      stale: backendData.stale,
-      synced_at: backendData.synced_at,
-    };
+      if (backendData?.articles && Array.isArray(backendData.articles) && backendData.articles.length > 0) {
+        const normalized = backendData.articles.map((art) => ({
+          id: art.id || `backend-${art.title?.slice(0, 10)}`,
+          title: art.title,
+          description: art.description || art.summary || "Summary corroborated by automated wire aggregation.",
+          image_url: resolveRealTimeNewsImage(art.title, art.category || category, art.url_to_image || art.image_url),
+          link: art.url || art.link || "#",
+          source: art.source_name || art.source || "Official Wire",
+          published_at: art.published_at || new Date().toISOString(),
+          time_ago: art.time_ago || getRelativeTimeString(art.published_at),
+          category: capitalize(art.category || category),
+          is_delayed: Boolean(art.is_delayed),
+          provider: art.provider,
+          content_paragraphs: [
+            art.description || art.summary,
+            "Original wire dispatch indexed via multi-source syndication feed.",
+            "Cross-referenced with verified fact-checking standards and publisher consensus."
+          ].filter(Boolean),
+        }));
+
+        const unique = deduplicateArticles(normalized);
+        saveToCache(cacheKey, unique);
+        const result = {
+          articles: unique,
+          fromCache: false,
+          source: "backend",
+          is_live: backendData.is_live,
+          stale: backendData.stale,
+          synced_at: backendData.synced_at,
+          fetched_at: backendData.fetched_at || backendData.synced_at,
+        };
+        notifyNewsSubscribers({ category, ...result });
+        return result;
+      }
+    } catch (err) {
+      console.warn("Live news fetch/revalidation error:", err);
+    }
+    return null;
+  };
+
+  // If we have stale cache, trigger background revalidation without blocking UI
+  if (cachedPayload) {
+    fetchAndProcessFresh();
+    return cachedPayload;
+  }
+
+  // Otherwise wait for fresh fetch
+  const freshResult = await fetchAndProcessFresh();
+  if (freshResult) {
+    return freshResult;
   }
 
   return {

@@ -463,11 +463,13 @@ class NewsProvider:
             start = max(page - 1, 0) * page_size
             sliced = deduped[start:start + page_size]
 
+            now_iso = datetime.now(timezone.utc).isoformat()
             feed_resp = NewsFeedResponse(
                 articles=sliced,
                 count=len(sliced),
                 total_results=len(deduped),
-                synced_at=datetime.now(timezone.utc).isoformat(),
+                synced_at=now_iso,
+                fetched_at=now_iso,
                 is_live=tier1_or_tier2_success,
                 stale=False,
                 category=category or "All",

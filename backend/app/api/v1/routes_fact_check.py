@@ -1,5 +1,6 @@
 import io
 from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Query
+from fastapi.responses import StreamingResponse
 from typing import Optional
 from PIL import Image
 
@@ -16,6 +17,21 @@ router = APIRouter(prefix="/fact-check", tags=["Fact Check"])
 service = FactCheckService()
 
 MAX_IMAGE_BYTES = 10 * 1024 * 1024  # 10 MB limit
+
+@router.post("/stream")
+async def stream_check_claim(payload: FactCheckTextRequest):
+    """Streams investigative fact-checking pipeline via Server-Sent Events (SSE)."""
+    if not payload.text or len(payload.text.strip()) < 5:
+        raise HTTPException(status_code=400, detail="Please provide at least 5 characters of claim text")
+    return StreamingResponse(
+        service.stream_verify_claim(payload.text.strip(), title=payload.title, language=payload.language),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        }
+    )
 
 @router.post("/url", response_model=FactCheckResponse)
 async def check_url(payload: FactCheckUrlRequest):

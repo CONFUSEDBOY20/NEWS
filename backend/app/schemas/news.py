@@ -41,6 +41,7 @@ class NewsFeedResponse(BaseModel):
     count: int
     total_results: int                    # For legacy compatibility
     synced_at: str
+    fetched_at: Optional[str] = None      # ISO timestamp when the feed was fetched
     is_live: bool                         # True only if at least one Tier 1/2 provider answered
     stale: bool = False                   # True if served from stale cache because all providers failed
     feed_mode: str = "realtime"

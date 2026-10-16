@@ -17,6 +17,38 @@ class NewsSourceFeed(BaseModel):
 VETTED_RSS_FEEDS: List[NewsSourceFeed] = [
     # --- World Tier 1 Feeds ---
     NewsSourceFeed(
+        name="Reuters",
+        url="https://www.reutersagency.com/feed/?taxonomy=best-sectors&post_type=best",
+        region="World",
+        category="World",
+        language="en",
+        reliability_score=94.0,
+    ),
+    NewsSourceFeed(
+        name="AP News",
+        url="https://rss.apnews.com/rss/apf-topnews.atom",
+        region="World",
+        category="World",
+        language="en",
+        reliability_score=93.0,
+    ),
+    NewsSourceFeed(
+        name="Snopes",
+        url="https://www.snopes.com/feed/",
+        region="Global",
+        category="General",
+        language="en",
+        reliability_score=95.0,
+    ),
+    NewsSourceFeed(
+        name="PolitiFact",
+        url="https://www.politifact.com/rss/factchecks/",
+        region="Global",
+        category="Politics",
+        language="en",
+        reliability_score=94.0,
+    ),
+    NewsSourceFeed(
         name="BBC World",
         url="https://feeds.bbci.co.uk/news/world/rss.xml",
         region="World",

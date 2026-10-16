@@ -144,4 +144,19 @@ def test_fact_check_url_ssrf_protection():
     )
     assert resp_v1.status_code == 400
 
+def test_fact_check_stream_endpoint():
+    resp = client.post(
+        "/api/fact-check/stream",
+        json={"text": "Water boils at 100 degrees Celsius at 1 atm."}
+    )
+    assert resp.status_code == 200
+    assert "text/event-stream" in resp.headers.get("content-type", "")
+    content = resp.text
+    assert "extracting" in content
+    assert "searching_news" in content
+    assert "checking_facts" in content
+    assert "analyzing_ai" in content
+    assert "complete" in content
+
+
 

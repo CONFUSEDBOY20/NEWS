@@ -81,10 +81,10 @@ class Settings(BaseModel):
         "http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,http://127.0.0.1:3000,"
         "https://truthlens-frontend-five.vercel.app,https://truthlens.vercel.app"
     )
-    # CORS Origin Regex for Vercel preview environments
-    CORS_ORIGIN_REGEX: Optional[str] = os.getenv("CORS_ORIGIN_REGEX", r"^https:\/\/truthlens-.*\.vercel\.app$")
+    # CORS Origin Regex for Vercel preview environments (*.vercel.app)
+    CORS_ORIGIN_REGEX: Optional[str] = os.getenv("CORS_ORIGIN_REGEX", r"^https:\/\/(?:[a-zA-Z0-9-]+\.)?vercel\.app$")
     
-    # Reverse proxy header trust (Render, Cloudflare, ALB)
+    # Reverse proxy header trust (Render, Cloudflare, ALB, Vercel)
     TRUST_PROXY: bool = os.getenv("TRUST_PROXY", "false").lower() in ("true", "1", "yes")
 
     # External APIs (configured via .env)
@@ -98,6 +98,9 @@ class Settings(BaseModel):
     GOOGLE_FACTCHECK_API_KEY: str = os.getenv("GOOGLE_FACTCHECK_API_KEY", "")
     
     # Firebase Cloud Configuration (Backend Server-Side Only)
+    # Supports JSON payload, credential file path, or individual fields
+    FIREBASE_CREDENTIALS_JSON: str = os.getenv("FIREBASE_CREDENTIALS_JSON", "")
+    FIREBASE_CREDENTIALS_PATH: str = os.getenv("FIREBASE_CREDENTIALS_PATH", "")
     FIREBASE_PROJECT_ID: str = os.getenv("FIREBASE_PROJECT_ID", "")
     FIREBASE_CLIENT_EMAIL: str = os.getenv("FIREBASE_CLIENT_EMAIL", "")
     FIREBASE_PRIVATE_KEY: str = os.getenv("FIREBASE_PRIVATE_KEY", "").replace("\\n", "\n")

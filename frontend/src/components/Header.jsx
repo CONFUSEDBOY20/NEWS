@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   SlidersHorizontal,
   Menu,
+  RefreshCw,
 } from "lucide-react";
 
 export function Header() {
@@ -24,6 +25,9 @@ export function Header() {
     setInputPreload,
     setVerificationResult,
     showToast,
+    isLiveConnected,
+    lastUpdated,
+    syncNow,
   } = useApp();
 
   const [topicsOpen, setTopicsOpen] = useState(false);
@@ -185,6 +189,22 @@ export function Header() {
           {/* Right: Search, Dark Mode, History */}
           <div className="flex items-center gap-2 sm:gap-3">
             
+            {/* Live Connection & Sync Button */}
+            <button
+              type="button"
+              onClick={syncNow}
+              className={`hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-medium border transition-colors cursor-pointer ${
+                isLiveConnected
+                  ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20"
+                  : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 hover:bg-amber-500/20"
+              }`}
+              title={`Last synced: ${lastUpdated ? new Date(lastUpdated).toLocaleTimeString() : "Never"}. Click to Sync Now.`}
+            >
+              <span className={`w-2 h-2 rounded-full ${isLiveConnected ? "bg-emerald-500 animate-pulse" : "bg-amber-500"}`} />
+              <span className="hidden md:inline">{isLiveConnected ? "Live Connected" : "Offline"}</span>
+              <RefreshCw className="w-3 h-3 hover:rotate-180 transition-transform" />
+            </button>
+
             {/* Search Trigger */}
             <button
               type="button"

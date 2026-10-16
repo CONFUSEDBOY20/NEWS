@@ -40,6 +40,7 @@ export function FactCheckHero() {
     setVerificationStage,
     setVerificationResult,
     setActiveClaimText,
+    setStreamingAnalysisText,
     addToHistory,
     history,
     setActiveView,
@@ -214,18 +215,12 @@ export function FactCheckHero() {
 
     const claimToVerify = titleToUse || (tab === "image" ? imageFile?.name || "Uploaded Claim Image" : val);
     setActiveClaimText(claimToVerify);
+    setStreamingAnalysisText("");
     setIsVerifying(true);
     setVerificationResult(null);
 
-    // Multi-stage progress indicator animation
-    let stage = 0;
+    // Initial stage
     setVerificationStage(0);
-    const stageTimer = setInterval(() => {
-      if (stage < 4) {
-        stage++;
-        setVerificationStage(stage);
-      }
-    }, 450);
 
     try {
       let result;
@@ -233,7 +228,23 @@ export function FactCheckHero() {
       if (tab === "url") {
         result = await api.verifyUrl(val, langParam, titleToUse);
       } else if (tab === "text") {
-        result = await api.verifyText(val, langParam);
+        result = await api.streamFactCheck(
+          { text: val, language: langParam, title: titleToUse },
+          (event) => {
+            if (event.stage === "extracting") {
+              setVerificationStage(1);
+            } else if (event.stage === "searching_news") {
+              setVerificationStage(2);
+            } else if (event.stage === "checking_facts") {
+              setVerificationStage(3);
+            } else if (event.stage === "analyzing_ai") {
+              setVerificationStage(4);
+              if (event.delta) {
+                setStreamingAnalysisText((prev) => (prev || "") + event.delta);
+              }
+            }
+          }
+        );
       } else if (tab === "image") {
         result = await api.verifyImage(imageFile, langParam);
       }
@@ -246,7 +257,6 @@ export function FactCheckHero() {
         }
       }
 
-      clearInterval(stageTimer);
       setVerificationStage(4);
 
       setTimeout(() => {
@@ -256,7 +266,6 @@ export function FactCheckHero() {
         if (showToast) showToast("Fact-check completed with corroborating sources.");
       }, 350);
     } catch (err) {
-      clearInterval(stageTimer);
       setIsVerifying(false);
       const is429 = err.status === 429 || err.code === "RATE_LIMITED";
       const message = is429

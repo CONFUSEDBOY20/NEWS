@@ -111,3 +111,5 @@ class FactCheckResponse(BaseModel):
     verification_providers: List[str] = ["TruthLens FactDB", "NewsAPI Source Graph", "Cross-Source Matrix"]
     created_at: str
     image_analysis: Optional[ImageAnalysisMetadata] = None
+    is_live_verification: bool = True
+    verification_source: str = "live-ai"

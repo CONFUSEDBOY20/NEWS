@@ -29,12 +29,9 @@ STOPWORDS = {
 
 
 def is_firestore_configured() -> bool:
-    """Return True only when all required Firebase credentials are set."""
-    return bool(
-        settings.FIREBASE_PROJECT_ID and
-        settings.FIREBASE_CLIENT_EMAIL and
-        settings.FIREBASE_PRIVATE_KEY
-    )
+    """Return True if Firestore is configured via JSON, path, or individual variables."""
+    from app.db.firestore_db import is_firestore_configured as _check_fs
+    return _check_fs()
 
 
 class JsonFactDatabaseProvider(BaseFactDatabaseProvider):
@@ -58,14 +55,24 @@ class JsonFactDatabaseProvider(BaseFactDatabaseProvider):
 
     @property
     def db_file(self) -> str:
+        if os.getenv("VERCEL") in ("1", "true", "True") or getattr(self, "_force_tmp", False):
+            return os.path.join(tempfile.gettempdir(), "database.json")
         return os.getenv("TRUTHLENS_DATA_FILE") or os.path.join(DATA_DIR, "runtime_database.json")
 
     def _ensure_db(self):
         with self._thread_lock:
             target_path = self.db_file
             target_dir = os.path.dirname(target_path)
-            if target_dir:
-                os.makedirs(target_dir, exist_ok=True)
+            try:
+                if target_dir:
+                    os.makedirs(target_dir, exist_ok=True)
+            except (PermissionError, OSError):
+                self._force_tmp = True
+                target_path = self.db_file
+                target_dir = os.path.dirname(target_path)
+                if target_dir:
+                    os.makedirs(target_dir, exist_ok=True)
+
             if not os.path.exists(target_path):
                 if os.path.exists(SEED_FILE) and os.path.abspath(SEED_FILE) != os.path.abspath(target_path):
                     try:
@@ -120,23 +127,42 @@ class JsonFactDatabaseProvider(BaseFactDatabaseProvider):
                     return json.load(f)
             except Exception:
                 self._ensure_db()
-                with open(self.db_file, "r", encoding="utf-8") as f:
-                    return json.load(f)
+                try:
+                    with open(self.db_file, "r", encoding="utf-8") as f:
+                        return json.load(f)
+                except Exception:
+                    if os.path.exists(SEED_FILE):
+                        with open(SEED_FILE, "r", encoding="utf-8") as sf:
+                            return json.load(sf)
+                    return {}
 
     def _write_db(self, data: Dict[str, Any]):
         with self._thread_lock:
             target_path = self.db_file
             dir_name = os.path.dirname(target_path) or "."
-            os.makedirs(dir_name, exist_ok=True)
-            fd, tmp_path = tempfile.mkstemp(dir=dir_name, prefix=".tmp_db_", suffix=".json")
+            tmp_path: Optional[str] = None
             try:
+                os.makedirs(dir_name, exist_ok=True)
+                fd, tmp_path = tempfile.mkstemp(dir=dir_name, prefix=".tmp_db_", suffix=".json")
                 with os.fdopen(fd, "w", encoding="utf-8") as f:
                     json.dump(data, f, indent=2, ensure_ascii=False)
                     f.flush()
                     os.fsync(f.fileno())
                 os.replace(tmp_path, target_path)
+            except (PermissionError, OSError) as e:
+                logger.warning(f"Filesystem write failed at {target_path} ({e}). Falling back to /tmp/database.json...")
+                self._force_tmp = True
+                tmp_target = self.db_file
+                tmp_dir = os.path.dirname(tmp_target) or "."
+                os.makedirs(tmp_dir, exist_ok=True)
+                fd, tmp_path = tempfile.mkstemp(dir=tmp_dir, prefix=".tmp_db_", suffix=".json")
+                with os.fdopen(fd, "w", encoding="utf-8") as f:
+                    json.dump(data, f, indent=2, ensure_ascii=False)
+                    f.flush()
+                    os.fsync(f.fileno())
+                os.replace(tmp_path, tmp_target)
             except Exception:
-                if os.path.exists(tmp_path):
+                if tmp_path and os.path.exists(tmp_path):
                     try:
                         os.remove(tmp_path)
                     except OSError:
@@ -489,18 +515,11 @@ class FirestoreFactDatabaseProvider(BaseFactDatabaseProvider):
     """Google Cloud Firestore implementation of BaseFactDatabaseProvider."""
 
     def __init__(self):
-        import firebase_admin
-        from firebase_admin import credentials, firestore
-
-        if not firebase_admin._apps:
-            cred = credentials.Certificate({
-                "project_id": settings.FIREBASE_PROJECT_ID,
-                "client_email": settings.FIREBASE_CLIENT_EMAIL,
-                "private_key": settings.FIREBASE_PRIVATE_KEY
-            })
-            firebase_admin.initialize_app(cred)
-
-        self.db = firestore.client()
+        from app.db.firestore_db import get_firestore_client
+        client = get_firestore_client()
+        if client is None:
+            raise RuntimeError("Firestore is not configured or failed to initialize.")
+        self.db = client
         logger.info("FirestoreFactDatabaseProvider initialized (storage: firestore)")
 
     async def search_fact_database(self, query: str) -> List[EvidenceItem]:
@@ -617,14 +636,18 @@ class FirestoreFactDatabaseProvider(BaseFactDatabaseProvider):
     # Admin Logs
     def get_admin_logs(self, limit: int = 100) -> List[Dict[str, Any]]:
         try:
-            from firebase_admin import firestore
-            docs = self.db.collection("admin_logs").order_by("timestamp", direction=firestore.Query.DESCENDING).limit(limit).stream()
+            from google.cloud.firestore import Query
+            docs = self.db.collection("admin_logs").order_by("timestamp", direction=Query.DESCENDING).limit(limit).stream()
             return [d.to_dict() for d in docs if d.to_dict()]
         except Exception:
-            docs = self.db.collection("admin_logs").stream()
-            logs = [d.to_dict() for d in docs if d.to_dict()]
-            logs.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
-            return logs[:limit]
+            try:
+                docs = self.db.collection("admin_logs").order_by("timestamp", direction="DESCENDING").limit(limit).stream()
+                return [d.to_dict() for d in docs if d.to_dict()]
+            except Exception:
+                docs = self.db.collection("admin_logs").stream()
+                logs = [d.to_dict() for d in docs if d.to_dict()]
+                logs.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
+                return logs[:limit]
 
     def add_admin_log(self, admin_id: str, action: str, target_collection: str, target_id: Optional[str], details: str):
         log_id = f"log-{int(datetime.now().timestamp()*1000)}"
@@ -664,8 +687,17 @@ def get_fact_database_provider() -> BaseFactDatabaseProvider:
         return JsonFactDatabaseProvider()
 
 
-class FactDatabaseProvider:
+class FactDatabaseProvider(BaseFactDatabaseProvider):
     """Polymorphic factory class returning either Firestore or JSON database provider."""
 
     def __new__(cls, *args, **kwargs):
         return get_fact_database_provider()
+
+    async def search_fact_database(self, query: str) -> List[EvidenceItem]:
+        return await get_fact_database_provider().search_fact_database(query)
+
+    async def save_fact_check(self, record: Dict[str, Any]) -> str:
+        return await get_fact_database_provider().save_fact_check(record)
+
+    async def get_fact_check(self, check_id: str) -> Optional[Dict[str, Any]]:
+        return await get_fact_database_provider().get_fact_check(check_id)

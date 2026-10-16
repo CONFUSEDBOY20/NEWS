@@ -1,9 +1,32 @@
-export const API_BASE =
-  import.meta.env.VITE_API_BASE_URL ||
-  import.meta.env.VITE_API_URL ||
-  (typeof window !== "undefined" && window.location.hostname !== "localhost"
-    ? "/api"
-    : "http://localhost:8000/api");
+export function getApiBase() {
+  const envUrl = (
+    import.meta.env.VITE_API_BASE_URL ||
+    import.meta.env.VITE_API_URL ||
+    ""
+  ).trim();
+
+  const isBrowser = typeof window !== "undefined";
+  const isVercelOrRemote =
+    isBrowser &&
+    window.location.hostname !== "localhost" &&
+    window.location.hostname !== "127.0.0.1";
+
+  // In production on Vercel or preview, if VITE_API_BASE_URL is unset or pointing to Render cold start,
+  // default to same-origin /api (Vercel Serverless Function)
+  if (isVercelOrRemote) {
+    if (!envUrl || envUrl.includes("onrender.com")) {
+      return "/api";
+    }
+  }
+
+  if (envUrl) {
+    return envUrl.replace(/\/+$/, "");
+  }
+
+  return isVercelOrRemote ? "/api" : "http://localhost:8000/api";
+}
+
+export const API_BASE = getApiBase();
 
 export class ApiError extends Error {
   constructor(status, code, message, data = null) {
@@ -125,33 +148,127 @@ export async function request(path, options = {}) {
   }
 }
 
+/**
+ * Stream real-time investigative fact-check pipeline via SSE.
+ * Emits progress stages and tokens to onStageUpdate callback:
+ *   onStageUpdate({ stage, message, delta, result })
+ * Returns final FactCheckResponse object.
+ */
+export async function streamFactCheck(claimInput, onStageUpdate) {
+  const text = typeof claimInput === "string" ? claimInput : (claimInput?.text || "");
+  const language = claimInput?.language || "en";
+  const title = claimInput?.title || "";
+
+  const url = `${API_BASE}/fact-check/stream`;
+  const token = typeof localStorage !== "undefined" ? localStorage.getItem("truthlens_admin_token") : null;
+  const headers = {
+    "Content-Type": "application/json",
+    ...(token ? { "Authorization": `Bearer ${token}` } : {})
+  };
+
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ text, language, title })
+    });
+
+    if (!res.ok || !res.body) {
+      throw new Error(`Streaming request failed: status ${res.status}`);
+    }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let finalResult = null;
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n\n");
+      buffer = lines.pop() || "";
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.startsWith("data:")) {
+          const jsonStr = trimmed.replace(/^data:\s*/, "");
+          try {
+            const eventData = JSON.parse(jsonStr);
+            if (onStageUpdate && typeof onStageUpdate === "function") {
+              onStageUpdate(eventData);
+            }
+            if (eventData.stage === "complete" && eventData.result) {
+              finalResult = {
+                ...eventData.result,
+                isLiveVerification: eventData.result.is_live_verification !== false,
+                verificationSource: eventData.result.verification_source || "live-ai",
+              };
+            }
+          } catch {
+            // ignore JSON parse error in individual SSE event
+          }
+        }
+      }
+    }
+
+    if (finalResult) {
+      return finalResult;
+    }
+
+    // If stream ended without complete event, fallback to standard verifyText
+    return await api.verifyText(text, language);
+  } catch (err) {
+    console.warn("SSE stream failed or unsupported, falling back to standard verifyText:", err);
+    return await api.verifyText(text, language);
+  }
+}
+
 // ── Main API Interface ──
 
 export const api = {
   // Public Fact-Checking
+  streamFactCheck,
+
   verifyUrl: async (url, language = "en", title = "") => {
-    return await request("/fact-check/url", {
+    const res = await request("/fact-check/url", {
       method: "POST",
       body: JSON.stringify({ url, language, title }),
     });
+    return {
+      ...res,
+      isLiveVerification: res?.is_live_verification !== false,
+      verificationSource: res?.verification_source || "live-ai",
+    };
   },
 
   verifyText: async (text, language = "en") => {
-    return await request("/fact-check/text", {
+    const res = await request("/fact-check/text", {
       method: "POST",
       body: JSON.stringify({ text, language }),
     });
+    return {
+      ...res,
+      isLiveVerification: res?.is_live_verification !== false,
+      verificationSource: res?.verification_source || "live-ai",
+    };
   },
 
   verifyImage: async (file, language = "en") => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("language", language);
-    return await request("/fact-check/image", {
+    const res = await request("/fact-check/image", {
       method: "POST",
       body: formData,
       isImageUpload: true,
     });
+    return {
+      ...res,
+      isLiveVerification: res?.is_live_verification !== false,
+      verificationSource: res?.verification_source || "live-ai",
+    };
   },
 
   detectLiveNews: async ({

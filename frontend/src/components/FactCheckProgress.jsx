@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 export function FactCheckProgress() {
-  const { verificationStage, activeClaimText } = useApp();
+  const { verificationStage, activeClaimText, streamingAnalysisText } = useApp();
   // Stage label comes from centralized animation system, tied to real pipeline stage
   // Type defaults to 'text'; for image type, the filename in activeClaimText serves as the cue
   const submissionType = activeClaimText && /\.(png|jpg|jpeg|webp|gif|bmp)$/i.test(activeClaimText)
@@ -111,6 +111,19 @@ export function FactCheckProgress() {
               </div>
             </div>
           </div>
+
+          {/* Live AI Streaming Token Feed */}
+          {streamingAnalysisText && (
+            <div className="relative rounded-xl border border-emerald-500/30 bg-emerald-500/5 dark:bg-emerald-500/10 p-3.5 space-y-1.5 animate-fadeIn">
+              <div className="flex items-center gap-2 text-xs font-mono font-semibold text-emerald-600 dark:text-emerald-400">
+                <Sparkles className="w-3.5 h-3.5 animate-spin" />
+                <span>Live Gemini AI Synthesis</span>
+              </div>
+              <p className="text-xs text-slate-700 dark:text-slate-300 font-mono whitespace-pre-wrap leading-relaxed max-h-36 overflow-y-auto">
+                {streamingAnalysisText}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Animated Progress Indicator Bar */}

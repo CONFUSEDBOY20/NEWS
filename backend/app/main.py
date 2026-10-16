@@ -45,14 +45,16 @@ async def api_redoc_redirect():
     return RedirectResponse(url="/redoc")
 
 
+from typing import Any, cast
+
 # Register Global Exception Handlers
-app.add_exception_handler(TruthLensException, truthlens_exception_handler)
-app.add_exception_handler(HTTPException, http_exception_handler)
-app.add_exception_handler(RequestValidationError, validation_exception_handler)
-app.add_exception_handler(Exception, generic_exception_handler)
+app.add_exception_handler(TruthLensException, cast(Any, truthlens_exception_handler))
+app.add_exception_handler(HTTPException, cast(Any, http_exception_handler))
+app.add_exception_handler(RequestValidationError, cast(Any, validation_exception_handler))
+app.add_exception_handler(Exception, cast(Any, generic_exception_handler))
 
 # CORS Configuration
-# Supports explicit origins list and regex pattern for Vercel preview environments
+# Supports explicit origins list and regex pattern for Vercel preview and production environments
 cors_origins = [origin.strip() for origin in settings.CORS_ORIGINS.split(",") if origin.strip()]
 app.add_middleware(
     CORSMiddleware,
@@ -63,7 +65,7 @@ app.add_middleware(
         "https://truthlens-frontend-five.vercel.app",
         "https://truthlens.vercel.app"
     ],
-    allow_origin_regex=settings.CORS_ORIGIN_REGEX if settings.CORS_ORIGIN_REGEX else None,
+    allow_origin_regex=settings.CORS_ORIGIN_REGEX or r"^https:\/\/(?:[a-zA-Z0-9-]+\.)?vercel\.app$",
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
@@ -84,8 +86,9 @@ async def request_lifecycle_and_rate_limit_middleware(request: Request, call_nex
     start_time = time.time()
     
     # Read client IP from X-Forwarded-For only when TRUST_PROXY is explicitly enabled
-    if settings.TRUST_PROXY and request.headers.get("x-forwarded-for"):
-        client_ip = request.headers.get("x-forwarded-for").split(",")[0].strip()
+    forwarded = request.headers.get("x-forwarded-for")
+    if settings.TRUST_PROXY and forwarded:
+        client_ip = forwarded.split(",")[0].strip()
     else:
         client_ip = request.client.host if request.client else "127.0.0.1"
     
